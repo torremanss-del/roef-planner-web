@@ -670,7 +670,18 @@ async function markPosted(id){const p=S.posts.find(x=>x.id===id);if(!p)return;tr
 async function approvePost(id){try{await queue(id,()=>db.doc('posts/'+id).update({status:'approved'}));toast('Approved')}catch(e){toast('Could not save. Try again.')}}
 function copyFor(id,k){const p=S.posts.find(x=>x.id===id);if(!p)return;let t;if(k==='all')t=[p.captionEn,p.captionNl,p.hashtags].map(x=>str(x).trim()).filter(Boolean).join('\n\n');else t=str(p[k]);copyText(t)}
 function linkify(t){return esc(t).replace(/https?:\/\/[^\s<]+/g,u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`)}
-function playHTML(){return `${str(S.settings.trendBrief).trim()?`<div class="pcard" style="margin-bottom:18px"><h3>This week's trends</h3><div class="prewrap">${linkify(S.settings.trendBrief)}</div><p class="small">Researched ${esc(S.settings.trendAt||'')} by the weekly trend scout. Trend ideas are in the idea bank, marked Trend.</p></div>`:''}<div class="play-sec">
+function trendCard(){const T=str(S.settings.trendBrief).trim(),err=str(S.settings.trendError).trim();
+ return `<div class="pcard" style="margin-bottom:18px"><h3>This week's trends</h3>${T?`<div class="prewrap">${linkify(T)}</div><p class="small">Researched ${esc(S.settings.trendAt||'')} by the trend scout, which runs every Monday morning. Trend ideas are in the idea bank, marked Trend.</p>`:'<p class="empty">No trend brief yet. The trend scout runs every Monday morning, or start it now.</p>'}${err?`<p class="small" style="color:var(--red)">Last run failed: ${esc(err)}</p>`:''}<div class="btnrow"><button class="ghost" type="button" id="trendbtn">Refresh trends now</button><span class="aistat" id="trendstat" role="status"></span></div></div>`}
+async function refreshTrends(){
+ const st=$('#trendstat'),b=$('#trendbtn');b.disabled=true;st.textContent='Starting…';
+ try{const {data:{session}}=await sbc.auth.getSession();if(!session)throw new Error('login');
+  const res=await fetch(SB_URL+'/functions/v1/trends',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,apikey:SB_KEY},body:'{"source":"planner"}'});
+  const out=await res.json().catch(()=>({}));
+  st.textContent=out.started?'Researching this week\'s trends. New ideas and the brief appear here in 1 to 2 minutes.':out.skipped?(out.reason||'Ran recently.'):'Could not start the trend scout. Try again later.';
+ }catch(e){st.textContent='Could not start the trend scout. Try again later.'}
+ finally{const bb=$('#trendbtn');if(bb)bb.disabled=false}
+}
+function playHTML(){return `${trendCard()}<div class="play-sec">
 <div class="pcard"><h3>What works right now</h3><ul>
 <li><b>Win the first two seconds.</b> Open on the payoff: the dog in the basket, mid-ride. Not a logo, not an intro.</li>
 <li><b>Text on the first frame.</b> Lots of people scroll with the sound off, so the opening text has to say what the video is about.</li>
@@ -1018,6 +1029,7 @@ document.addEventListener('click',e=>{
  if(el=t.closest('[data-posted]'))return markPosted(el.dataset.posted);
  if(el=t.closest('[data-approve]'))return approvePost(el.dataset.approve);
  if(t.closest('#learnbtn'))return runLearn();
+ if(t.closest('#trendbtn'))return refreshTrends();
  if(el=t.closest('[data-sugg]')){const x=edSugg[Number(el.dataset.sugg)];if(x){readEditor();const old=ED.keyword.trim();const terms=ED.searchTerms.split(',').map(z=>z.trim()).filter(Boolean).filter(z=>z.toLowerCase()!==x.text.toLowerCase());if(old&&old.toLowerCase()!==x.text.toLowerCase()&&!terms.some(z=>z.toLowerCase()===old.toLowerCase()))terms.unshift(old);ED.keyword=x.text;ED.searchTerms=terms.slice(0,6).join(', ');$('#e-keyword').value=ED.keyword;$('#e-terms').value=ED.searchTerms;renderSugg()}return}
  if(el=t.closest('[data-mrm]')){const m=edMedia.splice(Number(el.dataset.mrm),1)[0];if(m&&m.url)URL.revokeObjectURL(m.url);return renderMedia()}
  if(el=t.closest('#view [data-id]'))return openEditor(el.dataset.id);
