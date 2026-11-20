@@ -174,6 +174,10 @@ textarea{min-height:78px;resize:vertical;line-height:1.45}
 .login h2{margin:2px 0 6px;font-size:30px;letter-spacing:-.02em}
 #l-msg{min-height:1.5em;color:var(--red);font-size:15px;margin:12px 0 0}
 input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.schips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.schip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:6px 12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left}
+.schip small{color:var(--mute);font-weight:500;margin-left:6px;font-size:13px}
+.schip.on{border-color:var(--red);background:color-mix(in srgb,var(--sky) 30%,var(--bg))}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:80;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.on{opacity:1}
 .copybox{width:100%;min-height:200px;margin-top:10px}
@@ -318,6 +322,8 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
         <div><label class="f" for="e-capen">English</label><textarea id="e-capen" rows="6"></textarea></div>
         <div><label class="f" for="e-capnl">Dutch</label><textarea id="e-capnl" rows="6"></textarea></div>
       </div>
+      <div class="airow" id="e-humanrow"><button class="ghost" id="e-humanbtn" type="button">Make it sound human</button><span class="aistat" id="e-humanstat" role="status"></span></div>
+      <p class="hint">Rewrites the captions, opening text and spoken line in Kim's voice (from the voice samples in Brand &amp; launch).</p>
       <div class="g2">
         <div><label class="f" for="e-tags">Hashtags</label><input type="text" id="e-tags"></div>
         <div><label class="f" for="e-cta">Call to action</label><input type="text" id="e-cta"></div>
@@ -329,6 +335,11 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
           <div><label class="f" for="e-keyword">Main search phrase</label><input type="text" id="e-keyword" placeholder="e.g. dog basket for e-bike"></div>
           <div><label class="f" for="e-terms">Other search terms</label><input type="text" id="e-terms" placeholder="e.g. hondenmand fiets, dog bike basket"></div>
         </div>
+        <div class="airow"><button class="ghost" id="e-findbtn" type="button">Find real search phrases (free)</button><span class="aistat" id="e-findstat" role="status"></span></div>
+        <div class="schips" id="e-sugg"></div>
+        <p class="hint">What people actually type into Google and YouTube, in English and Dutch. Tap one to make it the main phrase.</p>
+        <label class="f" for="e-platsugg">What Instagram and TikTok suggest</label>
+        <input type="text" id="e-platsugg" placeholder="Type the phrase in their search bar and note the suggestions here">
         <label class="f" for="e-spoken">First spoken line (voiceover)</label>
         <input type="text" id="e-spoken" placeholder="Say the search phrase in the first sentence">
         <label class="f" for="e-alt">Alt text for Instagram</label>
@@ -374,6 +385,9 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
       <h3 class="sec">Brand brain</h3>
       <p class="hint">Claude reads this before every script: voice, facts and what never to say. Keep it up to date.</p>
       <textarea id="s-brain" rows="16" style="margin-top:8px"></textarea>
+      <h3 class="sec">Voice samples</h3>
+      <p class="hint">Paste 10–20 captions Kim wrote herself (not AI), with an empty line between them. Claude copies their tone and rhythm so posts sound like a person, not a robot.</p>
+      <textarea id="s-voice" rows="10" style="margin-top:8px" placeholder="Paste real captions here"></textarea>
     </fieldset>
     <div class="foot">
       <span></span>
@@ -591,9 +605,9 @@ function playHTML(){return `<div class="play-sec">
 </div>`}
 
 /* ---------- editor ---------- */
-let ED=null,edImg=null,edCtl=null,delArm=0,edMedia=[],imgMax=4,statEl=null;
+let ED=null,edImg=null,edCtl=null,delArm=0,edMedia=[],imgMax=4,statEl=null,edSugg=[];
 const MAXUP=50*1024*1024;
-function blank(date){return {id:null,title:'',status:date?'draft':'idea',date:date||'',pillar:pillars()[0]?.id||'',format:'Reel',platforms:['ig','tt'],lang:'both',duration:'',hook:'',cover:'',shots:[],captionEn:'',captionNl:'',hashtags:'',cta:'',why:'',tips:'',idea:'',link:'',like:'',assetId:'',media:[],keyword:'',searchTerms:'',spoken:'',altText:''}}
+function blank(date){return {id:null,title:'',status:date?'draft':'idea',date:date||'',pillar:pillars()[0]?.id||'',format:'Reel',platforms:['ig','tt'],lang:'both',duration:'',hook:'',cover:'',shots:[],captionEn:'',captionNl:'',hashtags:'',cta:'',why:'',tips:'',idea:'',link:'',like:'',assetId:'',media:[],keyword:'',searchTerms:'',spoken:'',altText:'',platSugg:''}}
 function openEditor(id,date){
  if(id){const p=S.posts.find(x=>x.id===id);if(!p)return false;ED=Object.assign(blank(),JSON.parse(JSON.stringify(p)));}
  else{if(!S.canWrite){toast('View only: ask Sam for edit access.');return false}ED=blank(date);}
@@ -638,7 +652,7 @@ async function addFiles(list){
 async function collectImages(mode){
  const imgs=[],labels=[];if(!imgOK)return {imgs,labels};
  if(mode==='write'&&edImg){imgs.push(edImg);labels.push('screenshot of someone else\'s video used as inspiration (not ROEF footage: borrow structure and style only)')}
- if(mode!=='change')for(const m of edMedia){
+ if(mode==='write'||mode==='seo')for(const m of edMedia){
   if(m.saved){try{const {data:bl}=await sbc.storage.from('media').download(m.thumb);if(bl){imgs.push(bl);labels.push(`ROEF's own ${m.kind==='video'?'video (one still)':'photo'}${m.name?' "'+m.name+'"':''}`)}}catch(e){}}
   else m.frames.forEach((b,i)=>{imgs.push(b);labels.push(m.kind==='video'?`ROEF's own video "${m.name}", still ${i+1} of ${m.frames.length}`:`ROEF's own photo "${m.name}"`)});
  }
@@ -654,7 +668,7 @@ function fillEditor(){
  $('#e-imgprev').innerHTML='';
  fillPost();renderMedia();mstat('');
  $('#e-aibox').open=!(ED.shots&&ED.shots.length);
- $('#e-aistat').textContent='';$('#e-seostat').textContent='';$('#e-changestat').textContent='';setAI(false);
+ $('#e-aistat').textContent='';$('#e-seostat').textContent='';$('#e-changestat').textContent='';$('#e-humanstat').textContent='';$('#e-findstat').textContent='';edSugg=[];renderSugg();setAI(false);
  $('#e-del').hidden=!ED.id||!S.canWrite;$('#e-del').textContent='Delete';delArm=0;
  $('#e-fs').disabled=!S.canWrite;$('#e-save').hidden=!S.canWrite;
 }
@@ -662,7 +676,7 @@ function fillPost(){
  const set=(id,v)=>{$('#'+id).value=v??''};
  set('e-title',ED.title);set('e-date',isKey(ED.date)?ED.date:'');set('e-status',STATUS[ED.status]?ED.status:'idea');set('e-dur',ED.duration);
  set('e-hook',ED.hook);set('e-cover',ED.cover);set('e-capen',ED.captionEn);set('e-capnl',ED.captionNl);set('e-tags',ED.hashtags);set('e-cta',ED.cta);set('e-why',ED.why);set('e-tips',ED.tips);
- set('e-keyword',ED.keyword);set('e-terms',ED.searchTerms);set('e-spoken',ED.spoken);set('e-alt',ED.altText);
+ set('e-keyword',ED.keyword);set('e-terms',ED.searchTerms);set('e-spoken',ED.spoken);set('e-alt',ED.altText);set('e-platsugg',ED.platSugg);
  if(FORMATS.includes(ED.format))set('e-format',ED.format);
  renderShots();
 }
@@ -672,7 +686,7 @@ function readEditor(){
  const v=id=>$('#'+id).value;
  Object.assign(ED,{idea:v('e-idea'),link:v('e-link').trim(),like:v('e-like'),pillar:v('e-pillar'),format:v('e-format'),lang:v('e-lang'),
   platforms:[...($('#e-ig').checked?['ig']:[]),...($('#e-tt').checked?['tt']:[])],title:v('e-title').trim(),date:v('e-date'),status:v('e-status'),duration:v('e-dur'),
-  hook:v('e-hook'),cover:v('e-cover'),captionEn:v('e-capen'),captionNl:v('e-capnl'),hashtags:v('e-tags'),cta:v('e-cta'),why:v('e-why'),tips:v('e-tips'),keyword:v('e-keyword'),searchTerms:v('e-terms'),spoken:v('e-spoken'),altText:v('e-alt')});
+  hook:v('e-hook'),cover:v('e-cover'),captionEn:v('e-capen'),captionNl:v('e-capnl'),hashtags:v('e-tags'),cta:v('e-cta'),why:v('e-why'),tips:v('e-tips'),keyword:v('e-keyword'),searchTerms:v('e-terms'),spoken:v('e-spoken'),altText:v('e-alt'),platSugg:v('e-platsugg')});
  ED.shots=$$('#e-shots .srow').map(r=>({text:r.querySelector('.s-text').value,overlay:r.querySelector('.s-ov').value,done:r.querySelector('.s-done').checked}));
 }
 async function saveEditor(){
@@ -722,9 +736,9 @@ async function copyText(t){
 }
 
 /* ---------- Claude ---------- */
-function setAI(on){$('#e-write').disabled=on;$('#e-changebtn').disabled=on;$('#e-seobtn').disabled=on;$('#e-stop').hidden=!on}
+function setAI(on){$('#e-write').disabled=on;$('#e-changebtn').disabled=on;$('#e-seobtn').disabled=on;$('#e-humanbtn').disabled=on;$('#e-stop').hidden=!on}
 function setStat(t){(statEl||$('#e-aistat')).textContent=t}
-function hideAI(){$('#e-aibox').hidden=true;$('#e-changewrap').hidden=true;$('#e-seorow').hidden=true}
+function hideAI(){$('#e-aibox').hidden=true;$('#e-changewrap').hidden=true;$('#e-seorow').hidden=true;$('#e-humanrow').hidden=true}
 const AIKEYS=['hook','cover','duration','captionEn','captionNl','hashtags','cta','why','tips','keyword','searchTerms','spoken','altText'];
 function contentOf(p){const o={title:p.title,format:p.format};for(const k of AIKEYS)o[k]=p[k];o.shots=(p.shots||[]).map(s=>({text:s.text,overlay:s.overlay}));return o}
 function aiPrompt(mode,instr,labels){
@@ -740,6 +754,14 @@ Use 4 to 7 shots (for a carousel: one shot per slide). Captions: a first sentenc
 
 BRAND RULES
 ${brain()}
+
+${voiceBlock()}HUMAN WRITING RULES
+- Write like Kim talking to a friend about the basket: plain words, contractions, short lines.
+- No em dashes, no dashes used as punctuation, no semicolons.
+- Avoid AI-sounding words and patterns: elevate, unleash, game-changer, seamless, effortless, embark, journey, discover, delve, ultimate, perfect companion, "not just X, it's Y", "Imagine...", lists of three adjectives.
+- Vary sentence length. One idea per line. No hashtags inside sentences.
+- At most one emoji and one exclamation mark per caption.
+- Dutch: everyday spoken Dutch, not a translation.
 
 WHAT WORKS (rules of thumb)
 - The first 1-3 seconds decide if people keep watching: show the payoff or the product in use straight away.
@@ -758,14 +780,22 @@ THE IDEA
 Idea: ${ED.idea.trim()||'(none given)'}
 Inspiration link: ${ED.link||'(none)'} (you cannot open links; work from the description and any attached images)
 What she likes about it: ${ED.like.trim()||'(not said)'}
-${imgNote}
+${imgNote}${suggBlock()}
 Turn this into a ready-to-film post. If ROEF's own footage is attached, build the shots around what it shows.
 ${spec}`;
+ if(mode==='human')return base+`
+THE POST (JSON)
+${JSON.stringify(contentOf(ED))}
+
+TASK
+Rewrite the opening text, first spoken line, cover text, call to action and the captions so they sound like a real person from ROEF wrote them, following the voice samples and the human writing rules. Keep the meaning, the facts, the search phrase and the language setting. Keep the search phrase in the first sentence of each caption. Do not add facts.
+Reply with only one JSON object, no other text:
+{"hook":"","spoken":"","cover":"","cta":"","captionEn":"","captionNl":"","notes":"one short line on what you changed"}`;
  if(mode==='seo')return base+`
 THE POST SO FAR (JSON)
 ${JSON.stringify(contentOf(ED))}
 Idea: ${ED.idea.trim()||'(none given)'}
-${imgNote}
+${imgNote}${suggBlock()}
 TASK
 Optimise this post so people find it in Instagram and TikTok search. Pick ONE main search phrase that people really type (English; if Dutch is used, add a Dutch phrase to searchTerms). Use it naturally in the first sentence of each caption, the opening on-screen text, the first spoken line and the alt text. No keyword stuffing. Keep the brand voice and the post's idea. Do not change the shots. If no images are attached, work from the text.
 Reply with only one JSON object, no other text:
@@ -780,14 +810,17 @@ ${instr}
 Apply the change request, keep what wasn't asked to change, and return the full updated post.
 ${spec}`;
 }
+function voiceBlock(){const v=str(S.settings.voiceSamples).trim();return v?`VOICE SAMPLES (real captions written by Kim: match their tone, rhythm, length, casing and punctuation; never copy them word for word)\n${v.slice(0,6000)}\n\n`:''}
+function suggBlock(){const a=edSugg.slice(0,20).map(x=>x.text);const p=str(ED&&ED.platSugg).trim();if(!a.length&&!p)return '';return `REAL SEARCH SUGGESTIONS (what people actually type; prefer a main search phrase from these when one fits, and never invent search volumes)\n${a.length?'Google/YouTube: '+a.join(' | ')+'\n':''}${p?'Instagram/TikTok search bar: '+p+'\n':''}\n`}
 function aiErr(e){const c=e&&e.code;return ({no_api_key:"The Claude key isn't set up yet. Sam needs to add it in Supabase (Edge Functions, Secrets).",cancelled:'Stopped.',rate_limited:'Claude is busy or your usage limit is reached. Try again in a bit.',refused:"Claude wouldn't write this one. Try rewording the idea.",invalid_json:'The answer came back garbled. Try again.',image_rejected:"That image didn't work. Try a PNG or JPG under 20 MB.",session_expired:'Sign in to Claude again, then retry.',not_granted:'Claude was not allowed on this page.',sampling_disabled:'Claude is not available on this account.',empty_completion:'Claude returned nothing. Try a shorter idea.'})[c]||'Something went wrong. Try again.'}
 async function runAI(mode){
  if(!sample||edCtl)return;
- statEl=$(mode==='seo'?'#e-seostat':mode==='change'?'#e-changestat':'#e-aistat');
+ statEl=$(mode==='seo'?'#e-seostat':mode==='change'?'#e-changestat':mode==='human'?'#e-humanstat':'#e-aistat');
  readEditor();
  const instr=mode==='change'?$('#e-change').value.trim():'';
  if(mode==='change'&&!instr){$('#e-change').focus();return}
  if(mode==='write'&&!ED.idea.trim()&&!ED.link&&!edImg&&!edMedia.length)return setStat('Add an idea, a link, a screenshot or your own footage first.');
+ if(mode==='human'&&!ED.captionEn.trim()&&!ED.captionNl.trim()&&!ED.hook.trim())return setStat('Write or generate a caption first.');
  if(mode==='seo'&&!edMedia.length&&!ED.idea.trim()&&!ED.captionEn.trim()&&!ED.captionNl.trim()&&!ED.hook.trim())return setStat('Add a photo, a video or some text first.');
  edCtl=new AbortController();setAI(true);setStat('Getting the images ready…');
  const {imgs,labels}=await collectImages(mode);
@@ -799,7 +832,7 @@ async function runAI(mode){
   const r=await sample.json(prompt,opts);
   if(!r||typeof r!=='object'||Array.isArray(r))throw {code:'invalid_json'};
   const old=ED.shots||[];
-  if(mode!=='seo'){
+  if(mode==='write'||mode==='change'){
    if(str(r.title)&&(!ED.title||mode==='change'))ED.title=r.title.trim();
    if(FORMATS.includes(r.format))ED.format=r.format;
    if(Array.isArray(r.shots))ED.shots=r.shots.slice(0,12).map((s,i)=>{const text=str(s&&s.text);return {text,overlay:str(s&&s.overlay),done:!!(old[i]&&old[i].text===text&&old[i].done)}});
@@ -808,7 +841,7 @@ async function runAI(mode){
   if(Array.isArray(r.searchTerms))ED.searchTerms=r.searchTerms.filter(x=>typeof x==='string').join(', ');
   fillPost();
   if(mode==='change')$('#e-change').value='';
-  setStat(mode==='write'?'Done. Check it, change what you like, then save.':mode==='seo'?('Done. Save to keep it.'+(str(r.notes)?' Claude noticed: '+r.notes:'')):'Updated. Save to keep it.');
+  setStat(mode==='write'?'Done. Check it, change what you like, then save.':mode==='seo'?('Done. Save to keep it.'+(str(r.notes)?' Claude noticed: '+r.notes:'')):mode==='human'?('Done. Save to keep it.'+(str(r.notes)?' '+r.notes:'')):'Updated. Save to keep it.');
   if(mode==='write'){$('#e-aibox').open=false;$('#e-title').scrollIntoView({behavior:'smooth',block:'center'})}
  }catch(e){
   setStat(aiErr(e));
@@ -835,13 +868,13 @@ async function toggleShot(id,i,done){
 let SP=[];
 function openSettings(){
  if(!S.canWrite)return toast('View only: ask Sam for edit access.');
- $('#s-launch').value=launch();$('#s-brain').value=brain();
+ $('#s-launch').value=launch();$('#s-brain').value=brain();$('#s-voice').value=str(S.settings.voiceSamples);
  SP=pillars().map(p=>({id:p.id,name:p.name,color:col(p.color)}));renderSP();openOv('ovs');
 }
 function renderSP(){$('#s-pillars').innerHTML=SP.map((p,i)=>`<div class="prow"><input type="color" value="${esc(p.color)}" data-pc="${i}" aria-label="Colour for ${esc(p.name)}"><input type="text" value="${esc(p.name)}" data-pn="${i}" aria-label="Pillar name"><button class="iconbtn sm" type="button" data-prm="${i}" aria-label="Remove ${esc(p.name)}">×</button></div>`).join('')}
 async function saveSettings(){
  const pillarsV=SP.map(p=>({id:p.id,name:p.name.trim()||'Untitled',color:col(p.color)}));
- const d={launchDate:$('#s-launch').value||'',brain:$('#s-brain').value.trim()||DEF_BRAIN,pillars:pillarsV.length?pillarsV:DEF_PILLARS};
+ const d={launchDate:$('#s-launch').value||'',brain:$('#s-brain').value.trim()||DEF_BRAIN,pillars:pillarsV.length?pillarsV:DEF_PILLARS,voiceSamples:$('#s-voice').value.trim()};
  const btn=$('#s-save');btn.disabled=true;
  try{if(db)await queue('settings',()=>db.doc('settings/main').set(d));else{S.settings=d;render()}closeOv('ovs');toast('Saved')}
  catch(e){toast('Could not save. Try again.')}finally{btn.disabled=false}
@@ -863,6 +896,7 @@ document.addEventListener('click',e=>{
  if(el=t.closest('[data-new]'))return openEditor(null,el.dataset.new);
  if(el=t.closest('[data-rm]')){readEditor();ED.shots.splice(Number(el.dataset.rm),1);return renderShots()}
  if(el=t.closest('[data-prm]')){SP.splice(Number(el.dataset.prm),1);return renderSP()}
+ if(el=t.closest('[data-sugg]')){const x=edSugg[Number(el.dataset.sugg)];if(x){readEditor();const old=ED.keyword.trim();const terms=ED.searchTerms.split(',').map(z=>z.trim()).filter(Boolean).filter(z=>z.toLowerCase()!==x.text.toLowerCase());if(old&&old.toLowerCase()!==x.text.toLowerCase()&&!terms.some(z=>z.toLowerCase()===old.toLowerCase()))terms.unshift(old);ED.keyword=x.text;ED.searchTerms=terms.slice(0,6).join(', ');$('#e-keyword').value=ED.keyword;$('#e-terms').value=ED.searchTerms;renderSugg()}return}
  if(el=t.closest('[data-mrm]')){const m=edMedia.splice(Number(el.dataset.mrm),1)[0];if(m&&m.url)URL.revokeObjectURL(m.url);return renderMedia()}
  if(el=t.closest('#view [data-id]'))return openEditor(el.dataset.id);
  if(el=t.closest('.day')){const k=el.dataset.day;
@@ -910,6 +944,8 @@ document.addEventListener('drop',e=>{
   return}
  if(!d)return;e.preventDefault();const id=e.dataTransfer.getData('text/plain');if(id)movePost(id,d.dataset.day||'')});
 $('#e-seobtn').onclick=()=>runAI('seo');
+$('#e-humanbtn').onclick=()=>runAI('human');
+$('#e-findbtn').onclick=findSuggestions;
 $('#e-drop').onclick=()=>{if(S.canWrite)$('#e-files').click()};
 $('#e-drop').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();if(S.canWrite)$('#e-files').click()}});
 $('#e-files').addEventListener('change',e=>{const fl=[...(e.target.files||[])];e.target.value='';addFiles(fl)});
@@ -997,6 +1033,21 @@ async function start(){
  let t1=null;const sched=()=>{clearTimeout(t1);t1=setTimeout(()=>{refresh('posts').catch(()=>{});refresh('settings').catch(()=>{})},300)};
  try{sbc.channel('planner').on('postgres_changes',{event:'*',schema:'public',table:'posts'},sched).on('postgres_changes',{event:'*',schema:'public',table:'settings'},sched).subscribe()}catch(e){}
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sched()});
+}
+function renderSugg(){const k=($('#e-keyword').value||'').trim().toLowerCase();$('#e-sugg').innerHTML=edSugg.map((x,i)=>`<button type="button" class="schip${x.text.toLowerCase()===k?' on':''}" data-sugg="${i}">${esc(x.text)}<small>${esc(x.sources.join(' + '))} · ${esc(x.langs.join('/'))}</small></button>`).join('')}
+async function findSuggestions(){
+ readEditor();const st=$('#e-findstat');
+ let seeds=[ED.keyword,...ED.searchTerms.split(',')].map(z=>z.trim()).filter(Boolean).slice(0,3);
+ if(!seeds.length)seeds=['dog basket bike','hondenmand fiets','dog bike basket'];
+ const langs=ED.lang==='en'?['en']:ED.lang==='nl'?['nl']:['en','nl'];
+ st.textContent='Looking up: '+seeds.join(', ')+'…';$('#e-findbtn').disabled=true;
+ try{const {data:{session}}=await sbc.auth.getSession();if(!session)throw new Error('login');
+  const res=await fetch(SB_URL+'/functions/v1/suggest',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,apikey:SB_KEY},body:JSON.stringify({terms:seeds,langs})});
+  const out=await res.json().catch(()=>({}));if(!res.ok)throw new Error(out.message||'failed');
+  edSugg=(out.suggestions||[]).filter(x=>x&&typeof x.text==='string').map(x=>({text:x.text,sources:Array.isArray(x.sources)?x.sources:[],langs:Array.isArray(x.langs)?x.langs:[]}));
+  renderSugg();st.textContent=edSugg.length?`${edSugg.length} real phrases found. Tap one, then Optimise for search uses them.`:'Nothing came back. Try a shorter phrase, like "hondenmand".';
+ }catch(e){st.textContent='Could not fetch suggestions right now. Try again in a minute.'}
+ finally{$('#e-findbtn').disabled=false}
 }
 async function init(){
  const h=location.hash.slice(1);if(VIEWS.includes(h))S.view=h;

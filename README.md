@@ -8,7 +8,8 @@ Content planner for ROEF's Instagram and TikTok (@byroef), built for the build-u
 - **Feed preview** of how the Instagram or TikTok profile will look. Drafts are shown faded.
 - **List** with search and a status filter. **Shotlist** of what's still to film, by week, with "Copy for WhatsApp".
 - **Playbook** with what works, openings that fit ROEF, a content rhythm up to launch, and a search (SEO) checklist.
-- **Claude features:** write a script from an idea, a link or your own footage; optimise for search; ask for changes.
+- **Claude features:** write a script from an idea, a link or your own footage; optimise for search; ask for changes; **make it sound human** in Kim's voice (from the voice samples in Brand & launch).
+- **Free search phrases:** "Find real search phrases" shows what people actually type into Google and YouTube (English and Dutch), plus a field for what Instagram and TikTok suggest. Claude uses both when optimising.
 - **Brand & launch:** launch date, content pillars, and the brand brain Claude reads before every script. The brand brain lives in the database, not in the code.
 
 ## Files
@@ -27,6 +28,7 @@ This repo is public. Keep private details (brand rules, plans, prices) in the da
 | Who can use it | Table `allowed_users` (login emails). Every table, file and the Claude function checks it |
 | Photos and videos | Private storage bucket `media`, 50 MB per file |
 | Live sync between Sam and Kim | Supabase Realtime on `posts` and `settings` |
+| Search suggestions | Edge Function `suggest`: Google and YouTube autocomplete (free, unofficial, so it can change or slow down) |
 | Claude | Edge Function `claude`, calls the Anthropic API with the secret `ANTHROPIC_API_KEY` (optional `ANTHROPIC_MODEL`, default `claude-sonnet-5-5`) |
 
 The Supabase URL and publishable key in `index.html` are meant to be public: access is protected by login and row-level security. The Anthropic key only lives in Supabase secrets.
