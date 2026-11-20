@@ -9,6 +9,9 @@ Content planner for ROEF's Instagram and TikTok (@byroef), built for the build-u
 - **List** with search and a status filter. **Shotlist** of what's still to film, by week, with "Copy for WhatsApp".
 - **Playbook** with what works, openings that fit ROEF, a content rhythm up to launch, and a search (SEO) checklist.
 - **Claude features:** write a script from an idea, a link or your own footage; optimise for search; ask for changes; **make it sound human** in Kim's voice (from the voice samples in Brand & launch).
+- **Post today:** approved posts for today with one-tap copy (captions, hashtags, alt text), a Google Calendar reminder and "Mark as posted". Drafts for the next 3 days can be approved there. Kim posts in the apps herself, so she can pick the sound.
+- **Results:** fill in views, likes, comments, shares, saves, followers and watch time per platform 2 days after posting. The Results screen compares pillars and formats, and "Ask Claude what's working" saves learnings that feed every script.
+- **Weekly trend scout:** a scheduled Claude task every Monday researches trends, adds 3 trend ideas to the idea bank (marked Trend) and updates the trend brief in the Playbook.
 - **Free search phrases:** "Find real search phrases" shows what people actually type into Google and YouTube (English and Dutch), plus a field for what Instagram and TikTok suggest. Claude uses both when optimising.
 - **Brand & launch:** launch date, content pillars, and the brand brain Claude reads before every script. The brand brain lives in the database, not in the code.
 
