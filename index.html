@@ -209,6 +209,42 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
 .scroll{overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
 .scroll .rtab tr:last-child td{border-bottom:0}
 .rtab a{color:var(--red)}
+.cmts{margin-top:18px;border-top:1px solid var(--line);padding-top:4px}
+.cmt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;background:var(--bg)}
+.cmt.forme{border-left:4px solid var(--red)}
+.cmt.done{opacity:.62}
+.cmt .ch{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:15px}
+.cmt .ch span{color:var(--mute);font-size:13px}
+.cmt .cb{margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}
+.cmt .ca{display:flex;gap:16px;margin-top:6px;font-size:14px}
+.cmt .ca .linkish{color:var(--mute);text-decoration:underline}
+.cmt .cb a,.fy .cb a{color:var(--red)}
+.mention{color:var(--red);font-weight:600;background:color-mix(in srgb,var(--red) 8%,var(--bg));border-radius:4px;padding:0 3px}
+.cnew{position:relative;margin-top:12px}
+.mlist{position:absolute;left:0;z-index:5;margin-top:4px;background:var(--bg);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);min-width:220px;padding:4px}
+.mlist button{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:8px;font:inherit;cursor:pointer;color:var(--ink)}
+.mlist button small{color:var(--mute)}
+.mlist button[aria-selected=true],.mlist button:hover{background:var(--skyl)}
+.tagchips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.tagchips button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:4px 11px;font:inherit;font-size:14px;cursor:pointer}
+.tagchips button:hover{border-color:var(--sky);background:var(--skyl)}
+.cc{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--mute);margin-left:6px;vertical-align:middle}
+.cc.new{color:#fff;background:var(--red);border-radius:99px;padding:1px 6px}
+.badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--red);color:#fff;font-size:12px;font-weight:700;margin-left:6px}
+.badge[hidden]{display:none}
+.fy{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.fy.unread{border-left:4px solid var(--red)}
+.fy small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
+.fy .cb{display:block;margin-top:6px;white-space:pre-wrap;overflow-wrap:anywhere}
+.sndchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.snd{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:7px 10px;font:inherit;font-size:14px;text-align:left;cursor:pointer;max-width:100%}
+.snd:hover{border-color:var(--sky);background:var(--skyl)}
+.snd small{display:block;color:var(--mute);font-size:12px}
+.soundlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;margin-top:10px}
+.soundlist .s{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
+.soundlist .s a{color:var(--red)}
+.mitem a{display:block;width:100%;height:100%}
+.ph .phr{display:flex;align-items:center;gap:8px}
 .barrow{display:grid;grid-template-columns:minmax(7em,12em) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:15px}
 .barrow i{display:block;height:12px;border-radius:6px;background:var(--c)}
 .barrow span{white-space:nowrap;color:var(--mute);font-variant-numeric:tabular-nums}
@@ -292,6 +328,7 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
       <button data-view="playbook">Playbook</button>
     </div>
     <div class="right">
+      <button class="ghost" id="foryou" type="button">For you<span class="badge" id="fybadge" hidden>0</span></button>
       <button class="ghost" data-act="settings">Brand &amp; launch</button>
       <button class="primary" id="new">+ Idea or post</button>
     </div>
@@ -302,7 +339,7 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
 
 <div class="ov" id="ov" aria-hidden="true">
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="e-heading">
-    <div class="ph"><h2 id="e-heading">New idea or post</h2><button class="iconbtn" data-close="ov" aria-label="Close">×</button></div>
+    <div class="ph"><h2 id="e-heading">New idea or post</h2><div class="phr"><button class="ghost" id="e-cjump" type="button" hidden style="height:38px">Comments</button><button class="iconbtn" data-close="ov" aria-label="Close">×</button></div></div>
     <fieldset id="e-fs">
       <details class="ai" id="e-aibox" open>
         <summary>Write it with Claude</summary>
@@ -342,6 +379,7 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
       <p class="hint">Add your own footage. Claude looks at it to write the caption, alt text and search phrase. For videos, Claude sees a few stills, not the moving picture or the sound.</p>
       <div class="drop" id="e-drop" role="button" tabindex="0" aria-label="Add photos or videos"><b>Drag photos or videos here</b> or tap to choose</div>
       <input type="file" id="e-files" accept="image/*,video/*" multiple hidden>
+      <div class="airow"><button class="ghost" id="e-drive" type="button">Add from Google Drive</button><span class="aistat" id="e-dstat" role="status"></span></div>
       <p class="hint" id="e-mstat" role="status"></p>
       <div class="media" id="e-media"></div>
 
@@ -365,6 +403,15 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
       <h3 class="sec">Shots</h3>
       <div id="e-shots"></div>
       <button class="ghost" id="e-addshot" type="button" style="margin-top:8px">+ Add shot</button>
+      <h3 class="sec">Sound</h3>
+      <p class="hint">@byroef is a business account. On TikTok only "Commercial sounds" work; on Instagram use Sound Collection, your own voice or the real sound of the clip. Check the sound in the app before you film.</p>
+      <div class="g2">
+        <div><label class="f" for="e-sound">Sound or beat</label><input type="text" id="e-sound" placeholder="e.g. upbeat lo-fi from Commercial sounds, or voiceover only"></div>
+        <div><label class="f" for="e-soundsearch">What to search in the app</label><input type="text" id="e-soundsearch" placeholder="e.g. lo-fi city, acoustic upbeat"></div>
+      </div>
+      <label class="f" for="e-soundnote">How to use it</label><input type="text" id="e-soundnote" placeholder="e.g. cut on the beat, keep the bike bell in">
+      <div class="airow" id="e-soundrow"><button class="ghost" id="e-soundbtn" type="button">Suggest a sound with Claude</button><span class="aistat" id="e-soundstat" role="status"></span></div>
+      <div class="sndchips" id="e-sndchips"></div>
       <h3 class="sec">Caption</h3>
       <div class="g2">
         <div><label class="f" for="e-capen">English</label><textarea id="e-capen" rows="6"></textarea></div>
@@ -418,6 +465,18 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
         </div>
         <p class="aistat" id="e-changestat" role="status" style="margin:6px 0 0"></p>
       </div>
+      <section class="cmts" id="e-cmts" aria-labelledby="e-cmth">
+        <h3 class="sec" id="e-cmth">Comments</h3>
+        <p class="hint">Feedback for the team. Comments are saved straight away, without pressing Save. Type @ to tag someone.</p>
+        <div id="e-clist"></div>
+        <div class="cnew" id="e-cnew">
+          <label class="f" for="c-body">Add a comment</label>
+          <textarea id="c-body" rows="2" placeholder="e.g. @Kim love the opening, maybe a shorter caption?"></textarea>
+          <div class="mlist" id="c-mlist" role="listbox" aria-label="People to tag" hidden></div>
+          <div class="tagchips" id="c-tags"></div>
+          <div class="airow"><button class="primary" id="c-send" type="button">Post comment</button><span class="aistat" id="c-stat" role="status"></span></div>
+        </div>
+      </section>
     </fieldset>
     <div class="foot">
       <button class="ghost danger" id="e-del" type="button">Delete</button>
@@ -447,6 +506,16 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
       <h3 class="sec">Voice samples</h3>
       <p class="hint">Paste 10–20 captions Kim wrote herself (not AI), with an empty line between them. Claude copies their tone and rhythm so posts sound like a person, not a robot.</p>
       <textarea id="s-voice" rows="10" style="margin-top:8px" placeholder="Paste real captions here"></textarea>
+      <h3 class="sec">Google Drive</h3>
+      <p class="hint">Lets everyone add photos and videos straight from Drive. The files stay in Drive. Sam fills these in once, from Google Cloud.</p>
+      <div class="g2">
+        <div><label class="f" for="s-gclient">OAuth client ID</label><input type="text" id="s-gclient" autocomplete="off" spellcheck="false" placeholder="….apps.googleusercontent.com"></div>
+        <div><label class="f" for="s-gkey">API key</label><input type="text" id="s-gkey" autocomplete="off" spellcheck="false" placeholder="AIza…"></div>
+      </div>
+      <div class="g2">
+        <div><label class="f" for="s-gapp">Project number</label><input type="text" id="s-gapp" inputmode="numeric" autocomplete="off" placeholder="e.g. 123456789012"></div>
+        <div><label class="f" for="s-gfolder">ROEF Drive folder link</label><input type="url" id="s-gfolder" placeholder="https://drive.google.com/drive/folders/…"></div>
+      </div>
     </fieldset>
     <div class="foot">
       <span></span>
@@ -471,6 +540,14 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
     <input type="password" id="p-new2" autocomplete="new-password">
     <p class="aistat" id="p-msg" role="status" style="margin:10px 0 0"></p>
     <div class="foot"><span></span><div class="r"><button class="ghost" data-close="ovp" type="button">Cancel</button><button class="primary" id="p-save" type="button">Save password</button></div></div>
+  </div>
+</div>
+<div class="ov" id="ovf" aria-hidden="true">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="f-heading" style="max-width:620px">
+    <div class="ph"><h2 id="f-heading">For you</h2><button class="iconbtn" data-close="ovf" aria-label="Close">×</button></div>
+    <p class="hint">Comments where someone tagged you. Tap one to open the post.</p>
+    <div id="f-list"></div>
+    <div class="foot"><span></span><div class="r"><button class="ghost" id="f-readall" type="button">Mark all as read</button><button class="primary" data-close="ovf" type="button">Close</button></div></div>
   </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -512,7 +589,7 @@ RULES
 Only use facts written in this brand brain. Do not invent features, prices, test results or dates.`;
 
 const now=new Date();
-const S={posts:[],settings:{},view:'calendar',ym:[now.getFullYear(),now.getMonth()],feed:'ig',q:'',fstatus:'all',openOnly:false,selDay:null,canWrite:true};
+const S={members:[],me:'',comments:[],posts:[],settings:{},view:'calendar',ym:[now.getFullYear(),now.getMonth()],feed:'ig',q:'',fstatus:'all',openOnly:false,selDay:null,canWrite:true};
 let db=null,sample=null,assets=null,imgOK=false;
 const pillars=()=>Array.isArray(S.settings.pillars)&&S.settings.pillars.length?S.settings.pillars:DEF_PILLARS;
 const pil=id=>pillars().find(p=>p.id===id)||{id:'',name:'No pillar',color:'#8a8486'};
@@ -536,6 +613,7 @@ function render(){
  $('#legend').hidden=['playbook','today','results'].includes(S.view);
  $('#new').hidden=!S.canWrite;
  const v=$('#view');
+ updateFY();
  v.innerHTML=S.view==='calendar'?calHTML():S.view==='today'?todayHTML():S.view==='feed'?feedHTML():S.view==='list'?listHTML():S.view==='shotlist'?shotHTML():S.view==='results'?resultsHTML():playHTML();
 }
 function renderTop(){
@@ -551,9 +629,9 @@ function renderTop(){
  $('#legend').innerHTML=pillars().map(p=>`<span><i class="dot" style="background:${col(p.color)}"></i>${esc(p.name)}</span>`).join('');
 }
 function chip(p){const c=pil(p.pillar);
- return `<button class="chip" draggable="true" data-id="${esc(p.id)}" style="--c:${col(c.color)}">${p.trend?'<span class="ex trend">Trend</span>':p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}<small>${esc(p.format||'Post')}${isKey(p.date)?' · '+(STATUS[p.status]||'Draft'):''}</small></button>`}
+ return `<button class="chip" draggable="true" data-id="${esc(p.id)}" style="--c:${col(c.color)}">${p.trend?'<span class="ex trend">Trend</span>':p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}${cBadge(p.id)}<small>${esc(p.format||'Post')}${isKey(p.date)?' · '+(STATUS[p.status]||'Draft'):''}</small></button>`}
 function rowHTML(p){const c=pil(p.pillar);
- return `<button class="row" data-id="${esc(p.id)}" style="--c:${col(c.color)}"><span class="d">${isKey(p.date)?fmtDay(p.date):'Idea bank'}</span><span><b>${p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}</b><small>${esc(c.name)} · ${esc(p.format||'Post')} · ${plat(p)}</small></span><span class="pill ${esc(p.status)}">${STATUS[p.status]||'Draft'}</span></button>`}
+ return `<button class="row" data-id="${esc(p.id)}" style="--c:${col(c.color)}"><span class="d">${isKey(p.date)?fmtDay(p.date):'Idea bank'}</span><span><b>${p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}${cBadge(p.id)}</b><small>${esc(c.name)} · ${esc(p.format||'Post')} · ${plat(p)}</small></span><span class="pill ${esc(p.status)}">${STATUS[p.status]||'Draft'}</span></button>`}
 
 function calHTML(){
  const [y,m]=S.ym;const start=monday(new Date(y,m,1));const last=new Date(y,m+1,0);
@@ -629,9 +707,9 @@ function calLink(p){
 function readyCard(p,mode){const c=pil(p.pillar);const m=Array.isArray(p.media)?p.media:[];
  const copyBtn=(k,label)=>str(p[k]).trim()?`<button class="ghost" type="button" data-copy="${k}" data-pid="${esc(p.id)}">${label}</button>`:'';
  return `<article class="tcard" style="--c:${col(c.color)}"><div class="tp"><span>${fmtDay(p.date)} · ${esc(p.time||'18:00')} · ${esc(plat(p))} · ${esc(p.format||'Post')}</span><span class="pill ${esc(p.status)}">${STATUS[p.status]||'Draft'}</span></div>
- <h4><button class="linkish" data-id="${esc(p.id)}">${esc(p.title||'Untitled')}</button></h4>
- <dl>${p.cover?`<dt>Cover</dt><dd>${esc(p.cover)}</dd>`:''}${p.hook?`<dt>Opening text</dt><dd>${esc(p.hook)}</dd>`:''}${p.spoken?`<dt>Say first</dt><dd>${esc(p.spoken)}</dd>`:''}${p.keyword?`<dt>Search phrase</dt><dd>${esc(p.keyword)}</dd>`:''}</dl>
- ${m.length?`<div class="thumbs">${m.map(x=>`<a href="${mediaSrc(x.id||x.thumb)}" target="_blank" rel="noopener" title="Open ${esc(x.name||'file')}"><img src="${mediaSrc(x.thumb)}" alt="${esc(x.name||'')}"></a>`).join('')}</div>`:''}
+ <h4><button class="linkish" data-id="${esc(p.id)}">${esc(p.title||'Untitled')}</button>${cBadge(p.id)}</h4>
+ <dl>${p.cover?`<dt>Cover</dt><dd>${esc(p.cover)}</dd>`:''}${p.hook?`<dt>Opening text</dt><dd>${esc(p.hook)}</dd>`:''}${p.spoken?`<dt>Say first</dt><dd>${esc(p.spoken)}</dd>`:''}${p.keyword?`<dt>Search phrase</dt><dd>${esc(p.keyword)}</dd>`:''}${p.sound?`<dt>Sound</dt><dd>${esc(p.sound)}${p.soundSearch?` · search “${esc(p.soundSearch)}”`:''}</dd>`:''}</dl>
+ ${m.length?`<div class="thumbs">${m.map(x=>{const dv=x.drive&&safeUrl(x.drive.url);return `<a href="${dv?esc(x.drive.url):mediaSrc(x.id||x.thumb)}" target="_blank" rel="noopener" title="Open ${esc(x.name||'file')}${dv?' in Google Drive':''}"><img src="${x.thumb?mediaSrc(x.thumb):DRIVE_PH}" alt="${esc(x.name||'')}"></a>`}).join('')}</div>`:''}
  ${mode==='ready'?`<div class="btnrow">${copyBtn('captionEn','Copy caption EN')}${copyBtn('captionNl','Copy caption NL')}${copyBtn('hashtags','Copy hashtags')}${copyBtn('altText','Copy alt text')}<button class="ghost" type="button" data-copy="all" data-pid="${esc(p.id)}">Copy everything</button></div>
  <div class="btnrow"><a class="ghost" style="display:inline-flex;align-items:center;text-decoration:none" href="${calLink(p)}" target="_blank" rel="noopener">Add reminder</a><button class="primary" type="button" data-posted="${esc(p.id)}">Mark as posted</button></div>`:''}
  ${mode==='approve'?`<div class="btnrow"><button class="primary" type="button" data-approve="${esc(p.id)}">Approve</button><button class="ghost" type="button" data-id="${esc(p.id)}">Open to check</button></div>`:''}
@@ -861,6 +939,8 @@ function perfBlock(){
  const top=S.posts.filter(p=>p.status==='posted'&&hasResults(p)).map(p=>({p,t:totals(p)})).sort((a,b)=>b.t.views-a.t.views).slice(0,3);
  if(L||top.length)out+=`WHAT WORKED FOR ROEF SO FAR (real results; lean into this)\n${L?L.slice(0,2500)+'\n':''}${top.map(({p,t})=>`- "${p.title}" (${p.format}, ${pil(p.pillar).name}): ${t.views} views, ${pct(t.rate)} engagement, opening text: "${p.hook||''}"`).join('\n')}\n\n`;
  const T=str(S.settings.trendBrief).trim();
+ const SN=trendSounds();
+ if(SN.length)out+=`THIS WEEK'S SOUNDS (business-safe, found by the trend scout; you may name these)\n${SN.map(x=>`- ${x.name}${x.artist?' by '+x.artist:''} (${x.platform}, ${x.library}): ${x.mood}. ${x.how}`).join('\n')}\n\n`;
  if(T)out+=`THIS WEEK'S TRENDS (researched ${S.settings.trendAt||'recently'}; only use what fits ROEF's brand rules)\n${T.slice(0,2500)}\n\n`;
  return out;
 }
@@ -878,7 +958,7 @@ async function approvePost(id){try{await queue(id,()=>db.doc('posts/'+id).update
 function copyFor(id,k){const p=S.posts.find(x=>x.id===id);if(!p)return;let t;if(k==='all')t=[p.captionEn,p.captionNl,p.hashtags].map(x=>str(x).trim()).filter(Boolean).join('\n\n');else t=str(p[k]);copyText(t)}
 function linkify(t){return esc(t).replace(/https?:\/\/[^\s<]+/g,u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`)}
 function trendCard(){const T=str(S.settings.trendBrief).trim(),err=str(S.settings.trendError).trim();
- return `<div class="pcard" style="margin-bottom:18px"><h3>This week's trends</h3>${T?`<div class="prewrap">${linkify(T)}</div><p class="small">Researched ${esc(S.settings.trendAt||'')} by the trend scout, which runs every Monday morning. Trend ideas are in the idea bank, marked Trend.</p>`:'<p class="empty">No trend brief yet. The trend scout runs every Monday morning, or start it now.</p>'}${err?`<p class="small" style="color:var(--red)">Last run failed: ${esc(err)}</p>`:''}<div class="btnrow"><button class="ghost" type="button" id="trendbtn">Refresh trends now</button><span class="aistat" id="trendstat" role="status"></span></div></div>`}
+ return `<div class="pcard" style="margin-bottom:18px"><h3>This week's trends</h3>${T?`<div class="prewrap">${linkify(T)}</div><p class="small">Researched ${esc(S.settings.trendAt||'')} by the trend scout, which runs every Monday morning. Trend ideas are in the idea bank, marked Trend.</p>`:'<p class="empty">No trend brief yet. The trend scout runs every Monday morning, or start it now.</p>'}${soundsHTML()}${err?`<p class="small" style="color:var(--red)">Last run failed: ${esc(err)}</p>`:''}<div class="btnrow"><button class="ghost" type="button" id="trendbtn">Refresh trends now</button><span class="aistat" id="trendstat" role="status"></span></div></div>`}
 async function refreshTrends(){
  const st=$('#trendstat'),b=$('#trendbtn');b.disabled=true;st.textContent='Starting…';
  try{const {data:{session}}=await sbc.auth.getSession();if(!session)throw new Error('login');
@@ -942,13 +1022,15 @@ function playHTML(){return `${trendCard()}<div class="play-sec">
 /* ---------- editor ---------- */
 let ED=null,edImg=null,edCtl=null,delArm=0,edMedia=[],imgMax=4,statEl=null,edSugg=[];
 const MAXUP=50*1024*1024;
-function blank(date){return {id:null,title:'',status:date?'draft':'idea',date:date||'',pillar:pillars()[0]?.id||'',format:'Reel',platforms:['ig','tt'],lang:'both',duration:'',hook:'',cover:'',shots:[],captionEn:'',captionNl:'',hashtags:'',cta:'',why:'',tips:'',idea:'',link:'',like:'',assetId:'',media:[],keyword:'',searchTerms:'',spoken:'',altText:'',platSugg:'',time:'18:00',postLinks:{ig:'',tt:'',fb:''},results:{ig:{},tt:{},fb:{}},resultsAt:0,postedAt:0}}
+function blank(date){return {id:null,title:'',status:date?'draft':'idea',date:date||'',pillar:pillars()[0]?.id||'',format:'Reel',platforms:['ig','tt'],lang:'both',duration:'',hook:'',cover:'',shots:[],captionEn:'',captionNl:'',hashtags:'',cta:'',why:'',tips:'',idea:'',link:'',like:'',assetId:'',media:[],keyword:'',searchTerms:'',spoken:'',altText:'',platSugg:'',sound:'',soundSearch:'',soundNote:'',time:'18:00',postLinks:{ig:'',tt:'',fb:''},results:{ig:{},tt:{},fb:{}},resultsAt:0,postedAt:0}}
 function openEditor(id,date){
  if(id){const p=S.posts.find(x=>x.id===id);if(!p)return false;ED=Object.assign(blank(),JSON.parse(JSON.stringify(p)));}
  else{if(!S.canWrite){toast('View only: ask Sam for edit access.');return false}ED=blank(date);}
  edImg=null;$('#e-img').value='';
- edMedia=(Array.isArray(ED.media)?ED.media:[]).filter(m=>m&&m.thumb).map(m=>({saved:true,kind:m.kind==='video'?'video':'image',name:str(m.name),thumb:String(m.thumb),id:str(m.id)}));
+ edMedia=(Array.isArray(ED.media)?ED.media:[]).filter(m=>m&&(m.thumb||m.drive)).map(m=>({saved:true,kind:m.kind==='video'?'video':'image',name:str(m.name),thumb:str(m.thumb),id:str(m.id),drive:m.drive&&typeof m.drive==='object'?m.drive:null}));
  fillEditor();openOv('ov');
+ if(ED.id&&cNew(ED.id))markSeen(ED.id);
+ if(gReady())gPrepare().catch(()=>{});
  setTimeout(()=>{try{(ED.id?$('#e-title'):$('#e-idea')).focus()}catch(e){}},40);
  return true;
 }
@@ -969,7 +1051,9 @@ function videoFrames(file,n){return new Promise((res,rej)=>{
 })}
 function mstat(t){$('#e-mstat').textContent=t||''}
 function renderMedia(){
- $('#e-media').innerHTML=edMedia.map((m,i)=>`<div class="mitem"><img src="${m.saved?mediaSrc(m.thumb):m.url}" alt="${esc(m.name||(m.kind==='video'?'Video':'Photo'))}"><span class="k">${m.kind==='video'?'Video':'Photo'}</span>${S.canWrite?`<button type="button" data-mrm="${i}" aria-label="Remove ${esc(m.name||'file')}">×</button>`:''}</div>`).join('')}
+ $('#e-media').innerHTML=edMedia.map((m,i)=>{const src=m.saved?(m.thumb?mediaSrc(m.thumb):DRIVE_PH):(m.url||DRIVE_PH);const alt=esc(m.name||(m.kind==='video'?'Video':'Photo'));
+  const img=`<img src="${src}" alt="${alt}">`;const dv=m.drive&&safeUrl(m.drive.url);
+  return `<div class="mitem">${dv?`<a href="${esc(m.drive.url)}" target="_blank" rel="noopener" title="Open ${esc(m.name||'file')} in Google Drive">${img}</a>`:img}<span class="k">${m.drive?'Drive · ':''}${m.kind==='video'?'Video':'Photo'}</span>${S.canWrite?`<button type="button" data-mrm="${i}" aria-label="Remove ${esc(m.name||'file')}">×</button>`:''}</div>`}).join('')}
 async function addFiles(list){
  if(!S.canWrite)return;
  const files=[...(list||[])].filter(f=>/^(image|video)\//.test(f.type||''));
@@ -988,7 +1072,7 @@ async function collectImages(mode){
  const imgs=[],labels=[];if(!imgOK)return {imgs,labels};
  if(mode==='write'&&edImg){imgs.push(edImg);labels.push('screenshot of someone else\'s video used as inspiration (not ROEF footage: borrow structure and style only)')}
  if(mode==='write'||mode==='seo')for(const m of edMedia){
-  if(m.saved){try{const {data:bl}=await sbc.storage.from('media').download(m.thumb);if(bl){imgs.push(bl);labels.push(`ROEF's own ${m.kind==='video'?'video (one still)':'photo'}${m.name?' "'+m.name+'"':''}`)}}catch(e){}}
+  if(m.saved){if(!m.thumb)continue;try{const {data:bl}=await sbc.storage.from('media').download(m.thumb);if(bl){imgs.push(bl);labels.push(`ROEF's own ${m.kind==='video'?'video (one still)':'photo'}${m.name?' "'+m.name+'"':''}`)}}catch(e){}}
   else m.frames.forEach((b,i)=>{imgs.push(b);labels.push(m.kind==='video'?`ROEF's own video "${m.name}", still ${i+1} of ${m.frames.length}`:`ROEF's own photo "${m.name}"`)});
  }
  return {imgs:imgs.slice(0,imgMax),labels:labels.slice(0,imgMax)};
@@ -1003,6 +1087,7 @@ function fillEditor(){
  $('#e-imgprev').innerHTML='';
  fillPost();renderMedia();mstat('');
  $('#e-aibox').open=!(ED.shots&&ED.shots.length);
+ $('#e-soundstat').textContent='';$('#e-dstat').textContent='';$('#c-stat').textContent='';$('#c-body').value='';hideMList();renderSndChips();renderComments();
  $('#e-aistat').textContent='';$('#e-seostat').textContent='';$('#e-changestat').textContent='';$('#e-humanstat').textContent='';$('#e-findstat').textContent='';edSugg=[];renderSugg();setAI(false);
  $('#e-del').hidden=!ED.id||!S.canWrite;$('#e-del').textContent='Delete';delArm=0;
  $('#e-fs').disabled=!S.canWrite;$('#e-save').hidden=!S.canWrite;
@@ -1011,7 +1096,7 @@ function fillPost(){
  const set=(id,v)=>{$('#'+id).value=v??''};
  set('e-title',ED.title);set('e-date',isKey(ED.date)?ED.date:'');set('e-status',STATUS[ED.status]?ED.status:'idea');set('e-dur',ED.duration);
  set('e-hook',ED.hook);set('e-cover',ED.cover);set('e-capen',ED.captionEn);set('e-capnl',ED.captionNl);set('e-tags',ED.hashtags);set('e-cta',ED.cta);set('e-why',ED.why);set('e-tips',ED.tips);
- set('e-keyword',ED.keyword);set('e-terms',ED.searchTerms);set('e-spoken',ED.spoken);set('e-alt',ED.altText);set('e-platsugg',ED.platSugg);set('e-time',ED.time||'18:00');set('e-lig',(ED.postLinks||{}).ig);set('e-ltt',(ED.postLinks||{}).tt);set('e-lfb',(ED.postLinks||{}).fb);$$('#e-results .rin').forEach(i=>{const v=((ED.results||{})[i.dataset.rp]||{})[i.dataset.rk];i.value=(v===0||v)?v:''});
+ set('e-keyword',ED.keyword);set('e-terms',ED.searchTerms);set('e-spoken',ED.spoken);set('e-alt',ED.altText);set('e-platsugg',ED.platSugg);set('e-sound',ED.sound);set('e-soundsearch',ED.soundSearch);set('e-soundnote',ED.soundNote);set('e-time',ED.time||'18:00');set('e-lig',(ED.postLinks||{}).ig);set('e-ltt',(ED.postLinks||{}).tt);set('e-lfb',(ED.postLinks||{}).fb);$$('#e-results .rin').forEach(i=>{const v=((ED.results||{})[i.dataset.rp]||{})[i.dataset.rk];i.value=(v===0||v)?v:''});
  if(FORMATS.includes(ED.format))set('e-format',ED.format);
  renderShots();
 }
@@ -1021,7 +1106,7 @@ function readEditor(){
  const v=id=>$('#'+id).value;
  Object.assign(ED,{idea:v('e-idea'),link:v('e-link').trim(),like:v('e-like'),pillar:v('e-pillar'),format:v('e-format'),lang:v('e-lang'),
   platforms:[...($('#e-ig').checked?['ig']:[]),...($('#e-tt').checked?['tt']:[])],title:v('e-title').trim(),date:v('e-date'),status:v('e-status'),duration:v('e-dur'),
-  hook:v('e-hook'),cover:v('e-cover'),captionEn:v('e-capen'),captionNl:v('e-capnl'),hashtags:v('e-tags'),cta:v('e-cta'),why:v('e-why'),tips:v('e-tips'),keyword:v('e-keyword'),searchTerms:v('e-terms'),spoken:v('e-spoken'),altText:v('e-alt'),platSugg:v('e-platsugg'),time:v('e-time')||'18:00',postLinks:{ig:v('e-lig').trim(),tt:v('e-ltt').trim(),fb:v('e-lfb').trim()}});
+  hook:v('e-hook'),cover:v('e-cover'),captionEn:v('e-capen'),captionNl:v('e-capnl'),hashtags:v('e-tags'),cta:v('e-cta'),why:v('e-why'),tips:v('e-tips'),keyword:v('e-keyword'),searchTerms:v('e-terms'),spoken:v('e-spoken'),altText:v('e-alt'),platSugg:v('e-platsugg'),sound:v('e-sound').trim(),soundSearch:v('e-soundsearch').trim(),soundNote:v('e-soundnote').trim(),time:v('e-time')||'18:00',postLinks:{ig:v('e-lig').trim(),tt:v('e-ltt').trim(),fb:v('e-lfb').trim()}});
  {const res={ig:{},tt:{},fb:{}};let any=false;$$('#e-results .rin').forEach(i=>{if(i.value!==''){const n=Math.max(0,Number(i.value)||0);res[i.dataset.rp][i.dataset.rk]=n;any=true}});ED.results=res;if(any&&!ED.resultsAt)ED.resultsAt=Date.now();if(!any)ED.resultsAt=0;}
  ED.shots=$$('#e-shots .srow').map(r=>({text:r.querySelector('.s-text').value,overlay:r.querySelector('.s-ov').value,done:r.querySelector('.s-done').checked}));
 }
@@ -1037,7 +1122,8 @@ async function saveEditor(){
  try{
   const media=[];const todo=edMedia.filter(m=>!m.saved).length;let n=0;
   for(const m of edMedia){
-   if(m.saved){media.push({kind:m.kind,name:m.name,thumb:m.thumb,id:m.id||''});continue}
+   if(m.saved){media.push(Object.assign({kind:m.kind,name:m.name,thumb:m.thumb,id:m.id||''},m.drive?{drive:m.drive}:{}));continue}
+   if(m.drive){let th='';if(assets&&m.thumbBlob){try{th=(await assets.upload(m.thumbBlob)).id}catch(e){}}media.push({kind:m.kind,name:m.name,thumb:th,id:'',drive:m.drive});continue}
    if(!assets){unstored++;continue}
    n++;btn.textContent=`Uploading ${n} of ${todo}…`;
    try{const t=await assets.upload(m.thumbBlob);let id='';
@@ -1046,7 +1132,7 @@ async function saveEditor(){
    }catch(e){failed++}
   }
   d.media=media;
-  if(media.length)d.assetId=media[0].thumb;
+  d.assetId=(media.find(x=>x.thumb)||{}).thumb||'';
   btn.textContent='Saving…';
   if(!db){if(id){const p=S.posts.find(x=>x.id===id);Object.assign(p,d)}else S.posts.push(Object.assign({id:'local'+Date.now()},d));render()}
   else{const ref=id?db.doc('posts/'+id):db.collection('posts').doc();await queue(ref.id,()=>ref.set(d))}
@@ -1072,10 +1158,10 @@ async function copyText(t){
 }
 
 /* ---------- Claude ---------- */
-function setAI(on){$('#e-write').disabled=on;$('#e-changebtn').disabled=on;$('#e-seobtn').disabled=on;$('#e-humanbtn').disabled=on;$('#e-stop').hidden=!on}
+function setAI(on){$('#e-soundbtn').disabled=on;$('#e-write').disabled=on;$('#e-changebtn').disabled=on;$('#e-seobtn').disabled=on;$('#e-humanbtn').disabled=on;$('#e-stop').hidden=!on}
 function setStat(t){(statEl||$('#e-aistat')).textContent=t}
-function hideAI(){$('#e-aibox').hidden=true;$('#e-changewrap').hidden=true;$('#e-seorow').hidden=true;$('#e-humanrow').hidden=true}
-const AIKEYS=['hook','cover','duration','captionEn','captionNl','hashtags','cta','why','tips','keyword','searchTerms','spoken','altText'];
+function hideAI(){$('#e-soundrow').hidden=true;$('#e-aibox').hidden=true;$('#e-changewrap').hidden=true;$('#e-seorow').hidden=true;$('#e-humanrow').hidden=true}
+const AIKEYS=['hook','cover','duration','captionEn','captionNl','hashtags','cta','why','tips','keyword','searchTerms','spoken','altText','sound','soundSearch','soundNote'];
 function contentOf(p){const o={title:p.title,format:p.format};for(const k of AIKEYS)o[k]=p[k];o.shots=(p.shots||[]).map(s=>({text:s.text,overlay:s.overlay}));return o}
 function aiPrompt(mode,instr,labels){
  labels=labels||[];
@@ -1084,7 +1170,7 @@ function aiPrompt(mode,instr,labels){
  const langRule=ED.lang==='en'?'Write captionEn only; captionNl must be an empty string. On-screen text in English.':ED.lang==='nl'?'Write captionNl only, in Dutch; captionEn must be an empty string. On-screen text in Dutch.':'Write both captionEn and captionNl. The Dutch caption is its own natural version, not a word-for-word translation. On-screen text in English.';
  const ctx={pillar:pil(ED.pillar).name,format:ED.format,platforms:plat(ED),kickstarterLaunch:L?L:'not confirmed yet (early 2027): do not name a date',plannedPostDate:isKey(ED.date)?ED.date:'not planned yet',today:key(now)};
  const spec=`Reply with only one JSON object, no other text, in exactly this shape:
-{"title":"short internal title, max 6 words","format":"one of Reel, TikTok, Carousel, Photo, Story","duration":"e.g. 15–20 sec, or number of slides for a carousel","hook":"on-screen text for the first frame, max 8 words, makes sense with the sound off","cover":"cover text for the profile grid, max 5 words","shots":[{"text":"what to film in one plain line, with angle or framing","overlay":"on-screen text for this shot, or empty string"}],"captionEn":"","captionNl":"","hashtags":"3 to 5 specific hashtags separated by spaces","cta":"one clear call to action","why":"1-2 sentences on why this should work for ROEF right now","tips":"2-4 short filming tips on light, angle, sound and length, one per line","keyword":"one main search phrase people would really type","searchTerms":"3 to 6 related search phrases, comma separated","spoken":"first spoken line for a voiceover, containing the search phrase, max 15 words","altText":"Instagram alt text: plain description of the visuals including the search phrase, max 200 characters"}
+{"title":"short internal title, max 6 words","format":"one of Reel, TikTok, Carousel, Photo, Story","duration":"e.g. 15–20 sec, or number of slides for a carousel","hook":"on-screen text for the first frame, max 8 words, makes sense with the sound off","cover":"cover text for the profile grid, max 5 words","shots":[{"text":"what to film in one plain line, with angle or framing","overlay":"on-screen text for this shot, or empty string"}],"captionEn":"","captionNl":"","hashtags":"3 to 5 specific hashtags separated by spaces","cta":"one clear call to action","why":"1-2 sentences on why this should work for ROEF right now","tips":"2-4 short filming tips on light, angle, sound and length, one per line","sound":"which sound or beat to use, following the SOUND RULES","soundSearch":"what to type in the app's sound search","soundNote":"one line on how to use the sound, e.g. cut on the beat","keyword":"one main search phrase people would really type","searchTerms":"3 to 6 related search phrases, comma separated","spoken":"first spoken line for a voiceover, containing the search phrase, max 15 words","altText":"Instagram alt text: plain description of the visuals including the search phrase, max 200 characters"}
 Use 4 to 7 shots (for a carousel: one shot per slide). Captions: a first sentence that contains the search phrase, then 1-3 short lines, then the call to action. Put the search phrase in the opening text too. At most one emoji per caption.`;
  const base=`You write short-form social media content for ROEF, a startup building up to its Kickstarter launch. Follow the brand rules exactly and never break the "never mention" list. Do not invent facts, numbers, test results or customer quotes.
 
@@ -1098,6 +1184,12 @@ ${perfBlock()}${voiceBlock()}HUMAN WRITING RULES
 - Vary sentence length. One idea per line. No hashtags inside sentences.
 - At most one emoji and one exclamation mark per caption.
 - Dutch: everyday spoken Dutch, not a translation.
+
+SOUND RULES (@byroef is a business account on TikTok and Instagram)
+- TikTok: only sounds from the Commercial Music Library ("Commercial sounds") can be used. Instagram: Sound Collection, royalty-free music or original audio.
+- Never suggest a mainstream chart song. Only name a specific track if it is listed under THIS WEEK'S SOUNDS; otherwise describe the sound.
+- No-licence options often work best: voiceover, the real sound of the ride (bell, tyres, the lock clicking), city ambience.
+- Describe the sound so Kim can find it in the app: mood, rough tempo and what to type in the sound search.
 
 WHAT WORKS (rules of thumb)
 - The first 1-3 seconds decide if people keep watching: show the payoff or the product in use straight away.
@@ -1119,6 +1211,15 @@ What she likes about it: ${ED.like.trim()||'(not said)'}
 ${imgNote}${suggBlock()}
 Turn this into a ready-to-film post. If ROEF's own footage is attached, build the shots around what it shows.
 ${spec}`;
+ if(mode==='sound')return base+`
+THE POST (JSON)
+${JSON.stringify(contentOf(ED))}
+Idea: ${ED.idea.trim()||'(none given)'}
+
+TASK
+Suggest the best sound for this post, following the SOUND RULES. Think about the pace of the shots and whether a voiceover or the real sound of the ride works better. If useful, name one alternative in soundNote.
+Reply with only one JSON object, no other text:
+{"sound":"which sound or beat, max 14 words","soundSearch":"what to type in the app's sound search, max 5 words","soundNote":"one line on how to use it, max 20 words"}`;
  if(mode==='human')return base+`
 THE POST (JSON)
 ${JSON.stringify(contentOf(ED))}
@@ -1151,12 +1252,13 @@ function suggBlock(){const a=edSugg.slice(0,20).map(x=>x.text);const p=str(ED&&E
 function aiErr(e){const c=e&&e.code;return ({no_api_key:"The Claude key isn't set up yet. Sam needs to add it in Supabase (Edge Functions, Secrets).",cancelled:'Stopped.',rate_limited:'Claude is busy or your usage limit is reached. Try again in a bit.',refused:"Claude wouldn't write this one. Try rewording the idea.",invalid_json:'The answer came back garbled. Try again.',image_rejected:"That image didn't work. Try a PNG or JPG under 20 MB.",session_expired:'Sign in to Claude again, then retry.',not_granted:'Claude was not allowed on this page.',sampling_disabled:'Claude is not available on this account.',empty_completion:'Claude returned nothing. Try a shorter idea.'})[c]||'Something went wrong. Try again.'}
 async function runAI(mode){
  if(!sample||edCtl)return;
- statEl=$(mode==='seo'?'#e-seostat':mode==='change'?'#e-changestat':mode==='human'?'#e-humanstat':'#e-aistat');
+ statEl=$(mode==='seo'?'#e-seostat':mode==='change'?'#e-changestat':mode==='human'?'#e-humanstat':mode==='sound'?'#e-soundstat':'#e-aistat');
  readEditor();
  const instr=mode==='change'?$('#e-change').value.trim():'';
  if(mode==='change'&&!instr){$('#e-change').focus();return}
  if(mode==='write'&&!ED.idea.trim()&&!ED.link&&!edImg&&!edMedia.length)return setStat('Add an idea, a link, a screenshot or your own footage first.');
  if(mode==='human'&&!ED.captionEn.trim()&&!ED.captionNl.trim()&&!ED.hook.trim())return setStat('Write or generate a caption first.');
+ if(mode==='sound'&&!ED.idea.trim()&&!(ED.shots||[]).some(s=>s.text.trim())&&!ED.captionEn.trim()&&!ED.captionNl.trim()&&!ED.hook.trim())return setStat('Add an idea or write the post first.');
  if(mode==='seo'&&!edMedia.length&&!ED.idea.trim()&&!ED.captionEn.trim()&&!ED.captionNl.trim()&&!ED.hook.trim())return setStat('Add a photo, a video or some text first.');
  edCtl=new AbortController();setAI(true);setStat('Getting the images ready…');
  const {imgs,labels}=await collectImages(mode);
@@ -1177,7 +1279,7 @@ async function runAI(mode){
   if(Array.isArray(r.searchTerms))ED.searchTerms=r.searchTerms.filter(x=>typeof x==='string').join(', ');
   fillPost();
   if(mode==='change')$('#e-change').value='';
-  setStat(mode==='write'?'Done. Check it, change what you like, then save.':mode==='seo'?('Done. Save to keep it.'+(str(r.notes)?' Claude noticed: '+r.notes:'')):mode==='human'?('Done. Save to keep it.'+(str(r.notes)?' '+r.notes:'')):'Updated. Save to keep it.');
+  setStat(mode==='sound'?'Done. Check the sound in the app, then save.':mode==='write'?'Done. Check it, change what you like, then save.':mode==='seo'?('Done. Save to keep it.'+(str(r.notes)?' Claude noticed: '+r.notes:'')):mode==='human'?('Done. Save to keep it.'+(str(r.notes)?' '+r.notes:'')):'Updated. Save to keep it.');
   if(mode==='write'){$('#e-aibox').open=false;$('#e-title').scrollIntoView({behavior:'smooth',block:'center'})}
  }catch(e){
   setStat(aiErr(e));
@@ -1185,6 +1287,153 @@ async function runAI(mode){
   if(['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(c)){sample=null;hideAI()}
   if(c==='images_unavailable'){imgOK=false;setStat('Images are not available here. Try again: Claude will work from the text only.')}
  }finally{setAI(false);edCtl=null}
+}
+
+/* ---------- comments and @tags ---------- */
+const BUBBLE='<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H10l-5 4v-4H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg>';
+const lowerE=s=>String(s||'').trim().toLowerCase();
+const normA=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const handleOf=m=>String((m&&m.name)||String(m&&m.email||'').split('@')[0]).trim().split(/\s+/)[0];
+function nameOf(e){e=lowerE(e);const m=S.members.find(x=>lowerE(x.email)===e);return m&&m.name?m.name:(e.split('@')[0]||'Someone')}
+function titleOf(pid){const p=S.posts.find(x=>x.id===pid);return p?(p.title||'Untitled'):'a post'}
+function myUnread(){return S.me?S.comments.filter(c=>c.mentions.includes(S.me)&&!c.seen_by.includes(S.me)):[]}
+function cOpen(pid){return S.comments.filter(c=>c.post_id===pid&&!c.resolved).length}
+function cNew(pid){return !!S.me&&S.comments.some(c=>c.post_id===pid&&c.mentions.includes(S.me)&&!c.seen_by.includes(S.me))}
+function cBadge(pid){const n=cOpen(pid),u=cNew(pid);return n||u?`<span class="cc${u?' new':''}" title="${n} open comment${n===1?'':'s'}${u?', you are tagged':''}">${BUBBLE}${n||''}</span>`:''}
+function ago(t){const s=(Date.now()-new Date(t).getTime())/1000;if(!isFinite(s))return '';if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';if(s<7*86400)return Math.floor(s/86400)+' d ago';return new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
+const ALL_TAGS=['all','team','iedereen'];
+function handleSet(){return new Set(S.members.map(m=>normA(handleOf(m))).filter(Boolean))}
+function parseMentions(body){const hs=handleSet(),out=new Set();
+ for(const m of String(body).matchAll(/(^|[\s(])@([\p{L}\p{N}_]+)/gu)){const w=normA(m[2]);
+  if(ALL_TAGS.includes(w))S.members.forEach(x=>out.add(lowerE(x.email)));
+  else if(hs.has(w))S.members.filter(x=>normA(handleOf(x))===w).forEach(x=>out.add(lowerE(x.email)))}
+ out.delete(S.me);return [...out]}
+function bodyHTML(t){const hs=handleSet();return linkify(t).replace(/(^|[\s(])@([\p{L}\p{N}_]+)/gu,(m,pre,w)=>hs.has(normA(w))||ALL_TAGS.includes(normA(w))?`${pre}<span class="mention">@${w}</span>`:m)}
+let cLoaded=false;
+async function loadMembers(){try{const {data,error}=await sbc.from('allowed_users').select('email,name');if(!error&&Array.isArray(data))S.members=data.map(m=>({email:lowerE(m.email),name:str(m.name)}))}catch(e){}}
+async function loadComments(){
+ if(!sbc)return;
+ try{const {data,error}=await sbc.from('comments').select('id,post_id,author,body,mentions,seen_by,resolved,created_at').order('created_at',{ascending:true});if(error)throw error;
+  const before=new Set(myUnread().map(c=>c.id));
+  S.comments=(data||[]).map(c=>Object.assign({},c,{author:lowerE(c.author),mentions:Array.isArray(c.mentions)?c.mentions.map(lowerE):[],seen_by:Array.isArray(c.seen_by)?c.seen_by.map(lowerE):[]}));
+  const fresh=myUnread().filter(c=>!before.has(c.id));
+  if(cLoaded&&fresh.length){const c=fresh[fresh.length-1];if(!(edOpen()&&ED&&ED.id===c.post_id))toast(`${nameOf(c.author)} tagged you on "${titleOf(c.post_id)}"`)}
+  cLoaded=true;render();
+  if(edOpen()&&ED&&ED.id){renderComments();if(cNew(ED.id))markSeen(ED.id)}
+  if($('#ovf').classList.contains('open'))renderFY();
+ }catch(e){}
+}
+function updateFY(){const b=$('#fybadge');if(!b)return;const n=myUnread().length;b.hidden=!n;b.textContent=String(n)}
+async function markSeen(pid){
+ let any=false;S.comments.forEach(c=>{if((pid==null||c.post_id===pid)&&c.mentions.includes(S.me)&&!c.seen_by.includes(S.me)){c.seen_by.push(S.me);any=true}});
+ if(!any)return;render();try{await sbc.rpc('mark_comments_seen',{p_post_id:pid})}catch(e){}
+}
+function renderComments(){
+ if(!ED||!$('#e-cmts'))return;
+ const j=$('#e-cjump');
+ if(!ED.id){$('#e-clist').innerHTML='<p class="empty">Save the post first, then you can comment on it.</p>';$('#e-cnew').hidden=true;j.hidden=true;return}
+ const cs=S.comments.filter(c=>c.post_id===ED.id);
+ $('#e-cnew').hidden=false;
+ $('#e-clist').innerHTML=cs.map(c=>{const mine=c.author===S.me,forMe=!!S.me&&c.mentions.includes(S.me);
+  return `<div class="cmt${c.resolved?' done':''}${forMe?' forme':''}"><div class="ch"><b>${esc(nameOf(c.author))}</b><span>${esc(ago(c.created_at))}</span>${c.resolved?'<span class="pill posted">Done</span>':''}</div><div class="cb">${bodyHTML(c.body)}</div><div class="ca"><button type="button" class="linkish" data-cres="${esc(c.id)}" data-v="${c.resolved?0:1}">${c.resolved?'Reopen':'Mark done'}</button>${mine?`<button type="button" class="linkish" data-cdel="${esc(c.id)}">Delete</button>`:''}</div></div>`}).join('')||'<p class="empty">No comments yet.</p>';
+ const n=cs.filter(c=>!c.resolved).length;j.hidden=false;j.textContent=n?`Comments (${n})`:'Comments';
+ const others=S.members.filter(m=>m.email!==S.me);
+ $('#c-tags').innerHTML=others.length?`<span class="small">Tag:</span>${others.map(m=>`<button type="button" data-tag="${esc(handleOf(m))}">@${esc(handleOf(m))}</button>`).join('')}${others.length>1?'<button type="button" data-tag="all">@all</button>':''}`:'';
+}
+async function sendComment(){
+ if(!ED||!ED.id||!sbc)return;const ta=$('#c-body'),body=ta.value.trim();if(!body){ta.focus();return}
+ const btn=$('#c-send'),st=$('#c-stat');btn.disabled=true;st.textContent='Posting…';
+ const mentions=parseMentions(body);
+ try{const {error}=await sbc.from('comments').insert({post_id:ED.id,body:body.slice(0,4000),mentions});if(error)throw error;
+  ta.value='';st.textContent=mentions.length?`Posted. ${mentions.map(nameOf).join(', ')} will see it under For you.`:'Posted.';await loadComments()}
+ catch(e){st.textContent=/foreign key|violates/i.test(String(e&&e.message||''))?'Save the post first, then comment.':'Could not post. Try again.'}
+ finally{btn.disabled=false;hideMList()}
+}
+async function resolveComment(id,v){const c=S.comments.find(x=>x.id===id);if(c){c.resolved=!!v;renderComments();render()}
+ try{const {error}=await sbc.rpc('set_comment_resolved',{p_id:id,p_resolved:!!v});if(error)throw error}catch(e){toast('Could not update the comment.');loadComments()}}
+let cDelArm='';
+async function deleteComment(id,btn){
+ if(cDelArm!==id){cDelArm=id;btn.textContent='Tap again to delete';setTimeout(()=>{if(cDelArm===id){cDelArm='';renderComments()}},3000);return}
+ cDelArm='';try{const {error}=await sbc.from('comments').delete().eq('id',id);if(error)throw error;S.comments=S.comments.filter(c=>c.id!==id);renderComments();render()}catch(e){toast('Could not delete the comment.')}}
+let mSel=0,mItems=[];
+function mentionQuery(){const ta=$('#c-body');const pos=ta.selectionStart==null?ta.value.length:ta.selectionStart;const m=ta.value.slice(0,pos).match(/(^|\s)@([\p{L}\p{N}_]*)$/u);return m?{q:m[2],start:pos-m[2].length-1,pos}:null}
+function showMList(){const mq=mentionQuery();if(!mq)return hideMList();const q=normA(mq.q);
+ mItems=[...S.members.filter(m=>m.email!==S.me).map(m=>({h:handleOf(m),label:m.name||handleOf(m)})),{h:'all',label:'Everyone'}].filter(x=>normA(x.h).startsWith(q)||normA(x.label).startsWith(q));
+ if(!mItems.length)return hideMList();mSel=Math.min(mSel,mItems.length-1);
+ const box=$('#c-mlist');box.innerHTML=mItems.map((x,i)=>`<button type="button" role="option" aria-selected="${i===mSel}" data-mpick="${i}">@${esc(x.h)} <small>${esc(x.label)}</small></button>`).join('');box.hidden=false}
+function hideMList(){const b=$('#c-mlist');if(b){b.hidden=true;b.innerHTML=''}mItems=[];mSel=0}
+function pickMention(i){const x=mItems[i],mq=mentionQuery();if(!x||!mq)return hideMList();const ta=$('#c-body');
+ ta.value=ta.value.slice(0,mq.start)+'@'+x.h+' '+ta.value.slice(mq.pos);const np=mq.start+x.h.length+2;ta.focus();ta.setSelectionRange(np,np);hideMList()}
+function insertTag(h){const ta=$('#c-body');const pos=ta.selectionStart==null?ta.value.length:ta.selectionStart;const pre=ta.value.slice(0,pos);const sp=pre&&!/\s$/.test(pre)?' ':'';
+ ta.value=pre+sp+'@'+h+' '+ta.value.slice(pos);const np=(pre+sp+'@'+h+' ').length;ta.focus();ta.setSelectionRange(np,np)}
+function renderFY(){
+ const mine=S.me?S.comments.filter(c=>c.mentions.includes(S.me)).slice().reverse():[];
+ const list=mine.filter(c=>!c.seen_by.includes(S.me)||Date.now()-new Date(c.created_at).getTime()<14*864e5).slice(0,40);
+ $('#f-list').innerHTML=list.map(c=>{const u=!c.seen_by.includes(S.me);return `<button type="button" class="fy${u?' unread':''}" data-fy="${esc(c.post_id)}"><span><b>${esc(nameOf(c.author))}</b> tagged you on <b>${esc(titleOf(c.post_id))}</b></span><small>${esc(ago(c.created_at))}${u?' · new':''}</small><span class="cb">${esc(c.body.slice(0,200))}</span></button>`}).join('')
+  ||`<p class="empty">Nobody has tagged you yet. When someone writes @${esc(handleOf({name:nameOf(S.me),email:S.me}))} in a comment, it shows up here.</p>`;
+ $('#f-readall').disabled=!myUnread().length}
+function openFromFY(pid){if(!S.posts.some(p=>p.id===pid))return toast('That post was deleted.');closeOv('ovf');if(openEditor(pid))setTimeout(()=>{const c=$('#e-cmts');if(c)c.scrollIntoView({behavior:'smooth',block:'start'})},80)}
+
+/* ---------- sounds ---------- */
+const trendSounds=()=>Array.isArray(S.settings.trendSounds)?S.settings.trendSounds.filter(x=>x&&x.name):[];
+function renderSndChips(){const SN=trendSounds();const box=$('#e-sndchips');if(!box)return;
+ box.innerHTML=SN.length?`<p class="small" style="width:100%;margin:0">This week's business-safe sounds from the trend scout. Tap one to use it:</p>${SN.map((x,i)=>`<button type="button" class="snd" data-snd="${i}"><b>${esc(x.name)}</b>${x.artist?' · '+esc(x.artist):''}<small>${esc(x.platform||'')}${x.library?' · '+esc(x.library):''}${x.mood?' · '+esc(x.mood):''}</small></button>`).join('')}`:''}
+function useSound(i){const x=trendSounds()[i];if(!x)return;$('#e-sound').value=x.name+(x.artist?' by '+x.artist:'')+(x.library?' ('+x.library+')':'');$('#e-soundsearch').value=x.search||'';$('#e-soundnote').value=x.how||'';$('#e-soundstat').textContent='Filled in. Check the sound in the app, then save.'}
+function soundsHTML(){const SN=trendSounds();if(!SN.length)return '';
+ return `<h4 style="margin:16px 0 4px">Sounds you can use</h4><p class="small" style="margin:0">@byroef is a business account, so these are cleared for business use or need no licence. Check each one in the app before filming.</p><div class="soundlist">${SN.map(x=>`<div class="s"><b>${esc(x.name)}</b>${x.artist?' · '+esc(x.artist):''}<div class="small">${esc(x.platform||'')}${x.library?' · '+esc(x.library):''}${x.mood?' · '+esc(x.mood):''}</div>${x.how?`<div>${esc(x.how)}</div>`:''}${x.search?`<div class="small">Search: ${esc(x.search)}</div>`:''}${safeUrl(x.source)?`<a class="small" href="${esc(x.source)}" target="_blank" rel="noopener">Source</a>`:''}</div>`).join('')}</div>`}
+
+/* ---------- Google Drive ---------- */
+const GSCOPE='https://www.googleapis.com/auth/drive.file';
+let gTok=null,gTokExp=0,gTC=null,gLoading=null;
+function folderId(u){u=String(u||'').trim();const m=u.match(/folders\/([\w-]{10,})/)||u.match(/[?&]id=([\w-]{10,})/);return m?m[1]:(/^[\w-]{10,}$/.test(u)?u:'')}
+const gCfg=()=>({client:str(S.settings.gClientId).trim(),key:str(S.settings.gApiKey).trim(),app:str(S.settings.gAppId).replace(/\D/g,''),folder:folderId(S.settings.gFolder)});
+const gReady=()=>{const c=gCfg();return !!(c.client&&c.key)};
+const DRIVE_PH='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 128"><rect width="96" height="128" fill="#EEF4F9"/><path d="M38 44h20l14 24-10 18H34L24 68z" fill="none" stroke="#6F202A" stroke-width="4" stroke-linejoin="round"/></svg>');
+function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const s=document.createElement('script');s.src=src;s.async=true;s.onload=()=>res();s.onerror=()=>rej(new Error('load'));document.head.appendChild(s)})}
+function gPrepare(){
+ if(!gReady())return Promise.reject(new Error('not_configured'));
+ if(gLoading)return gLoading;
+ gLoading=Promise.all([loadScript('https://apis.google.com/js/api.js'),loadScript('https://accounts.google.com/gsi/client')])
+  .then(()=>new Promise((res,rej)=>window.gapi.load('picker',{callback:res,onerror:()=>rej(new Error('picker'))})))
+  .then(()=>{gTC=google.accounts.oauth2.initTokenClient({client_id:gCfg().client,scope:GSCOPE,callback:()=>{}})})
+  .catch(e=>{gLoading=null;throw e});
+ return gLoading}
+function gToken(){return new Promise((res,rej)=>{
+ if(gTok&&Date.now()<gTokExp-60000)return res(gTok);
+ gTC.callback=r=>{if(r&&r.access_token){gTok=r.access_token;gTokExp=Date.now()+(Number(r.expires_in)||3600)*1000;res(gTok)}else rej(new Error((r&&r.error)||'denied'))};
+ gTC.error_callback=e=>rej(new Error((e&&e.type)||'popup'));
+ try{gTC.requestAccessToken({prompt:gTok?'':'consent'})}catch(e){rej(e)}})}
+async function openDrive(){
+ const st=$('#e-dstat');
+ if(!gReady())return st.textContent="Google Drive isn't connected yet. Sam adds the Google details in Brand & launch.";
+ st.textContent='Opening Google Drive…';
+ try{await gPrepare();const tok=await gToken();const c=gCfg();
+  const mimes='image/png,image/jpeg,image/webp,image/gif,image/heic,image/heif,video/mp4,video/quicktime,video/webm,video/x-m4v';
+  const view=()=>new google.picker.DocsView(google.picker.ViewId.DOCS).setIncludeFolders(true).setMimeTypes(mimes);
+  const b=new google.picker.PickerBuilder().setOAuthToken(tok).setDeveloperKey(c.key).setCallback(d=>onPicked(d,tok)).setTitle('Add photos or videos from Drive').enableFeature(google.picker.Feature.MULTISELECT_ENABLED).enableFeature(google.picker.Feature.SUPPORT_DRIVES);
+  if(c.app)b.setAppId(c.app);
+  if(c.folder){const v=view().setParent(c.folder);try{v.setLabel('ROEF folder')}catch(e){}b.addView(v)}
+  {const v=view();try{v.setLabel('My Drive')}catch(e){}b.addView(v)}
+  {const v=view().setEnableDrives(true);try{v.setLabel('Shared drives')}catch(e){}b.addView(v)}
+  b.build().setVisible(true);st.textContent='';
+ }catch(e){const m=String(e&&e.message||e);
+  st.textContent=/popup/i.test(m)?'Your browser blocked the Google sign-in window. Allow pop-ups for this site, then try again.':/denied|access_denied/i.test(m)?'Google sign-in was cancelled.':'Could not open Google Drive. Check the Google details in Brand & launch, or try again.'}
+}
+async function driveThumb(doc,tok,kind){
+ const H={Authorization:'Bearer '+tok},id=encodeURIComponent(doc.id);
+ if(kind==='image'&&(!doc.sizeBytes||Number(doc.sizeBytes)<25e6)){try{const r=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media&supportsAllDrives=true`,{headers:H});if(r.ok)return await imageThumb(await r.blob())}catch(e){}}
+ const r=await fetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=thumbnailLink&supportsAllDrives=true`,{headers:H});if(!r.ok)return null;
+ const j=await r.json();if(!j||!j.thumbnailLink)return null;
+ const t=await fetch(String(j.thumbnailLink).replace(/=s\d+$/,'=s800'));if(!t.ok)return null;return await imageThumb(await t.blob())}
+async function onPicked(d,tok){
+ if(!d||d.action!==google.picker.Action.PICKED)return;
+ const docs=d.docs||[],st=$('#e-dstat');let n=0;
+ for(const doc of docs){n++;st.textContent=`Adding ${n} of ${docs.length} from Drive…`;
+  const mime=String(doc.mimeType||''),kind=mime.startsWith('video/')?'video':'image';
+  const drive={id:String(doc.id),url:safeUrl(doc.url)||`https://drive.google.com/file/d/${encodeURIComponent(doc.id)}/view`,mime,name:str(doc.name)};
+  let thumb=null;try{thumb=await driveThumb(doc,tok,kind)}catch(e){}
+  edMedia.push({saved:false,drive,kind,name:str(doc.name),frames:thumb?[thumb]:[],thumbBlob:thumb,url:thumb?URL.createObjectURL(thumb):''});renderMedia()}
+ st.textContent=docs.length?`Added ${docs.length} from Drive. The files stay in Drive; the planner keeps a small preview. Save the post to keep them.`:'';
 }
 
 /* ---------- moves, ticks, settings ---------- */
@@ -1205,14 +1454,17 @@ let SP=[];
 function openSettings(){
  if(!S.canWrite)return toast('View only: ask Sam for edit access.');
  $('#s-launch').value=launch();$('#s-brain').value=brain();$('#s-voice').value=str(S.settings.voiceSamples);
+ $('#s-gclient').value=str(S.settings.gClientId);$('#s-gkey').value=str(S.settings.gApiKey);$('#s-gapp').value=str(S.settings.gAppId);$('#s-gfolder').value=str(S.settings.gFolder);
  SP=pillars().map(p=>({id:p.id,name:p.name,color:col(p.color)}));renderSP();openOv('ovs');
 }
 function renderSP(){$('#s-pillars').innerHTML=SP.map((p,i)=>`<div class="prow"><input type="color" value="${esc(p.color)}" data-pc="${i}" aria-label="Colour for ${esc(p.name)}"><input type="text" value="${esc(p.name)}" data-pn="${i}" aria-label="Pillar name"><button class="iconbtn sm" type="button" data-prm="${i}" aria-label="Remove ${esc(p.name)}">×</button></div>`).join('')}
 async function saveSettings(){
  const pillarsV=SP.map(p=>({id:p.id,name:p.name.trim()||'Untitled',color:col(p.color)}));
- const d={launchDate:$('#s-launch').value||'',brain:$('#s-brain').value.trim()||DEF_BRAIN,pillars:pillarsV.length?pillarsV:DEF_PILLARS,voiceSamples:$('#s-voice').value.trim()};
+ const d={launchDate:$('#s-launch').value||'',brain:$('#s-brain').value.trim()||DEF_BRAIN,pillars:pillarsV.length?pillarsV:DEF_PILLARS,voiceSamples:$('#s-voice').value.trim(),
+  gClientId:$('#s-gclient').value.trim(),gApiKey:$('#s-gkey').value.trim(),gAppId:$('#s-gapp').value.replace(/\D/g,''),gFolder:$('#s-gfolder').value.trim()};
+ if(d.gClientId!==str(S.settings.gClientId)||d.gApiKey!==str(S.settings.gApiKey)){gLoading=null;gTok=null}
  const btn=$('#s-save');btn.disabled=true;
- try{if(db)await queue('settings',()=>db.doc('settings/main').set(d));else{S.settings=d;render()}closeOv('ovs');toast('Saved')}
+ try{if(db)await queue('settings',()=>db.doc('settings/main').update(d));else{Object.assign(S.settings,d);render()}closeOv('ovs');toast('Saved')}
  catch(e){toast('Could not save. Try again.')}finally{btn.disabled=false}
 }
 
@@ -1226,6 +1478,18 @@ document.addEventListener('click',e=>{
  if(el=t.closest('[data-close]'))return closeOv(el.dataset.close);
  if(t.classList&&t.classList.contains('ov'))return closeOv(t.id);
  if(t.closest('[data-act="settings"]'))return openSettings();
+ if(t.closest('#foryou')){renderFY();return openOv('ovf')}
+ if(t.closest('#f-readall'))return markSeen(null).then(renderFY);
+ if(el=t.closest('[data-fy]'))return openFromFY(el.dataset.fy);
+ if(t.closest('#e-cjump')){const c=$('#e-cmts');if(c)c.scrollIntoView({behavior:'smooth',block:'start'});return}
+ if(t.closest('#c-send'))return sendComment();
+ if(el=t.closest('[data-mpick]'))return pickMention(Number(el.dataset.mpick));
+ if(el=t.closest('[data-tag]'))return insertTag(el.dataset.tag);
+ if(el=t.closest('[data-cres]'))return resolveComment(el.dataset.cres,el.dataset.v==='1');
+ if(el=t.closest('[data-cdel]'))return deleteComment(el.dataset.cdel,el);
+ if(t.closest('#e-soundbtn'))return runAI('sound');
+ if(el=t.closest('[data-snd]'))return useSound(Number(el.dataset.snd));
+ if(t.closest('#e-drive'))return openDrive();
  if(el=t.closest('[data-view]'))return setView(el.dataset.view);
  if(el=t.closest('[data-feed]')){S.feed=el.dataset.feed;return render()}
  if(el=t.closest('[data-wa]'))return copyText(waText(el.dataset.wa));
@@ -1258,6 +1522,15 @@ $('#e-copy').onclick=()=>copyText(captionText());
 $('#e-write').onclick=()=>runAI('write');
 $('#e-changebtn').onclick=()=>runAI('change');
 $('#e-change').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();runAI('change')}});
+$('#c-body').addEventListener('input',()=>showMList());
+$('#c-body').addEventListener('click',()=>showMList());
+$('#c-body').addEventListener('keydown',e=>{
+ const open=!$('#c-mlist').hidden&&mItems.length;
+ if(open&&(e.key==='ArrowDown'||e.key==='ArrowUp')){e.preventDefault();mSel=(mSel+(e.key==='ArrowDown'?1:mItems.length-1))%mItems.length;showMList();return}
+ if(open&&(e.key==='Enter'||e.key==='Tab')){e.preventDefault();pickMention(mSel);return}
+ if(open&&e.key==='Escape'){e.preventDefault();e.stopPropagation();hideMList();return}
+ if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();sendComment()}
+});
 $('#e-stop').onclick=()=>{if(edCtl)edCtl.abort()};
 $('#e-addshot').onclick=()=>{readEditor();ED.shots.push({text:'',overlay:'',done:false});renderShots();const r=$$('#e-shots .s-text');if(r.length)r[r.length-1].focus()};
 $('#e-img').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];edImg=f||null;$('#e-imgprev').innerHTML=f?`<img src="${URL.createObjectURL(f)}" alt="Chosen image">`:''});
@@ -1324,7 +1597,7 @@ async function refresh(t){
 }
 function mkRef(t,id){return {id,
  set:async d=>{const {error}=await sbc.from(t).upsert({id,data:d});if(error)throw error;await refresh(t)},
- update:async d=>{const {error}=t==='posts'?await sbc.rpc('patch_post',{p_id:id,p_patch:d}):await sbc.from(t).update({data:Object.assign({},S.settings,d)}).eq('id',id);if(error)throw error;await refresh(t)},
+ update:async d=>{const {error}=t==='posts'?await sbc.rpc('patch_post',{p_id:id,p_patch:d}):await sbc.rpc('patch_settings',{p_patch:d});if(error)throw error;await refresh(t)},
  delete:async()=>{const {error}=await sbc.from(t).delete().eq('id',id);if(error)throw error;await refresh(t)}}}
 const newId=()=>(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
 const sbDb={doc:p=>{const a=p.split('/');return mkRef(a[0],a[1])},collection:t=>({doc:id=>mkRef(t,id||newId())})};
@@ -1382,10 +1655,12 @@ async function start(){
  $('#login').hidden=true;$('#app').hidden=false;
  db=sbDb;sample=sbSample;assets=sbAssets;S.canWrite=true;imgOK=true;imgMax=8;
  render();setNote('Loading the planner…');
- try{await Promise.all([refresh('posts'),refresh('settings')]);setNote('');loadStats()}catch(e){setNote('Could not load the planner. Reload the page to try again.')}
+ try{const {data:{session}}=await sbc.auth.getSession();S.me=lowerE(session&&session.user&&session.user.email)}catch(e){}
+ try{await Promise.all([refresh('posts'),refresh('settings'),loadMembers()]);setNote('');loadStats();loadComments()}catch(e){setNote('Could not load the planner. Reload the page to try again.')}
  let t1=null;const sched=()=>{clearTimeout(t1);t1=setTimeout(()=>{refresh('posts').catch(()=>{});refresh('settings').catch(()=>{})},300)};
- try{sbc.channel('planner').on('postgres_changes',{event:'*',schema:'public',table:'posts'},sched).on('postgres_changes',{event:'*',schema:'public',table:'settings'},sched).subscribe()}catch(e){}
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)sched()});
+ let t2=null;const schedC=()=>{clearTimeout(t2);t2=setTimeout(()=>loadComments(),300)};
+ try{sbc.channel('planner').on('postgres_changes',{event:'*',schema:'public',table:'posts'},sched).on('postgres_changes',{event:'*',schema:'public',table:'settings'},sched).on('postgres_changes',{event:'*',schema:'public',table:'comments'},schedC).subscribe()}catch(e){}
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){sched();schedC()}});
 }
 function renderSugg(){const k=($('#e-keyword').value||'').trim().toLowerCase();$('#e-sugg').innerHTML=edSugg.map((x,i)=>`<button type="button" class="schip${x.text.toLowerCase()===k?' on':''}" data-sugg="${i}">${esc(x.text)}<small>${esc(x.sources.join(' + '))} · ${esc(x.langs.join('/'))}</small></button>`).join('')}
 async function findSuggestions(){
