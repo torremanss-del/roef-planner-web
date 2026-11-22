@@ -727,10 +727,16 @@ const IMP_STOP=new Set('this that with your from have just they what when then t
 const impWords=s=>new Set(String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').split(/[^a-z0-9#]+/).filter(w=>w.length>3&&!IMP_STOP.has(w)));
 function impOverlap(a,b){if(a.size<3||b.size<3)return 0;let n=0;for(const w of a)if(b.has(w))n++;return n/Math.min(a.size,b.size)}
 function impAnalyse(){
- const R=IMP.raw;let hi=0;
- for(let i=0;i<Math.min(6,R.rows.length);i++){const c=mapCols(R.rows[i]);if(IMP_METRICS.some(k=>c[k]!=null)){hi=i;break}}
+ const R=IMP.raw,filled=r=>r.filter(x=>String(x).trim()).length;let hi=-1;
+ for(let i=0;i<Math.min(6,R.rows.length);i++){if(filled(R.rows[i])<2)continue;const c=mapCols(R.rows[i]);if(IMP_METRICS.some(k=>c[k]!=null)){hi=i;break}}
+ if(hi<0)hi=Math.max(0,R.rows.slice(0,6).findIndex(r=>filled(r)>=2));
  const headers=R.rows[hi]||[],cols=mapCols(headers);
  IMP.headers=headers;IMP.cols=cols;IMP.err='';IMP.guessed=false;IMP.rows=[];
+ const body=R.rows.slice(hi+1),dates=cols.date!=null?body.filter(r=>/^\d{4}-\d{2}-\d{2}/.test(String(r[cols.date]||'').trim())).length:0;
+ if(cols.link==null&&cols.caption==null&&dates&&dates>=body.length*0.8){
+  const title=hi>0?String(R.rows[hi-1].find(x=>String(x).trim())||'').trim():'';
+  const zero=body.every(r=>r.every((x,j)=>j===cols.date||!String(x).trim()||parseNum(x)===0));
+  IMP.err=`This is a daily total chart${title?' ("'+title+'")':''}: one number per day for the whole account, not a list of posts, so it can't be linked to planner posts.${zero?' All '+body.length+' days in it are 0.':''} In Business Suite, export from Insights → Content instead. That file has one row per post.`;return}
  if(!IMP_METRICS.some(k=>cols[k]!=null)){IMP.err='This file has no views, likes or comments columns that the planner recognises.';return}
  const H=headers.map(normH);
  const hdrPlat=H.some(h=>/account username|gebruikersnaam/.test(h))?'ig':H.some(h=>/^page (name|id)$|paginanaam|pagina id/.test(h))?'fb':H.some(h=>/tiktok|video link/.test(h))?'tt':'';
@@ -772,7 +778,7 @@ function impCard(){
 <li>Once a week is enough. Importing a newer file just updates the numbers.</li></ul></details>`;
  if(!IMP)return `<div class="pcard" id="impcard" style="margin-bottom:16px"><h3>Import numbers from a file</h3><p style="margin:0">Drop a CSV export and the views, likes and comments go into the matching posts. You check the matches before anything is saved.</p>
 <div class="drop" id="csvdrop" tabindex="0" role="button"><b>Drop a CSV file here</b> or tap to choose one</div><input type="file" id="csvfile" accept=".csv,.tsv,.txt,text/csv,text/plain" hidden>${help}${last}</div>`;
- if(IMP.err)return `<div class="pcard" id="impcard" style="margin-bottom:16px"><h3>Import numbers from a file</h3><p style="color:var(--red);margin:0">${esc(IMP.err)}</p><p class="small">File: ${esc(IMP.raw.name)}. Columns in it: ${esc((IMP.headers||[]).filter(Boolean).slice(0,30).join(', ')||'none')}. It needs the export with one row per post.</p><div class="btnrow"><button class="ghost" type="button" id="impclear">Try another file</button></div></div>`;
+ if(IMP.err)return `<div class="pcard" id="impcard" style="margin-bottom:16px"><h3>Import numbers from a file</h3><p style="color:var(--red);margin:0">${esc(IMP.err)}</p><p class="small">File: ${esc(IMP.raw.name)}. Columns in it: ${esc((IMP.headers||[]).filter(Boolean).slice(0,30).join(', ')||'none')}.</p><div class="btnrow"><button class="ghost" type="button" id="impclear">Try another file</button></div></div>`;
  const opts=S.posts.filter(p=>isKey(p.date)).sort((a,b)=>b.date.localeCompare(a.date));
  const sel=(r,i)=>`<select data-imp="${i}" aria-label="Planner post for this row" style="width:auto;min-width:13em;padding:6px 8px;font-size:14px"><option value="">Don't import</option>${opts.map(p=>`<option value="${esc(p.id)}"${p.id===r.match?' selected':''}>${esc(fmtShort(p.date))} · ${esc((p.title||'Untitled').slice(0,40))}</option>`).join('')}</select>`;
  const n=IMP.rows.filter(r=>r.match).length;
