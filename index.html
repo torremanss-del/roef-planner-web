@@ -208,6 +208,7 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
 .bars{display:grid;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
 .scroll{overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
 .scroll .rtab tr:last-child td{border-bottom:0}
+.rtab a{color:var(--red)}
 .barrow{display:grid;grid-template-columns:minmax(7em,12em) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:15px}
 .barrow i{display:block;height:12px;border-radius:6px;background:var(--c)}
 .barrow span{white-space:nowrap;color:var(--mute);font-variant-numeric:tabular-nums}
@@ -224,6 +225,8 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
 .copybox{width:100%;min-height:200px;margin-top:10px}
 @media(max-width:860px){.play-sec{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:700px){
+.barrow{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);row-gap:2px}
+.barrow span{grid-column:1/-1;white-space:normal;font-size:14px}
 #monthbar[data-off]{display:none}
 .top{grid-template-columns:minmax(0,1fr)}
 .side{align-items:flex-start}
@@ -405,7 +408,7 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
         </div>
         <label class="f" for="e-lfb">Facebook post link</label><input type="url" id="e-lfb" placeholder="https://www.facebook.com/…">
         <div class="scroll" style="margin-top:10px"><table class="rtab"><thead><tr><th></th><th>Views</th><th>Likes</th><th>Comments</th><th>Shares</th><th>Saves</th><th>New followers</th><th>Avg watch (sec)</th></tr></thead><tbody><tr><th>Instagram</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="views" aria-label="Instagram views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="likes" aria-label="Instagram likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="comments" aria-label="Instagram comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="shares" aria-label="Instagram shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="saves" aria-label="Instagram saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="follows" aria-label="Instagram new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="watch" aria-label="Instagram average watch seconds"></td></tr><tr><th>TikTok</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="views" aria-label="TikTok views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="likes" aria-label="TikTok likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="comments" aria-label="TikTok comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="shares" aria-label="TikTok shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="saves" aria-label="TikTok saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="follows" aria-label="TikTok new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="watch" aria-label="TikTok average watch seconds"></td></tr><tr><th>Facebook</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="views" aria-label="Facebook views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="likes" aria-label="Facebook likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="comments" aria-label="Facebook comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="shares" aria-label="Facebook shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="saves" aria-label="Facebook saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="follows" aria-label="Facebook new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="watch" aria-label="Facebook average watch seconds"></td></tr></tbody></table></div>
-        <p class="hint">Instagram and Facebook fill in by themselves once the Meta sync is connected (Results screen). TikTok is still typed in.</p>
+        <p class="hint">Or import a CSV export on the Results screen, which fills these in for you.</p>
       </div>
       <div id="e-changewrap">
         <label class="f" for="e-change">Ask Claude for changes</label>
@@ -648,6 +651,171 @@ function todayHTML(){
   +sec('Coming up (next 3 days)',upcoming,'ready','Nothing else approved for the next 3 days.')
   +sec('Add results (posted 2+ days ago)',needRes,'results','No results to add right now.');
 }
+/* ---------- import results from a CSV file ---------- */
+let IMP=null;
+const IMP_COLS={
+ views:['views','total views','video views','plays','weergaven','afspelingen','totaal aantal weergaven','videoweergaven','impressions','vertoningen'],
+ likes:['likes','total likes','video likes','vind ik leuks','vind ik leuk','reactions','likes and reactions'],
+ comments:['comments','total comments','opmerkingen'],
+ shares:['shares','total shares','gedeeld','keer gedeeld','delen'],
+ saves:['saves','saved','total saves','opgeslagen','keer opgeslagen','bewaard','add to favorites','favorites','favorieten'],
+ follows:['follows','new followers','followers gained','nieuwe volgers','volgers','volgacties'],
+ watch:['average watch time','avg watch time','average time watched','average watch time sec','gemiddelde kijktijd','gemiddelde weergavetijd'],
+ link:['permalink','post link','video link','link','permanente link','link naar bericht','url'],
+ date:['publish time','publish date','published','post time','posted','date posted','created time','publicatietijd','publicatiedatum','gepubliceerd','tijd van publicatie','datum en tijd','time','date','datum'],
+ caption:['description','caption','post message','title','video title','beschrijving','bericht','titel','videotitel','text','tekst']};
+const IMP_LABEL={views:'Views',likes:'Likes',comments:'Comments',shares:'Shares',saves:'Saves',follows:'New followers',watch:'Avg watch',link:'Post link',date:'Posted',caption:'Caption'};
+const IMP_METRICS=['views','likes','comments','shares','saves','follows','watch'];
+const PLAT_NAME={ig:'Instagram',fb:'Facebook',tt:'TikTok'};
+const normH=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+function decodeBuf(buf){const b=new Uint8Array(buf);
+ if(b[0]===0xFF&&b[1]===0xFE)return new TextDecoder('utf-16le').decode(buf);
+ if(b[0]===0xFE&&b[1]===0xFF)return new TextDecoder('utf-16be').decode(buf);
+ let z=0;for(let i=0;i<Math.min(b.length,400);i++)if(b[i]===0)z++;
+ if(z>50)return new TextDecoder(b[1]===0?'utf-16le':'utf-16be').decode(buf);
+ return new TextDecoder('utf-8').decode(buf)}
+function parseCSVText(t){
+ t=String(t).replace(/^﻿/,'');let d=null;
+ const sep=t.match(/^sep=(.)\s*\r?\n/i);if(sep){d=sep[1];t=t.slice(sep[0].length)}
+ if(!d){const first=t.split(/\r?\n/).find(l=>l.trim())||'';const c={',':0,';':0,'\t':0};let q=false;
+  for(const ch of first){if(ch==='"')q=!q;else if(!q&&ch in c)c[ch]++}
+  d=Object.keys(c).sort((a,b)=>c[b]-c[a])[0];if(!c[d])d=','}
+ const rows=[];let row=[],f='',q=false;
+ for(let i=0;i<t.length;i++){const ch=t[i];
+  if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}
+  else if(ch==='"'&&f==='')q=true;
+  else if(ch===d){row.push(f);f=''}
+  else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(f);f='';if(row.some(x=>x.trim()))rows.push(row);row=[]}
+  else f+=ch}
+ row.push(f);if(row.some(x=>x.trim()))rows.push(row);
+ return rows}
+function mapCols(hs){
+ const H=hs.map(normH),used=new Set(),cols={};
+ const find=(k,list)=>{
+  for(const a of list){const i=H.findIndex((h,j)=>!used.has(j)&&h===a);if(i>=0)return i}
+  for(const a of list){const multi=a.includes(' ');if(!multi&&!IMP_METRICS.includes(k))continue;
+   const i=H.findIndex((h,j)=>!used.has(j)&&(h.startsWith(a+' ')||(multi&&h.endsWith(' '+a))));if(i>=0)return i}
+  return -1};
+ for(const k of ['link','date','caption','views','likes','comments','shares','saves','follows','watch']){const i=find(k,IMP_COLS[k]);if(i>=0){cols[k]=i;used.add(i)}}
+ const r=H.findIndex((h,j)=>!used.has(j)&&h==='reacties');
+ if(r>=0){if(cols.likes==null)cols.likes=r;else if(cols.comments==null)cols.comments=r}
+ return cols}
+function parseNum(s,dec){s=String(s??'').trim();if(!s||s==='-'||/^n\/?a$/i.test(s))return undefined;
+ if(dec&&/^\d+:\d{1,2}(:\d{1,2})?$/.test(s))return s.split(':').map(Number).reduce((a,x)=>a*60+x,0);
+ const m=s.replace(/\s/g,'').match(/^(-?[\d.,]+)([kKmM]?)$/);if(!m)return undefined;let n=m[1];
+ if(m[2]||dec){
+  if(n.includes(',')&&n.includes('.'))n=n.lastIndexOf(',')>n.lastIndexOf('.')?n.replace(/\./g,'').replace(',','.'):n.replace(/,/g,'');
+  else if(n.includes(','))n=n.replace(',','.');
+  let v=parseFloat(n);if(isNaN(v))return undefined;if(m[2])v*=/m/i.test(m[2])?1e6:1e3;
+  return dec&&!m[2]?Math.round(v*10)/10:Math.round(v)}
+ const v=parseInt(n.replace(/[.,]/g,''),10);return isNaN(v)?undefined:v}
+function parseDT(s){s=String(s||'').trim();if(!s)return '';let m;
+ if(m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))return key(new Date(+m[1],+m[2]-1,+m[3]));
+ if(m=s.match(/^(\d{1,2})([\/.\-])(\d{1,2})\2(\d{2,4})/)){const a=+m[1],b=+m[3];let y=+m[4],d,mo;if(y<100)y+=2000;
+  if(m[2]==='/'){mo=a;d=b;if(a>12){d=a;mo=b}}else{d=a;mo=b;if(b>12){mo=a;d=b}}
+  if(mo<1||mo>12||d<1||d>31)return '';return key(new Date(y,mo-1,d))}
+ const t=Date.parse(s);return isNaN(t)?'':key(new Date(t))}
+function linkKey(u){u=String(u||'').trim();if(!/^https?:\/\//i.test(u))return '';
+ try{const x=new URL(u);const h=x.hostname.toLowerCase().replace(/^(www|m|web|vm)\./,'');
+  if(/(^|\.)instagram\.com$/.test(h)){const m=x.pathname.match(/\/(?:p|reel|reels|tv)\/([^\/]+)/);return 'ig:'+(m?m[1]:x.pathname.replace(/\/$/,''))}
+  if(/(^|\.)tiktok\.com$/.test(h)){const m=x.pathname.match(/\/(?:video|photo)\/(\d+)/);return 'tt:'+(m?m[1]:x.pathname.replace(/\/$/,''))}
+  if(/(^|\.)facebook\.com$|^fb\.watch$/.test(h)){const q=x.searchParams.get('story_fbid')||x.searchParams.get('fbid')||x.searchParams.get('v');
+   const m=x.pathname.match(/\/(?:posts|videos|reel|photos)\/(?:[^\/]+\/)?([\w.\-]+)\/?$/);return 'fb:'+(q||(m&&m[1])||x.pathname.replace(/\/$/,''))}
+  return h+x.pathname.replace(/\/$/,'')}catch(e){return ''}}
+const platOfLink=u=>{const k=linkKey(u);return k.startsWith('ig:')?'ig':k.startsWith('tt:')?'tt':k.startsWith('fb:')?'fb':''};
+const IMP_STOP=new Set('this that with your from have just they what when then there their about into over also more will been were here want dont the and for you are our een het van voor met die dat niet maar ook zijn naar deze onze jouw wordt'.split(' '));
+const impWords=s=>new Set(String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').split(/[^a-z0-9#]+/).filter(w=>w.length>3&&!IMP_STOP.has(w)));
+function impOverlap(a,b){if(a.size<3||b.size<3)return 0;let n=0;for(const w of a)if(b.has(w))n++;return n/Math.min(a.size,b.size)}
+function impAnalyse(){
+ const R=IMP.raw;let hi=0;
+ for(let i=0;i<Math.min(6,R.rows.length);i++){const c=mapCols(R.rows[i]);if(IMP_METRICS.some(k=>c[k]!=null)){hi=i;break}}
+ const headers=R.rows[hi]||[],cols=mapCols(headers);
+ IMP.headers=headers;IMP.cols=cols;IMP.err='';IMP.guessed=false;IMP.rows=[];
+ if(!IMP_METRICS.some(k=>cols[k]!=null)){IMP.err='This file has no views, likes or comments columns that the planner recognises.';return}
+ const H=headers.map(normH);
+ const hdrPlat=H.some(h=>/account username|gebruikersnaam/.test(h))?'ig':H.some(h=>/^page (name|id)$|paginanaam|pagina id/.test(h))?'fb':H.some(h=>/tiktok|video link/.test(h))?'tt':'';
+ const byKey={};
+ for(const r of R.rows.slice(hi+1)){
+  const g=k=>cols[k]!=null?String(r[cols[k]]??'').trim():'';
+  const link=/^https?:\/\//i.test(g('link'))?g('link'):'';
+  let plat=IMP.plat!=='auto'?IMP.plat:(platOfLink(link)||hdrPlat);
+  if(!plat){plat='ig';IMP.guessed=true}
+  const m={};IMP_METRICS.forEach(k=>{const v=parseNum(g(k),k==='watch');if(v!=null)m[k]=v});
+  if(!Object.keys(m).length)continue;
+  const row={plat,link,date:parseDT(g('date')),caption:g('caption'),m};
+  const k=plat+'|'+(linkKey(link)||row.date+'|'+row.caption.slice(0,60));
+  if(byKey[k]){const o=byKey[k];IMP_METRICS.forEach(x=>{if(m[x]!=null)o.m[x]=Math.max(o.m[x]??0,m[x])})}else byKey[k]=row}
+ IMP.rows=Object.values(byKey).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ if(!IMP.rows.length)IMP.err='No posts with numbers found in this file.';
+ impMatch()}
+function impMatch(){
+ const posts=S.posts.filter(p=>isKey(p.date));
+ const cands=IMP.rows.map(r=>{
+  const lk=linkKey(r.link);
+  if(lk){const p=posts.find(p=>linkKey((p.postLinks||{})[r.plat])===lk);if(p)return {id:p.id,how:'link',s:2}}
+  if(!r.date)return null;
+  const near=posts.filter(p=>{const pl=p.platforms||[];return Math.abs((parse(p.date)-parse(r.date))/864e5)<=1.01&&(!pl.length||pl.includes(r.plat)||(r.plat==='fb'&&pl.includes('ig')))});
+  const rw=impWords(r.caption);let top=null;
+  for(const p of near){const s=impOverlap(rw,impWords([p.captionEn,p.captionNl,p.title,p.hook,p.cover,p.hashtags].join(' ')));if(s>=0.35&&(!top||s>top.s))top={id:p.id,how:'caption',s}}
+  if(!top){const same=near.filter(p=>p.date===r.date);if(same.length===1)top={id:same[0].id,how:'day',s:0.1}}
+  return top});
+ const taken={};
+ cands.forEach((c,i)=>{if(!c)return;const k=c.id+'|'+IMP.rows[i].plat;const j=taken[k];if(j==null||cands[j].s<c.s)taken[k]=i});
+ IMP.rows.forEach((r,i)=>{const c=cands[i];const ok=!!c&&taken[c.id+'|'+r.plat]===i;r.match=ok?c.id:'';r.how=ok?c.how:''})}
+const IMP_HOW={link:'same link',caption:'caption matches',day:'same day, check it',manual:'picked by you'};
+function impCard(){
+ const st=S.settings||{};
+ const last=st.csvImportAt?`<p class="small" style="margin:10px 0 0">Last import ${esc(new Date(st.csvImportAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'}))}: ${esc(st.csvImportSummary||'')}</p>`:'';
+ const help=`<details style="margin-top:10px"><summary class="small" style="cursor:pointer">Where do I get the file?</summary><ul class="small" style="margin:6px 0 0;padding-left:18px">
+<li><b>Instagram and Facebook:</b> Meta Business Suite → Insights → Content → Export data → CSV. If it asks, export Instagram and Facebook as two files.</li>
+<li><b>TikTok:</b> if TikTok Studio on a computer lets you download your video data as CSV, drop that here too. Otherwise type the numbers into the post.</li>
+<li>Once a week is enough. Importing a newer file just updates the numbers.</li></ul></details>`;
+ if(!IMP)return `<div class="pcard" id="impcard" style="margin-bottom:16px"><h3>Import numbers from a file</h3><p style="margin:0">Drop a CSV export and the views, likes and comments go into the matching posts. You check the matches before anything is saved.</p>
+<div class="drop" id="csvdrop" tabindex="0" role="button"><b>Drop a CSV file here</b> or tap to choose one</div><input type="file" id="csvfile" accept=".csv,.tsv,.txt,text/csv,text/plain" hidden>${help}${last}</div>`;
+ if(IMP.err)return `<div class="pcard" id="impcard" style="margin-bottom:16px"><h3>Import numbers from a file</h3><p style="color:var(--red);margin:0">${esc(IMP.err)}</p><p class="small">File: ${esc(IMP.raw.name)}. Columns in it: ${esc((IMP.headers||[]).filter(Boolean).slice(0,30).join(', ')||'none')}. It needs the export with one row per post.</p><div class="btnrow"><button class="ghost" type="button" id="impclear">Try another file</button></div></div>`;
+ const opts=S.posts.filter(p=>isKey(p.date)).sort((a,b)=>b.date.localeCompare(a.date));
+ const sel=(r,i)=>`<select data-imp="${i}" aria-label="Planner post for this row" style="width:auto;min-width:13em;padding:6px 8px;font-size:14px"><option value="">Don't import</option>${opts.map(p=>`<option value="${esc(p.id)}"${p.id===r.match?' selected':''}>${esc(fmtShort(p.date))} · ${esc((p.title||'Untitled').slice(0,40))}</option>`).join('')}</select>`;
+ const n=IMP.rows.filter(r=>r.match).length;
+ const found=Object.keys(IMP_LABEL).filter(k=>IMP.cols[k]!=null).map(k=>`${IMP_LABEL[k]} ← “${esc(IMP.headers[IMP.cols[k]])}”`).join(' · ');
+ const miss=IMP_METRICS.filter(k=>IMP.cols[k]==null).map(k=>IMP_LABEL[k]).join(', ');
+ const show=IMP_METRICS.filter(k=>IMP.cols[k]!=null&&k!=='watch').slice(0,4);
+ const po=(v,l)=>`<option value="${v}"${IMP.plat===v?' selected':''}>${l}</option>`;
+ return `<div class="pcard" id="impcard" style="margin-bottom:16px"><h3>Check before saving</h3>
+<p style="margin:0">${esc(IMP.raw.name)} · ${IMP.rows.length} post${IMP.rows.length===1?'':'s'} in the file · <b id="impn">${n} matched</b> to the planner</p>
+<div style="max-width:300px"><label class="f" for="impplat">Platform</label><select id="impplat">${po('auto','Work it out from the file')}${po('ig','Instagram')}${po('fb','Facebook')}${po('tt','TikTok')}</select></div>
+${IMP.guessed?`<p class="small" style="color:var(--red)">Couldn't tell which platform this file is from, so it assumes Instagram. Change it above if that's wrong.</p>`:''}
+<p class="small">Columns used: ${found}${miss?`. Not in this file: ${esc(miss)} (those stay as they are)`:''}.</p>
+<div class="scroll" style="margin-top:8px"><table class="rtab"><thead><tr><th>Posted</th><th>On</th><th>Caption in the file</th>${show.map(k=>`<th class="n">${IMP_LABEL[k]}</th>`).join('')}<th>Goes into</th></tr></thead><tbody>
+${IMP.rows.map((r,i)=>`<tr><td>${r.date?esc(fmtShort(r.date)):'?'}</td><td>${PLAT_NAME[r.plat]||'?'}</td><td>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc((r.caption||'Open post').slice(0,38))}</a>`:esc((r.caption||'—').slice(0,38))}</td>${show.map(k=>`<td class="n">${r.m[k]!=null?fmtN(r.m[k]):'—'}</td>`).join('')}<td>${sel(r,i)} <span class="small" data-imphow="${i}">${r.how?IMP_HOW[r.how]:''}</span></td></tr>`).join('')}
+</tbody></table></div>
+<div class="btnrow"><button class="primary" type="button" id="impsave"${n?'':' disabled'}>Save numbers to ${n} post${n===1?'':'s'}</button><button class="ghost" type="button" id="impclear">Cancel</button><span class="aistat" id="impstat" role="status"></span></div>
+<p class="hint">Posts that get numbers are marked as posted, and the post link is filled in if it was empty. Rows set to "Don't import" are skipped.</p></div>`}
+function impCount(){const n=IMP.rows.filter(r=>r.match).length;const b=$('#impsave'),c=$('#impn');
+ if(b){b.disabled=!n;b.textContent=`Save numbers to ${n} post${n===1?'':'s'}`}if(c)c.textContent=`${n} matched`}
+async function importCSV(file){
+ if(!file)return;if(!S.canWrite)return toast('Log in to import numbers.');
+ if(/\.xlsx?$/i.test(file.name))return toast('That is an Excel file. Download it as CSV instead.');
+ if(!/\.(csv|tsv|txt)$/i.test(file.name)&&!/csv|text\/plain/.test(file.type||''))return toast('Choose a CSV file.');
+ if(file.size>5e6)return toast('That file is too big (over 5 MB).');
+ try{const rows=parseCSVText(decodeBuf(await file.arrayBuffer()));IMP={raw:{name:file.name,rows},plat:'auto'};impAnalyse()}
+ catch(e){IMP={raw:{name:file.name,rows:[]},plat:'auto',headers:[],err:'Could not read this file.'}}
+ if(S.view!=='results')setView('results');else render();
+ const c=$('#impcard');if(c)c.scrollIntoView({behavior:'smooth',block:'start'})}
+async function impSave(){
+ if(!IMP||!sbc)return;const st=$('#impstat'),b=$('#impsave');b.disabled=true;st.textContent='Saving…';
+ const by={};IMP.rows.forEach(r=>{if(r.match)(by[r.match]=by[r.match]||[]).push(r)});
+ let ok=0,fail=0;
+ for(const [id,rows] of Object.entries(by)){const p=S.posts.find(x=>x.id===id);if(!p){fail++;continue}
+  const results=Object.assign({},p.results||{}),links=Object.assign({},p.postLinks||{});
+  for(const r of rows){results[r.plat]=Object.assign({},results[r.plat]||{},r.m);if(r.link&&!links[r.plat])links[r.plat]=r.link}
+  const patch={results,postLinks:links,resultsAt:Date.now()};
+  if(p.status!=='posted'){patch.status='posted';if(!p.postedAt){const d=rows.find(r=>r.date);patch.postedAt=d?parse(d.date).getTime():Date.now()}}
+  try{await queue(id,async()=>{const {error}=await sbc.rpc('patch_post',{p_id:id,p_patch:patch});if(error)throw error});ok++}catch(e){fail++}}
+ const name=IMP.raw.name,plats=[...new Set(IMP.rows.filter(r=>r.match).map(r=>PLAT_NAME[r.plat]))].join(' + ');
+ IMP=null;
+ try{await refresh('posts')}catch(e){}
+ try{await db.doc('settings/main').update({csvImportAt:Date.now(),csvImportSummary:`${ok} post${ok===1?'':'s'} updated from ${name}${plats?' ('+plats+')':''}.`})}catch(e){}
+ render();toast(fail?`Saved ${ok}, ${fail} failed. Try those again.`:`Numbers saved to ${ok} post${ok===1?'':'s'}`)}
 function syncCard(){
  const st=S.settings||{};const at=st.metaSyncAt?new Date(st.metaSyncAt).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
  const un=(S.stats||[]).filter(x=>!x.matched_post).sort((a,b)=>String(b.posted_at).localeCompare(String(a.posted_at))).slice(0,12);
@@ -664,7 +832,7 @@ async function syncMeta(){
  finally{const bb=$('#syncbtn');if(bb)bb.disabled=false}
 }
 function resultsHTML(){
- return syncCard()+resultsBody();
+ return impCard()+syncCard()+resultsBody();
 }
 function resultsBody(){
  const rows=S.posts.filter(p=>p.status==='posted'&&hasResults(p)).map(p=>({p,t:totals(p)})).sort((a,b)=>b.t.views-a.t.views);
@@ -1064,6 +1232,9 @@ document.addEventListener('click',e=>{
  if(t.closest('#learnbtn'))return runLearn();
  if(t.closest('#trendbtn'))return refreshTrends();
  if(t.closest('#syncbtn'))return syncMeta();
+ if(t.closest('#impsave'))return impSave();
+ if(t.closest('#impclear')){IMP=null;return render()}
+ if(t.closest('#csvdrop')){const f=$('#csvfile');if(f)f.click();return}
  if(el=t.closest('[data-sugg]')){const x=edSugg[Number(el.dataset.sugg)];if(x){readEditor();const old=ED.keyword.trim();const terms=ED.searchTerms.split(',').map(z=>z.trim()).filter(Boolean).filter(z=>z.toLowerCase()!==x.text.toLowerCase());if(old&&old.toLowerCase()!==x.text.toLowerCase()&&!terms.some(z=>z.toLowerCase()===old.toLowerCase()))terms.unshift(old);ED.keyword=x.text;ED.searchTerms=terms.slice(0,6).join(', ');$('#e-keyword').value=ED.keyword;$('#e-terms').value=ED.searchTerms;renderSugg()}return}
  if(el=t.closest('[data-mrm]')){const m=edMedia.splice(Number(el.dataset.mrm),1)[0];if(m&&m.url)URL.revokeObjectURL(m.url);return renderMedia()}
  if(el=t.closest('#view [data-id]'))return openEditor(el.dataset.id);
@@ -1093,19 +1264,27 @@ document.addEventListener('change',e=>{const t=e.target;
  if(t.id==='fstatus'){S.fstatus=t.value;$('#listbody').innerHTML=listBody()}
 });
 document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;$('#listbody').innerHTML=listBody()}});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.id==='csvfile'){const f=t.files&&t.files[0];t.value='';return importCSV(f)}
+ if(t.id==='impplat'&&IMP){IMP.plat=t.value;impAnalyse();return render()}
+ if(t.dataset&&t.dataset.imp!=null&&IMP){const i=Number(t.dataset.imp),r=IMP.rows[i];if(!r)return;r.match=t.value;r.how=t.value?'manual':'';const h=document.querySelector(`[data-imphow="${i}"]`);if(h)h.textContent=r.how?IMP_HOW[r.how]:'';impCount()}
+});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.id==='csvdrop'){e.preventDefault();const f=$('#csvfile');if(f)f.click()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const o=$$('.ov.open').pop();if(o)closeOv(o.id)}});
 document.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.chip');if(c&&e.dataTransfer){e.dataTransfer.setData('text/plain',c.dataset.id);e.dataTransfer.effectAllowed='move'}});
 const hasFiles=e=>!!(e.dataTransfer&&[...(e.dataTransfer.types||[])].includes('Files'));
 const edOpen=()=>$('#ov').classList.contains('open');
 document.addEventListener('dragover',e=>{
  const files=hasFiles(e);if(files)e.preventDefault();
- const d=(files&&edOpen())?$('#e-drop'):(e.target.closest&&e.target.closest('.day,[data-drop]'));
+ const d=(files&&edOpen())?$('#e-drop'):(e.target.closest&&e.target.closest('.day,[data-drop],#csvdrop'));
  if(d){e.preventDefault();$$('.over').forEach(x=>x!==d&&x.classList.remove('over'));d.classList.add('over')}
 });
-document.addEventListener('dragleave',e=>{const d=e.target.closest&&e.target.closest('.day,[data-drop],#e-drop');if(d&&!d.contains(e.relatedTarget))d.classList.remove('over')});
+document.addEventListener('dragleave',e=>{const d=e.target.closest&&e.target.closest('.day,[data-drop],#e-drop,#csvdrop');if(d&&!d.contains(e.relatedTarget))d.classList.remove('over')});
 document.addEventListener('drop',e=>{
  $$('.over').forEach(x=>x.classList.remove('over'));
  const d=e.target.closest&&e.target.closest('.day,[data-drop]');
+ if(hasFiles(e)){const f0=e.dataTransfer.files[0];
+  if(!edOpen()&&f0&&((e.target.closest&&e.target.closest('#csvdrop'))||(S.view==='results'&&/\.(csv|tsv|txt|xlsx?)$/i.test(f0.name)))){e.preventDefault();return importCSV(f0)}}
  if(hasFiles(e)){e.preventDefault();const fl=e.dataTransfer.files;
   if(edOpen())return addFiles(fl);
   if(openEditor(null,d?(d.dataset.day||''):''))addFiles(fl);
