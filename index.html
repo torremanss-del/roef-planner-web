@@ -245,6 +245,9 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
 .soundlist .s a{color:var(--red)}
 .mitem a{display:block;width:100%;height:100%}
 .ph .phr{display:flex;align-items:center;gap:8px}
+.lex{border-top:1px solid var(--line);padding:8px 0}
+.lex .lb{color:var(--mute);text-decoration:line-through;white-space:pre-wrap;overflow-wrap:anywhere}
+.lex .la{white-space:pre-wrap;overflow-wrap:anywhere}
 .barrow{display:grid;grid-template-columns:minmax(7em,12em) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:15px}
 .barrow i{display:block;height:12px;border-radius:6px;background:var(--c)}
 .barrow span{white-space:nowrap;color:var(--mute);font-variant-numeric:tabular-nums}
@@ -311,6 +314,7 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
     </div>
   </header>
   <p class="note" id="note"></p>
+  <p class="note" id="vnote" hidden>A new version of the planner is ready. Reload so your changes save safely. <button class="primary" id="reloadbtn" type="button" style="height:36px;margin-left:8px">Reload now</button></p>
   <div class="bar">
     <div class="month" id="monthbar">
       <button class="iconbtn" id="prev" aria-label="Previous month">‹</button>
@@ -589,7 +593,7 @@ RULES
 Only use facts written in this brand brain. Do not invent features, prices, test results or dates.`;
 
 const now=new Date();
-const S={members:[],me:'',comments:[],posts:[],settings:{},view:'calendar',ym:[now.getFullYear(),now.getMonth()],feed:'ig',q:'',fstatus:'all',openOnly:false,selDay:null,canWrite:true};
+const S={editCount:null,lEdit:false,lDraft:null,members:[],me:'',comments:[],posts:[],settings:{},view:'calendar',ym:[now.getFullYear(),now.getMonth()],feed:'ig',q:'',fstatus:'all',openOnly:false,selDay:null,canWrite:true};
 let db=null,sample=null,assets=null,imgOK=false;
 const pillars=()=>Array.isArray(S.settings.pillars)&&S.settings.pillars.length?S.settings.pillars:DEF_PILLARS;
 const pil=id=>pillars().find(p=>p.id===id)||{id:'',name:'No pillar',color:'#8a8486'};
@@ -968,7 +972,7 @@ async function refreshTrends(){
  }catch(e){st.textContent='Could not start the trend scout. Try again later.'}
  finally{const bb=$('#trendbtn');if(bb)bb.disabled=false}
 }
-function playHTML(){return `${trendCard()}<div class="play-sec">
+function playHTML(){return `${learnCard()}${trendCard()}<div class="play-sec">
 <div class="pcard"><h3>What works right now</h3><ul>
 <li><b>Win the first two seconds.</b> Open on the payoff: the dog in the basket, mid-ride. Not a logo, not an intro.</li>
 <li><b>Text on the first frame.</b> Lots of people scroll with the sound off, so the opening text has to say what the video is about.</li>
@@ -1028,7 +1032,7 @@ function openEditor(id,date){
  else{if(!S.canWrite){toast('View only: ask Sam for edit access.');return false}ED=blank(date);}
  edImg=null;$('#e-img').value='';
  edMedia=(Array.isArray(ED.media)?ED.media:[]).filter(m=>m&&(m.thumb||m.drive)).map(m=>({saved:true,kind:m.kind==='video'?'video':'image',name:str(m.name),thumb:str(m.thumb),id:str(m.id),drive:m.drive&&typeof m.drive==='object'?m.drive:null}));
- fillEditor();openOv('ov');
+ snapEditor();fillEditor();openOv('ov');
  if(ED.id&&cNew(ED.id))markSeen(ED.id);
  if(gReady())gPrepare().catch(()=>{});
  setTimeout(()=>{try{(ED.id?$('#e-title'):$('#e-idea')).focus()}catch(e){}},40);
@@ -1135,7 +1139,7 @@ async function saveEditor(){
   d.assetId=(media.find(x=>x.thumb)||{}).thumb||'';
   btn.textContent='Saving…';
   if(!db){if(id){const p=S.posts.find(x=>x.id===id);Object.assign(p,d)}else S.posts.push(Object.assign({id:'local'+Date.now()},d));render()}
-  else{const ref=id?db.doc('posts/'+id):db.collection('posts').doc();await queue(ref.id,()=>ref.set(d))}
+  else{const ref=id?db.doc('posts/'+id):db.collection('posts').doc();await queue(ref.id,()=>ref.set(d));logEdits(ref.id,d)}
   closeOv('ov');
   toast(big?`Saved. ${big} video${big>1?'s were':' was'} over 50 MB, so only a still was kept. Keep the original in your Drive.`:failed?'Saved, but some files did not upload. Try adding them again.':unstored?'Saved. Photos and videos were not stored (editors only).':'Saved');
  }catch(e){
@@ -1177,7 +1181,7 @@ Use 4 to 7 shots (for a carousel: one shot per slide). Captions: a first sentenc
 BRAND RULES
 ${brain()}
 
-${perfBlock()}${voiceBlock()}HUMAN WRITING RULES
+${perfBlock()}${voiceBlock()}${lessonBlock()}HUMAN WRITING RULES
 - Write like Kim talking to a friend about the basket: plain words, contractions, short lines.
 - No em dashes, no dashes used as punctuation, no semicolons.
 - Avoid AI-sounding words and patterns: elevate, unleash, game-changer, seamless, effortless, embark, journey, discover, delve, ultimate, perfect companion, "not just X, it's Y", "Imagine...", lists of three adjectives.
@@ -1277,6 +1281,7 @@ async function runAI(mode){
   }
   for(const k of AIKEYS)if(typeof r[k]==='string')ED[k]=r[k];
   if(Array.isArray(r.searchTerms))ED.searchTerms=r.searchTerms.filter(x=>typeof x==='string').join(', ');
+  noteAI(r,mode,instr);
   fillPost();
   if(mode==='change')$('#e-change').value='';
   setStat(mode==='sound'?'Done. Check the sound in the app, then save.':mode==='write'?'Done. Check it, change what you like, then save.':mode==='seo'?('Done. Save to keep it.'+(str(r.notes)?' Claude noticed: '+r.notes:'')):mode==='human'?('Done. Save to keep it.'+(str(r.notes)?' '+r.notes:'')):'Updated. Save to keep it.');
@@ -1378,7 +1383,7 @@ function openFromFY(pid){if(!S.posts.some(p=>p.id===pid))return toast('That post
 const trendSounds=()=>Array.isArray(S.settings.trendSounds)?S.settings.trendSounds.filter(x=>x&&x.name):[];
 function renderSndChips(){const SN=trendSounds();const box=$('#e-sndchips');if(!box)return;
  box.innerHTML=SN.length?`<p class="small" style="width:100%;margin:0">This week's business-safe sounds from the trend scout. Tap one to use it:</p>${SN.map((x,i)=>`<button type="button" class="snd" data-snd="${i}"><b>${esc(x.name)}</b>${x.artist?' · '+esc(x.artist):''}<small>${esc(x.platform||'')}${x.library?' · '+esc(x.library):''}${x.mood?' · '+esc(x.mood):''}</small></button>`).join('')}`:''}
-function useSound(i){const x=trendSounds()[i];if(!x)return;$('#e-sound').value=x.name+(x.artist?' by '+x.artist:'')+(x.library?' ('+x.library+')':'');$('#e-soundsearch').value=x.search||'';$('#e-soundnote').value=x.how||'';$('#e-soundstat').textContent='Filled in. Check the sound in the app, then save.'}
+function useSound(i){const x=trendSounds()[i];if(!x)return;$('#e-sound').value=x.name+(x.artist?' by '+x.artist:'')+(x.library?' ('+x.library+')':'');$('#e-soundsearch').value=x.search||'';$('#e-soundnote').value=x.how||'';if(ED){const a=ED.aiDraft||(ED.aiDraft={});a.sound=$('#e-sound').value;a.soundSearch=$('#e-soundsearch').value;a.soundNote=$('#e-soundnote').value}$('#e-soundstat').textContent='Filled in. Check the sound in the app, then save.'}
 function soundsHTML(){const SN=trendSounds();if(!SN.length)return '';
  return `<h4 style="margin:16px 0 4px">Sounds you can use</h4><p class="small" style="margin:0">@byroef is a business account, so these are cleared for business use or need no licence. Check each one in the app before filming.</p><div class="soundlist">${SN.map(x=>`<div class="s"><b>${esc(x.name)}</b>${x.artist?' · '+esc(x.artist):''}<div class="small">${esc(x.platform||'')}${x.library?' · '+esc(x.library):''}${x.mood?' · '+esc(x.mood):''}</div>${x.how?`<div>${esc(x.how)}</div>`:''}${x.search?`<div class="small">Search: ${esc(x.search)}</div>`:''}${safeUrl(x.source)?`<a class="small" href="${esc(x.source)}" target="_blank" rel="noopener">Source</a>`:''}</div>`).join('')}</div>`}
 
@@ -1436,6 +1441,66 @@ async function onPicked(d,tok){
  st.textContent=docs.length?`Added ${docs.length} from Drive. The files stay in Drive; the planner keeps a small preview. Save the post to keep them.`:'';
 }
 
+/* ---------- new version check ---------- */
+const BUILD='2026-11-22-learn';
+let verWarned=false;
+async function checkVersion(){if(verWarned)return;try{const r=await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)return;const m=(await r.text()).match(/const BUILD='([^']+)'/);if(m&&m[1]!==BUILD){verWarned=true;$('#vnote').hidden=false}}catch(e){}}
+/* ---------- learning from edits ---------- */
+const TRACK=['title','hook','cover','duration','shots','captionEn','captionNl','hashtags','cta','spoken','altText','keyword','searchTerms','sound','soundSearch','soundNote','tips'];
+const FIELD_LABEL={title:'Title',hook:'Opening text',cover:'Cover text',duration:'Length',shots:'Shots',captionEn:'Caption EN',captionNl:'Caption NL',hashtags:'Hashtags',cta:'Call to action',spoken:'Say first',altText:'Alt text',keyword:'Search phrase',searchTerms:'Search phrases',sound:'Sound',soundSearch:'Sound search',soundNote:'How to use the sound',tips:'Filming tips',change_request:'Change request to Claude'};
+const nrm=s=>String(s??'').replace(/\s+/g,' ').trim();
+function fieldVal(o,f){if(f==='shots')return (o.shots||[]).filter(s=>s&&(str(s.text).trim()||str(s.overlay).trim())).map((s,i)=>`${i+1}. ${str(s.text).trim()}${str(s.overlay).trim()?' [on screen: '+str(s.overlay).trim()+']':''}`).join('\n');return str(o[f])}
+let edOrig={},edInstr=[];
+function snapEditor(){edOrig={};TRACK.forEach(f=>{edOrig[f]=fieldVal(ED,f)});edInstr=[];ED.aiDraft=Object.assign({},ED.aiDraft&&typeof ED.aiDraft==='object'?ED.aiDraft:{})}
+function noteAI(r,mode,instr){
+ const a=ED.aiDraft||(ED.aiDraft={});
+ for(const k of AIKEYS)if(typeof r[k]==='string')a[k]=ED[k];
+ if(Array.isArray(r.searchTerms))a.searchTerms=ED.searchTerms;
+ if(mode==='write'||mode==='change'){if(str(r.title))a.title=ED.title;if(Array.isArray(r.shots))a.shots=fieldVal(ED,'shots')}
+ if(mode==='change'&&instr)edInstr=edInstr.concat(instr).slice(-6)}
+async function logEdits(pid,d){
+ if(!sbc||!pid||!S.me)return;
+ const rows=[],ai=d.aiDraft||{},stamp=new Date().toISOString();
+ for(const f of TRACK){const now=fieldVal(d,f),was=edOrig[f]??'';
+  if(nrm(now)===nrm(was)||!nrm(now))continue;
+  const draft=typeof ai[f]==='string'?ai[f]:null;
+  if(draft!=null&&nrm(draft)===nrm(now))continue;
+  const before=draft!=null?draft:(nrm(was)?was:null);
+  rows.push({post_id:pid,field:f,source:draft!=null?'ai_edit':before!=null?'edit':'typed',before:before==null?null:String(before).slice(0,4000),after:String(now).slice(0,4000),author:S.me,updated_at:stamp})}
+ if(edInstr.length)rows.push({post_id:pid,field:'change_request',source:'instruction',before:null,after:edInstr.join('\n').slice(0,4000),author:S.me,updated_at:stamp});
+ edInstr=[];
+ if(!rows.length)return;
+ try{const {error}=await sbc.from('edit_log').upsert(rows,{onConflict:'post_id,field'});if(error)throw error;loadEditCount()}catch(e){}
+}
+async function loadEditCount(){if(!sbc)return;try{const {data,count,error}=await sbc.from('edit_log').select('id',{count:'exact',head:true});if(error)throw error;S.editCount=typeof count==='number'?count:(Array.isArray(data)?data.length:null);if(S.view==='playbook'&&!S.lEdit)render()}catch(e){}}
+function lessonBlock(){
+ const L=str(S.settings.editLessons).trim();const ex=(Array.isArray(S.settings.editExamples)?S.settings.editExamples:[]).filter(x=>x&&str(x.after).trim()).slice(0,5);
+ if(!L&&!ex.length)return '';
+ return `LEARNED FROM THE TEAM'S EDITS (how ROEF changes Claude's drafts; follow these unless they clash with the brand rules)\n${L.slice(0,2000)}\n${ex.length?`Examples (Claude's draft → what the team made of it):\n${ex.map(x=>`- ${FIELD_LABEL[x.field]||x.field}: "${str(x.before).slice(0,200)}" → "${str(x.after).slice(0,200)}"`).join('\n')}\n`:''}\n`}
+function learnCard(){
+ const L=str(S.settings.editLessons).trim(),err=str(S.settings.editLessonsError).trim(),ex=(Array.isArray(S.settings.editExamples)?S.settings.editExamples:[]).filter(x=>x&&str(x.after).trim());
+ const n=S.editCount;
+ const body=S.lEdit?`<label class="f" for="l-text">One lesson per line. Delete a line to drop it.</label><textarea id="l-text" rows="9">${esc(S.lDraft??L)}</textarea>`
+  :L?`<div class="prewrap">${esc(L)}</div>`:`<p class="empty">Nothing learned yet. Every time someone changes what Claude wrote, or types their own text, the planner keeps a note. After about 10 edited posts it can write useful lessons.</p>`;
+ const exHTML=!S.lEdit&&ex.length?`<details style="margin-top:10px"><summary class="small" style="cursor:pointer">Examples it learned from (${ex.length})</summary>${ex.map(x=>`<div class="lex"><span class="small">${esc(FIELD_LABEL[x.field]||x.field)}</span>${str(x.before).trim()?`<div class="lb">${esc(x.before)}</div>`:''}<div class="la">${esc(x.after)}</div></div>`).join('')}</details>`:'';
+ const meta=`${n==null?'':`${n} change${n===1?'':'s'} recorded so far. `}${S.settings.editLessonsAt?`Last updated ${esc(S.settings.editLessonsAt)}. `:''}Updates by itself every Monday. Claude uses these lessons in everything it writes; remove a line if it's wrong.`;
+ const btns=S.lEdit?`<button class="primary" id="l-save" type="button">Save lessons</button><button class="ghost" id="l-cancel" type="button">Cancel</button>`
+  :`<button class="ghost" id="l-update" type="button">Update now</button>${L?'<button class="ghost" id="l-edit" type="button">Edit lessons</button>':''}`;
+ return `<div class="pcard" id="learncard" style="margin-bottom:18px"><h3>Learned from your edits</h3>${body}${exHTML}<p class="small">${meta}</p>${err?`<p class="small" style="color:var(--red)">Last update: ${esc(err)}</p>`:''}<div class="btnrow">${btns}<span class="aistat" id="l-stat" role="status"></span></div></div>`}
+async function updateLessons(){
+ const st=$('#l-stat'),b=$('#l-update');if(b)b.disabled=true;st.textContent='Starting…';
+ try{const {data:{session}}=await sbc.auth.getSession();if(!session)throw new Error('login');
+  const res=await fetch(SB_URL+'/functions/v1/learn-edits',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,apikey:SB_KEY},body:'{"source":"planner"}'});
+  const out=await res.json().catch(()=>({}));
+  st.textContent=out.started?'Reading your edits. New lessons appear here in about a minute.':out.skipped?(out.reason||'Ran recently.'):'Could not start. Try again later.';
+ }catch(e){st.textContent='Could not start. Try again later.'}
+ finally{const bb=$('#l-update');if(bb)bb.disabled=false}}
+async function saveLessons(){
+ const v=($('#l-text').value||'').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>/^[-•*]\s*/.test(x)?'- '+x.replace(/^[-•*]\s*/,''):'- '+x).join('\n');
+ const b=$('#l-save');b.disabled=true;
+ try{await queue('settings',()=>db.doc('settings/main').update({editLessons:v}));S.lEdit=false;S.lDraft=null;render();toast('Lessons saved')}
+ catch(e){toast('Could not save. Try again.');b.disabled=false}}
+
 /* ---------- moves, ticks, settings ---------- */
 async function movePost(id,date){
  const p=S.posts.find(x=>x.id===id);if(!p||(p.date||'')===date)return;
@@ -1471,7 +1536,7 @@ async function saveSettings(){
 /* ---------- overlays, view switching ---------- */
 function openOv(id){const o=$('#'+id);o.classList.add('open');o.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeOv(id){const o=$('#'+id);o.classList.remove('open');o.setAttribute('aria-hidden','true');if(id==='ov'&&edCtl)edCtl.abort();if(!$$('.ov.open').length)document.body.style.overflow=''}
-function setView(v){if(!VIEWS.includes(v))v='calendar';S.view=v;if(v==='results'&&sbc)loadStats();try{if(location.hash!=='#'+v)history.replaceState(null,'','#'+v)}catch(e){try{location.hash=v}catch(e2){}}render()}
+function setView(v){if(!VIEWS.includes(v))v='calendar';S.view=v;if(v==='results'&&sbc)loadStats();if(v==='playbook'&&sbc)loadEditCount();try{if(location.hash!=='#'+v)history.replaceState(null,'','#'+v)}catch(e){try{location.hash=v}catch(e2){}}render()}
 
 document.addEventListener('click',e=>{
  const t=e.target;let el;
@@ -1490,6 +1555,11 @@ document.addEventListener('click',e=>{
  if(t.closest('#e-soundbtn'))return runAI('sound');
  if(el=t.closest('[data-snd]'))return useSound(Number(el.dataset.snd));
  if(t.closest('#e-drive'))return openDrive();
+ if(t.closest('#reloadbtn'))return location.reload();
+ if(t.closest('#l-update'))return updateLessons();
+ if(t.closest('#l-edit')){S.lEdit=true;S.lDraft=str(S.settings.editLessons);render();const x=$('#l-text');if(x)x.focus();return}
+ if(t.closest('#l-cancel')){S.lEdit=false;S.lDraft=null;return render()}
+ if(t.closest('#l-save'))return saveLessons();
  if(el=t.closest('[data-view]'))return setView(el.dataset.view);
  if(el=t.closest('[data-feed]')){S.feed=el.dataset.feed;return render()}
  if(el=t.closest('[data-wa]'))return copyText(waText(el.dataset.wa));
@@ -1542,7 +1612,7 @@ document.addEventListener('change',e=>{const t=e.target;
  if(t.id==='openonly'){S.openOnly=t.checked;return render()}
  if(t.id==='fstatus'){S.fstatus=t.value;$('#listbody').innerHTML=listBody()}
 });
-document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;$('#listbody').innerHTML=listBody()}});
+document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;$('#listbody').innerHTML=listBody()}if(e.target.id==='l-text')S.lDraft=e.target.value});
 document.addEventListener('change',e=>{const t=e.target;
  if(t.id==='csvfile'){const f=t.files&&t.files[0];t.value='';return importCSV(f)}
  if(t.id==='impplat'&&IMP){IMP.plat=t.value;impAnalyse();return render()}
@@ -1660,7 +1730,8 @@ async function start(){
  let t1=null;const sched=()=>{clearTimeout(t1);t1=setTimeout(()=>{refresh('posts').catch(()=>{});refresh('settings').catch(()=>{})},300)};
  let t2=null;const schedC=()=>{clearTimeout(t2);t2=setTimeout(()=>loadComments(),300)};
  try{sbc.channel('planner').on('postgres_changes',{event:'*',schema:'public',table:'posts'},sched).on('postgres_changes',{event:'*',schema:'public',table:'settings'},sched).on('postgres_changes',{event:'*',schema:'public',table:'comments'},schedC).subscribe()}catch(e){}
- document.addEventListener('visibilitychange',()=>{if(!document.hidden){sched();schedC()}});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){sched();schedC();checkVersion()}});
+ setInterval(checkVersion,15*60*1000);
 }
 function renderSugg(){const k=($('#e-keyword').value||'').trim().toLowerCase();$('#e-sugg').innerHTML=edSugg.map((x,i)=>`<button type="button" class="schip${x.text.toLowerCase()===k?' on':''}" data-sugg="${i}">${esc(x.text)}<small>${esc(x.sources.join(' + '))} · ${esc(x.langs.join('/'))}</small></button>`).join('')}
 async function findSuggestions(){
