@@ -39,7 +39,7 @@ This repo is public. Keep private details (brand rules, plans, prices) in the da
 | Photos and videos | Private storage bucket `media`, 50 MB per file |
 | Live sync between Sam and Kim | Supabase Realtime on `posts` and `settings` |
 | Search suggestions | Edge Function `suggest`: Google and YouTube autocomplete (free, unofficial, so it can change or slow down) |
-| Instagram and Facebook stats | Edge Function `meta-sync` with the secret `META_TOKEN` (system user key from ROEF's own Meta app, read-only). Raw numbers in table `social_stats` |
+| Instagram and Facebook stats | Edge Function `meta-sync` with the secret `META_TOKEN` (a ROEF Page key from ROEF's own Meta app with read-only permissions; a system user key also works). Raw numbers in table `social_stats` |
 | Claude | Edge Function `claude`, calls the Anthropic API with the secret `ANTHROPIC_API_KEY` (optional `ANTHROPIC_MODEL`, default `claude-sonnet-5-5`) |
 
 The Supabase URL and publishable key in `index.html` are meant to be public: access is protected by login and row-level security. The Anthropic key only lives in Supabase secrets.
@@ -50,7 +50,14 @@ The Supabase URL and publishable key in `index.html` are meant to be public: acc
 2. **Create both logins:** Supabase dashboard → Authentication → Users → Add user → Create new user. Enter email and password, tick "Auto Confirm User".
 3. **Turn off public sign-ups:** Authentication → Sign In / Providers → turn off "Allow new users to sign up".
 4. **Add the Claude key:** Edge Functions → Secrets → add `ANTHROPIC_API_KEY` with a key from console.anthropic.com.
-5. **Meta stats (optional):** in Meta Business Settings, create a system user with read access to the ROEF Facebook page and Instagram, generate a key for the ROEF app (expiry: never; permissions `pages_show_list`, `pages_read_engagement`, `read_insights`, `instagram_basic`, `instagram_manage_insights`, `business_management`) and add it under Edge Functions → Secrets as `META_TOKEN`.
+5. **Meta stats (optional):** the ROEF Facebook page (linked to @byroef) is managed by the Facebook profile Kim Jantzen. The key is a Page key that doesn't expire:
+   1. Meta for Developers (logged in as Kim Jantzen) → app **ROEF Planner Stats** → Tools → **Graph API Explorer**.
+   2. Pick the app, choose "Get User Access Token", tick `pages_show_list`, `pages_read_engagement`, `read_insights`, `instagram_basic`, `instagram_manage_insights`, `business_management`, click Generate Access Token and allow the ROEF page and @byroef.
+   3. Click the blue (i) next to the key → **Open in Access Token Tool** → **Extend Access Token** (this makes a 60-day key). Copy that key back into the Explorer.
+   4. Run `me/accounts?fields=name,access_token` in the Explorer. The `access_token` next to "ROEF" is the Page key; it doesn't expire.
+   5. Supabase → Edge Functions → Secrets → add it as `META_TOKEN`. Then press "Sync now" on Results.
+   The Page key stops working if Kim Jantzen's password changes, the profile is removed as page admin, or the app is deleted. The planner then shows "The Meta key has expired or was revoked": repeat steps 2 to 5.
+   Why not a system user: the ROEF business portfolio was made with the Instagram login, and Meta blocks Instagram-only users from Business Settings once the account is linked to a Facebook page, so no one can add a system user there right now. A system user key still works if that's sorted out later.
 6. **Hosting:** GitHub Pages from the `main` branch: https://torremanss-del.github.io/roef-planner-web/
 
 One shared login (by.roef@gmail.com). Change the password with "Change password" at the top of the planner.
