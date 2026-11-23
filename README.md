@@ -52,9 +52,9 @@ The Supabase URL and publishable key in `index.html` are meant to be public: acc
 4. **Add the Claude key:** Edge Functions → Secrets → add `ANTHROPIC_API_KEY` with a key from console.anthropic.com.
 5. **Meta stats (optional):** the ROEF Facebook page (linked to @byroef) is managed by the Facebook profile Kim Jantzen. The key is a Page key that doesn't expire:
    1. Meta for Developers (logged in as Kim Jantzen) → app **ROEF Planner Stats** → Tools → **Graph API Explorer**.
-   2. Pick the app, choose "Get User Access Token", tick `pages_show_list`, `pages_read_engagement`, `read_insights`, `instagram_basic`, `instagram_manage_insights`, `business_management`, click Generate Access Token and allow the ROEF page and @byroef.
+   2. Pick the app, choose "Get User Access Token", tick `pages_show_list`, `pages_read_engagement`, `pages_read_user_content` (needed to list Facebook posts), `read_insights`, `instagram_basic`, `instagram_manage_insights`, `business_management`, click Generate Access Token and allow the ROEF page, the ROEF business and @byroef.
    3. Click the blue (i) next to the key → **Open in Access Token Tool** → **Extend Access Token** (this makes a 60-day key). Copy that key back into the Explorer.
-   4. Run `me/accounts?fields=name,access_token` in the Explorer. The `access_token` next to "ROEF" is the Page key; it doesn't expire.
+   4. Keep "User or Page" on User Token and run `me/accounts?fields=name,access_token` in the Explorer. The `access_token` next to "ROEF" is the Page key. Check it with the (i) button: Expiration must say "Never".
    5. Supabase → Edge Functions → Secrets → add it as `META_TOKEN`. Then press "Sync now" on Results.
    The Page key stops working if Kim Jantzen's password changes, the profile is removed as page admin, or the app is deleted. The planner then shows "The Meta key has expired or was revoked": repeat steps 2 to 5.
    Why not a system user: the ROEF business portfolio was made with the Instagram login, and Meta blocks Instagram-only users from Business Settings once the account is linked to a Facebook page, so no one can add a system user there right now. A system user key still works if that's sorted out later.
