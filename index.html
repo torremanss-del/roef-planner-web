@@ -12,10 +12,10 @@
 /* VOICE work tool for two founders: calm, confident, minimal like the ROEF brand
    IDEA a bike-workshop job board: every post is a job card with its parts list (the shots)
    PICTURE the planner itself, calendar first, cards coloured by content pillar
-   COLOUR light: cool grey #F1F2F3 page, white blocks on top, bordeaux #6F202A header and active states, sky #B6D0E2 supports
+   COLOUR brand book: grey #F1F2F3 page, white blocks, ROEF red #701F29 header and active states, light greys #EAEBEE/#BFBFC0 support, black text
    TYPE Inter 700 for titles, Inter for text (the brand typeface)
    LAYOUT title left, launch countdown and counts right, toolbar, then the view; phone stacks and the calendar becomes day bars + a day list */
-:root{color-scheme:light;--page:#F1F2F3;--bg:#fff;--ink:#201C1D;--mute:#555A60;--line:#D9DCE0;--surf:#EDEFF1;--surf2:#F7F8F9;--red:#6F202A;--btn:#6F202A;--sky:#B6D0E2;--skyl:#EEF4F9;--ok:#2f7a4f;--shadow:0 1px 2px rgb(32 28 29 / .07),0 3px 10px rgb(32 28 29 / .05)}
+:root{color-scheme:light;--page:#F1F2F3;--bg:#fff;--ink:#201C1D;--mute:#555A60;--line:#D9DCE0;--surf:#EDEFF1;--surf2:#F7F8F9;--red:#701F29;--btn:#701F29;--sky:#BFBFC0;--skyl:#EAEBEE;--ok:#2f7a4f;--shadow:0 1px 2px rgb(32 28 29 / .07),0 3px 10px rgb(32 28 29 / .05)}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0}
 body{background:var(--page);color:var(--ink);font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip}
@@ -46,7 +46,7 @@ h1{font-size:clamp(32px,4.6vw,44px);line-height:1.05;letter-spacing:-.025em;marg
 .ghost{height:44px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-weight:500;font-size:15px;cursor:pointer;white-space:nowrap}
 .primary{background:var(--btn);color:#fff;border:0;border-radius:10px;padding:0 18px;height:44px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap}
 .primary:disabled,.ghost:disabled{opacity:.5;cursor:default}
-.primary:hover:not(:disabled){background:#5A1922}
+.primary:hover:not(:disabled){background:#57171F}
 .ghost:hover:not(:disabled),.iconbtn:hover{border-color:var(--sky);background:var(--skyl)}
 .tabs{display:flex;gap:4px;padding:4px;background:var(--surf);border-radius:12px;overflow-x:auto}
 .tabs button{flex:none;border:0;background:none;color:var(--ink);font-weight:600;font-size:15px;padding:0 14px;height:38px;border-radius:9px;white-space:nowrap;cursor:pointer}
@@ -286,6 +286,73 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
 .month h2{font-size:19px}
 }
 @media(prefers-reduced-motion:reduce){.toast{transition:none}}
+/* v2: Home, Ideas, board, tasks, creators, media, editor sections */
+.av{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:700;flex:none}
+.av.none{background:var(--surf);color:var(--mute)}
+.trow{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);margin-top:6px}
+.trow input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--red)}
+.trow .tt{flex:1;text-align:left;background:none;border:0;padding:0;font:inherit;color:var(--ink);cursor:pointer;display:flex;flex-direction:column}
+.trow .tt small{color:var(--mute);font-size:13px}
+.trow.done .tt span{text-decoration:line-through;color:var(--mute)}
+.trow.late{border-left:4px solid var(--red)}
+.trow.late .tt small{color:var(--red)}
+.tadd{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tadd input[type=text]{flex:1 1 220px}
+.tadd select,.tadd input[type=date]{flex:0 1 170px}
+.tadd input,.tadd select{height:44px}
+.glabel{margin:14px 0 0;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.home{display:grid;gap:4px}
+.hsec{margin-top:6px}
+.top3{border-top:4px solid var(--red)}
+.t3{display:flex;align-items:center;gap:10px}
+.t3>b{font-size:22px;width:22px;color:var(--red);flex:none}
+.t3 .trow{flex:1}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.icard{background:var(--bg);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.icard .tp{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--mute)}
+.icard h4{margin:6px 0 2px;font-size:17px}
+.icard .ihook{margin:2px 0;font-weight:600}
+.icard .btnrow{margin-top:auto;padding-top:8px}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,1fr);gap:10px;overflow-x:auto;padding-bottom:8px}
+.bcol{background:var(--surf);border-radius:12px;padding:10px;min-height:160px}
+.bcol.over{outline:2px dashed var(--red)}
+.bcol h4{margin:0 0 6px;font-size:15px}
+.bcard{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:8px 10px;margin-top:8px;cursor:grab;display:flex;flex-direction:column;gap:2px}
+.bcard small{color:var(--mute);font-size:13px}
+.bcard>.linkish{text-align:left}
+.bcard .cc{align-self:flex-start}
+.bfoot{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:4px}
+.ghost.sm{height:32px;padding:0 10px;font-size:13px}
+.tcols{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:12px}
+.tcols h3{display:flex;align-items:center;gap:8px}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.mtile{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.mtile button{display:block;width:100%;padding:0;border:0;background:var(--surf);cursor:pointer;aspect-ratio:4/5}
+.mtile img{width:100%;height:100%;object-fit:cover;display:block}
+.mtile figcaption{padding:6px 8px;font-size:13px;display:flex;flex-direction:column}
+.mtile figcaption small{color:var(--mute)}
+.swatches{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 4px}
+.swatches span{display:flex;align-items:center;gap:6px;font-size:14px}
+.swatches i{width:26px;height:26px;border-radius:6px;border:1px solid var(--line);display:inline-block}
+.swatches small{color:var(--mute)}
+.tplrow{display:grid;grid-template-columns:minmax(0,1.2fr) 120px 160px minmax(0,2fr) minmax(0,1.2fr) 36px;gap:6px;align-items:start;margin-top:8px}
+.basics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 12px}
+.basics .span2{grid-column:span 2}
+.esec{border:1px solid var(--line);border-radius:12px;padding:0 14px;margin-top:12px;background:var(--bg)}
+.esec>summary{cursor:pointer;font-weight:700;font-size:17px;padding:12px 0;list-style-position:outside}
+.esec[open]{padding-bottom:14px}
+.ctab select{height:36px}
+.play-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:14px}
+@media(max-width:700px){
+ .basics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tplrow{grid-template-columns:1fr 1fr}
+ .tplrow textarea{grid-column:1/-1}
+ .board{grid-auto-columns:minmax(78vw,1fr)}
+ .seg{width:100%;overflow-x:auto}
+ .seg button{padding:0 10px;font-size:14px}
+ .tabs{width:100%;justify-content:space-between}
+ .tabs button{padding:0 8px;font-size:14px}
+}
 </style>
 </head>
 <body>
@@ -323,18 +390,16 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
       <button class="ghost" id="today">Today</button>
     </div>
     <div class="tabs" role="group" aria-label="View">
-      <button data-view="calendar">Calendar</button>
-      <button data-view="today">Post today</button>
-      <button data-view="feed">Feed preview</button>
-      <button data-view="list">List</button>
-      <button data-view="shotlist">Shotlist</button>
+      <button data-view="home">Home</button>
+      <button data-view="ideas">Ideas</button>
+      <button data-view="plan">Plan</button>
       <button data-view="results">Results</button>
       <button data-view="playbook">Playbook</button>
     </div>
     <div class="right">
       <button class="ghost" id="foryou" type="button">For you<span class="badge" id="fybadge" hidden>0</span></button>
-      <button class="ghost" data-act="settings">Brand &amp; launch</button>
-      <button class="primary" id="new">+ Idea or post</button>
+      <button class="ghost" data-act="settings">Settings</button>
+      <button class="primary" id="new">+ New post</button>
     </div>
   </div>
   <div class="legend" id="legend"></div>
@@ -345,8 +410,23 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="e-heading">
     <div class="ph"><h2 id="e-heading">New idea or post</h2><div class="phr"><button class="ghost" id="e-cjump" type="button" hidden style="height:38px">Comments</button><button class="iconbtn" data-close="ov" aria-label="Close">×</button></div></div>
     <fieldset id="e-fs">
+      <div class="basics">
+        <div class="span2"><label class="f" for="e-title">Title</label><input type="text" id="e-title" placeholder="Short name for the planner"></div>
+        <div><label class="f" for="e-status">Stage</label><select id="e-status"><option value="idea">Idea</option><option value="draft">Script</option><option value="film">Film</option><option value="edit">Edit</option><option value="review">Review (Kim checks)</option><option value="approved">Ready (approved)</option><option value="posted">Posted</option></select></div>
+        <div><label class="f" for="e-owner">Owner</label><select id="e-owner"></select></div>
+        <div><label class="f" for="e-date">Post date</label><input type="date" id="e-date"></div>
+        <div><label class="f" for="e-time">Time</label><input type="time" id="e-time"></div>
+        <div><label class="f" for="e-pillar">Pillar</label><select id="e-pillar"></select></div>
+        <div><label class="f" for="e-format">Format</label><select id="e-format"></select></div>
+        <div class="span2"><span class="f" style="display:block;font-size:14px;font-weight:600;margin:12px 0 5px">Platforms</span><div class="plats"><label><input type="checkbox" id="e-ig"> Instagram</label><label><input type="checkbox" id="e-tt"> TikTok</label><label><input type="checkbox" id="e-fb"> Facebook</label></div></div>
+      </div>
+      <p class="hint">No date and stage Idea keeps it in Ideas. Only posts Kim sets to Ready show up under Ready to post on Home.</p>
+      <input type="hidden" id="e-lang" value="en">
+
       <details class="ai" id="e-aibox" open>
         <summary>Write it with Claude</summary>
+        <label class="f" for="e-tpl">Start from a format (optional)</label>
+        <select id="e-tpl"></select>
         <label class="f" for="e-idea">What's the idea?</label>
         <textarea id="e-idea" placeholder="e.g. Flinn's first ride in prototype 2, along the canal at golden hour"></textarea>
         <div class="g2">
@@ -366,12 +446,6 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
           <p class="hint">Only used to brief Claude. It isn't saved, because it's someone else's content.</p>
           <div class="imgprev" id="e-imgprev"></div>
         </div>
-        <div class="g4">
-          <div><label class="f" for="e-pillar">Pillar</label><select id="e-pillar"></select></div>
-          <div><label class="f" for="e-format">Format</label><select id="e-format"></select></div>
-          <div><label class="f" for="e-lang">Language</label><select id="e-lang"><option value="both">English + Dutch</option><option value="en">English</option><option value="nl">Dutch</option></select></div>
-          <div><span class="f" style="display:block;font-size:14px;font-weight:600;margin:12px 0 5px">Platforms</span><div class="plats"><label><input type="checkbox" id="e-ig"> Instagram</label><label><input type="checkbox" id="e-tt"> TikTok</label></div></div>
-        </div>
         <div class="airow">
           <button class="primary" id="e-write" type="button">Write script with Claude</button>
           <button class="ghost" id="e-stop" type="button" hidden>Stop</button>
@@ -379,88 +453,101 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
         </div>
       </details>
 
-      <h3 class="sec">Your photos and videos</h3>
-      <p class="hint">Add your own footage. Claude looks at it to write the caption, alt text and search phrase. For videos, Claude sees a few stills, not the moving picture or the sound.</p>
-      <div class="drop" id="e-drop" role="button" tabindex="0" aria-label="Add photos or videos"><b>Drag photos or videos here</b> or tap to choose</div>
-      <input type="file" id="e-files" accept="image/*,video/*" multiple hidden>
-      <div class="airow"><button class="ghost" id="e-drive" type="button">Add from Google Drive</button><span class="aistat" id="e-dstat" role="status"></span></div>
-      <p class="hint" id="e-mstat" role="status"></p>
-      <div class="media" id="e-media"></div>
+      <details class="esec" id="e-mediasec" open>
+        <summary>Photos and videos</summary>
+        <p class="hint">Add your own footage. Claude looks at it to write the caption, alt text and search phrase. For videos, Claude sees a few stills, not the moving picture or the sound.</p>
+        <div class="drop" id="e-drop" role="button" tabindex="0" aria-label="Add photos or videos"><b>Drag photos or videos here</b> or tap to choose</div>
+        <input type="file" id="e-files" accept="image/*,video/*" multiple hidden>
+        <div class="airow"><button class="ghost" id="e-drive" type="button">Add from Google Drive</button><span class="aistat" id="e-dstat" role="status"></span></div>
+        <p class="hint" id="e-mstat" role="status"></p>
+        <div class="media" id="e-media"></div>
+      </details>
 
-      <h3 class="sec">The post</h3>
-      <div class="g2">
-        <div><label class="f" for="e-title">Title</label><input type="text" id="e-title" placeholder="Short name for the planner"></div>
+      <details class="esec" id="e-scriptsec">
+        <summary>Script and sound</summary>
         <div class="g2">
-          <div><label class="f" for="e-date">Date</label><input type="date" id="e-date"></div>
-          <div><label class="f" for="e-status">Status</label><select id="e-status"><option value="idea">Idea</option><option value="draft">Draft</option><option value="approved">Approved</option><option value="posted">Posted</option></select></div>
+          <div><label class="f" for="e-hook">Opening text (first frame)</label><input type="text" id="e-hook" placeholder="Readable with the sound off"></div>
+          <div class="g2">
+            <div><label class="f" for="e-cover">Cover text</label><input type="text" id="e-cover"></div>
+            <div><label class="f" for="e-dur">Length</label><input type="text" id="e-dur" placeholder="15–20 sec"></div>
+          </div>
         </div>
-      </div>
-      <div class="g2"><div><label class="f" for="e-time">Post time</label><input type="time" id="e-time" style="max-width:160px"></div><div></div></div>
-      <p class="hint">No date keeps it in the idea bank. Only posts Kim sets to Approved show up as ready in Post today.</p>
-      <div class="g2">
-        <div><label class="f" for="e-hook">Opening text (first frame)</label><input type="text" id="e-hook" placeholder="Readable with the sound off"></div>
+        <h3 class="sec">Shots</h3>
+        <div id="e-shots"></div>
+        <button class="ghost" id="e-addshot" type="button" style="margin-top:8px">+ Add shot</button>
+        <h3 class="sec">Sound</h3>
+        <p class="hint">@byroef is a business account. On TikTok only "Commercial sounds" work; on Instagram use Sound Collection, your own voice or the real sound of the clip. Check the sound in the app before you film.</p>
         <div class="g2">
-          <div><label class="f" for="e-cover">Cover text</label><input type="text" id="e-cover"></div>
-          <div><label class="f" for="e-dur">Length</label><input type="text" id="e-dur" placeholder="15–20 sec"></div>
+          <div><label class="f" for="e-sound">Sound or beat</label><input type="text" id="e-sound" placeholder="e.g. upbeat lo-fi from Commercial sounds, or voiceover only"></div>
+          <div><label class="f" for="e-soundsearch">What to search in the app</label><input type="text" id="e-soundsearch" placeholder="e.g. lo-fi city, acoustic upbeat"></div>
         </div>
-      </div>
-      <h3 class="sec">Shots</h3>
-      <div id="e-shots"></div>
-      <button class="ghost" id="e-addshot" type="button" style="margin-top:8px">+ Add shot</button>
-      <h3 class="sec">Sound</h3>
-      <p class="hint">@byroef is a business account. On TikTok only "Commercial sounds" work; on Instagram use Sound Collection, your own voice or the real sound of the clip. Check the sound in the app before you film.</p>
-      <div class="g2">
-        <div><label class="f" for="e-sound">Sound or beat</label><input type="text" id="e-sound" placeholder="e.g. upbeat lo-fi from Commercial sounds, or voiceover only"></div>
-        <div><label class="f" for="e-soundsearch">What to search in the app</label><input type="text" id="e-soundsearch" placeholder="e.g. lo-fi city, acoustic upbeat"></div>
-      </div>
-      <label class="f" for="e-soundnote">How to use it</label><input type="text" id="e-soundnote" placeholder="e.g. cut on the beat, keep the bike bell in">
-      <div class="airow" id="e-soundrow"><button class="ghost" id="e-soundbtn" type="button">Suggest a sound with Claude</button><span class="aistat" id="e-soundstat" role="status"></span></div>
-      <div class="sndchips" id="e-sndchips"></div>
-      <h3 class="sec">Caption</h3>
-      <div class="g2">
-        <div><label class="f" for="e-capen">English</label><textarea id="e-capen" rows="6"></textarea></div>
-        <div><label class="f" for="e-capnl">Dutch</label><textarea id="e-capnl" rows="6"></textarea></div>
-      </div>
-      <div class="airow" id="e-humanrow"><button class="ghost" id="e-humanbtn" type="button">Make it sound human</button><span class="aistat" id="e-humanstat" role="status"></span></div>
-      <p class="hint">Rewrites the captions, opening text and spoken line in Kim's voice (from the voice samples in Brand &amp; launch).</p>
-      <div class="g2">
-        <div><label class="f" for="e-tags">Hashtags</label><input type="text" id="e-tags"></div>
-        <div><label class="f" for="e-cta">Call to action</label><input type="text" id="e-cta"></div>
-      </div>
-      <div class="seo" id="e-seo">
-        <h3 class="sec" style="margin-top:14px">Get found in search</h3>
-        <p class="hint">One search phrase, the way people type it, used in the first caption line, the opening text, the first spoken line and the alt text.</p>
+        <label class="f" for="e-soundnote">How to use it</label><input type="text" id="e-soundnote" placeholder="e.g. cut on the beat, keep the bike bell in">
+        <div class="airow" id="e-soundrow"><button class="ghost" id="e-soundbtn" type="button">Suggest a sound with Claude</button><span class="aistat" id="e-soundstat" role="status"></span></div>
+        <div class="sndchips" id="e-sndchips"></div>
         <div class="g2">
-          <div><label class="f" for="e-keyword">Main search phrase</label><input type="text" id="e-keyword" placeholder="e.g. dog basket for e-bike"></div>
-          <div><label class="f" for="e-terms">Other search terms</label><input type="text" id="e-terms" placeholder="e.g. hondenmand fiets, dog bike basket"></div>
+          <div><label class="f" for="e-why">Why this should work</label><textarea id="e-why"></textarea></div>
+          <div><label class="f" for="e-tips">Filming tips</label><textarea id="e-tips"></textarea></div>
         </div>
-        <div class="airow"><button class="ghost" id="e-findbtn" type="button">Find real search phrases (free)</button><span class="aistat" id="e-findstat" role="status"></span></div>
-        <div class="schips" id="e-sugg"></div>
-        <p class="hint">What people actually type into Google and YouTube, in English and Dutch. Tap one to make it the main phrase.</p>
-        <label class="f" for="e-platsugg">What Instagram and TikTok suggest</label>
-        <input type="text" id="e-platsugg" placeholder="Type the phrase in their search bar and note the suggestions here">
-        <label class="f" for="e-spoken">First spoken line (voiceover)</label>
-        <input type="text" id="e-spoken" placeholder="Say the search phrase in the first sentence">
-        <label class="f" for="e-alt">Alt text for Instagram</label>
-        <textarea id="e-alt" rows="2" placeholder="What's in the photo or video, including the search phrase"></textarea>
-        <p class="hint">On Instagram, add it under Advanced settings before posting.</p>
-        <div class="airow" id="e-seorow"><button class="primary" id="e-seobtn" type="button">Optimise for search with Claude</button><span class="aistat" id="e-seostat" role="status"></span></div>
-      </div>
-      <div class="g2">
-        <div><label class="f" for="e-why">Why this should work</label><textarea id="e-why"></textarea></div>
-        <div><label class="f" for="e-tips">Filming tips</label><textarea id="e-tips"></textarea></div>
-      </div>
-      <div class="seo" id="e-results">
-        <h3 class="sec" style="margin-top:14px">Results</h3>
-        <p class="hint">Fill in 2 days after posting, from Instagram and TikTok insights. Claude learns from these.</p>
+      </details>
+
+      <details class="esec" id="e-capsec">
+        <summary>Caption and search</summary>
+        <label class="f" for="e-capen">Caption</label><textarea id="e-capen" rows="6"></textarea>
+        <textarea id="e-capnl" hidden aria-hidden="true"></textarea>
+        <div class="airow" id="e-humanrow"><button class="ghost" id="e-humanbtn" type="button">Make it sound like us</button><span class="aistat" id="e-humanstat" role="status"></span></div>
+        <p class="hint">Rewrites the caption, opening text and spoken line in Kim's voice and the brand book's rules.</p>
         <div class="g2">
-          <div><label class="f" for="e-lig">Instagram post link</label><input type="url" id="e-lig" placeholder="https://www.instagram.com/reel/…"></div>
-          <div><label class="f" for="e-ltt">TikTok post link</label><input type="url" id="e-ltt" placeholder="https://www.tiktok.com/@byroef/video/…"></div>
+          <div><label class="f" for="e-tags">Hashtags</label><input type="text" id="e-tags"></div>
+          <div><label class="f" for="e-cta">Call to action</label><input type="text" id="e-cta"></div>
         </div>
-        <label class="f" for="e-lfb">Facebook post link</label><input type="url" id="e-lfb" placeholder="https://www.facebook.com/…">
-        <div class="scroll" style="margin-top:10px"><table class="rtab"><thead><tr><th></th><th>Views</th><th>Likes</th><th>Comments</th><th>Shares</th><th>Saves</th><th>New followers</th><th>Avg watch (sec)</th></tr></thead><tbody><tr><th>Instagram</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="views" aria-label="Instagram views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="likes" aria-label="Instagram likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="comments" aria-label="Instagram comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="shares" aria-label="Instagram shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="saves" aria-label="Instagram saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="follows" aria-label="Instagram new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="watch" aria-label="Instagram average watch seconds"></td></tr><tr><th>TikTok</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="views" aria-label="TikTok views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="likes" aria-label="TikTok likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="comments" aria-label="TikTok comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="shares" aria-label="TikTok shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="saves" aria-label="TikTok saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="follows" aria-label="TikTok new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="watch" aria-label="TikTok average watch seconds"></td></tr><tr><th>Facebook</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="views" aria-label="Facebook views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="likes" aria-label="Facebook likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="comments" aria-label="Facebook comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="shares" aria-label="Facebook shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="saves" aria-label="Facebook saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="follows" aria-label="Facebook new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="watch" aria-label="Facebook average watch seconds"></td></tr></tbody></table></div>
-        <p class="hint">Or import a CSV export on the Results screen, which fills these in for you.</p>
-      </div>
+        <div class="seo" id="e-seo">
+          <h3 class="sec" style="margin-top:14px">Get found in search</h3>
+          <p class="hint">One search phrase, the way people type it, used in the first caption line, the opening text, the first spoken line and the alt text.</p>
+          <div class="g2">
+            <div><label class="f" for="e-keyword">Main search phrase</label><input type="text" id="e-keyword" placeholder="e.g. dog basket for e-bike"></div>
+            <div><label class="f" for="e-terms">Other search terms</label><input type="text" id="e-terms" placeholder="e.g. dog bike basket, e-bike dog carrier"></div>
+          </div>
+          <div class="airow"><button class="ghost" id="e-findbtn" type="button">Find real search phrases (free)</button><span class="aistat" id="e-findstat" role="status"></span></div>
+          <div class="schips" id="e-sugg"></div>
+          <p class="hint">What people actually type into Google and YouTube. Tap one to make it the main phrase.</p>
+          <label class="f" for="e-platsugg">What Instagram and TikTok suggest</label>
+          <input type="text" id="e-platsugg" placeholder="Type the phrase in their search bar and note the suggestions here">
+          <label class="f" for="e-spoken">First spoken line (voiceover)</label>
+          <input type="text" id="e-spoken" placeholder="Say the search phrase in the first sentence">
+          <label class="f" for="e-alt">Alt text for Instagram</label>
+          <textarea id="e-alt" rows="2" placeholder="What's in the photo or video, including the search phrase"></textarea>
+          <p class="hint">On Instagram, add it under Advanced settings before posting.</p>
+          <div class="airow" id="e-seorow"><button class="primary" id="e-seobtn" type="button">Optimise for search with Claude</button><span class="aistat" id="e-seostat" role="status"></span></div>
+        </div>
+      </details>
+
+      <details class="esec" id="e-tasksec" open>
+        <summary>Tasks</summary>
+        <div id="e-tasks"></div>
+      </details>
+
+      <details class="esec" id="e-ressec">
+        <summary>Results and links</summary>
+        <div class="seo" id="e-results">
+          <p class="hint">Instagram and Facebook numbers fill in by themselves every morning. Add TikTok numbers here, or import a CSV on Results.</p>
+          <div class="g2">
+            <div><label class="f" for="e-lig">Instagram post link</label><input type="url" id="e-lig" placeholder="https://www.instagram.com/reel/…"></div>
+            <div><label class="f" for="e-ltt">TikTok post link</label><input type="url" id="e-ltt" placeholder="https://www.tiktok.com/@byroef/video/…"></div>
+          </div>
+          <label class="f" for="e-lfb">Facebook post link</label><input type="url" id="e-lfb" placeholder="https://www.facebook.com/…">
+          <div class="scroll" style="margin-top:10px"><table class="rtab"><thead><tr><th></th><th>Views</th><th>Likes</th><th>Comments</th><th>Shares</th><th>Saves</th><th>New followers</th><th>Avg watch (sec)</th></tr></thead><tbody><tr><th>Instagram</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="views" aria-label="Instagram views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="likes" aria-label="Instagram likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="comments" aria-label="Instagram comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="shares" aria-label="Instagram shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="saves" aria-label="Instagram saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="follows" aria-label="Instagram new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="ig" data-rk="watch" aria-label="Instagram average watch seconds"></td></tr><tr><th>TikTok</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="views" aria-label="TikTok views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="likes" aria-label="TikTok likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="comments" aria-label="TikTok comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="shares" aria-label="TikTok shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="saves" aria-label="TikTok saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="follows" aria-label="TikTok new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="tt" data-rk="watch" aria-label="TikTok average watch seconds"></td></tr><tr><th>Facebook</th><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="views" aria-label="Facebook views"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="likes" aria-label="Facebook likes"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="comments" aria-label="Facebook comments"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="shares" aria-label="Facebook shares"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="saves" aria-label="Facebook saves"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="follows" aria-label="Facebook new followers"></td><td><input class="rin" type="number" min="0" inputmode="numeric" data-rp="fb" data-rk="watch" aria-label="Facebook average watch seconds"></td></tr></tbody></table></div>
+          <div class="airow"><button class="ghost" id="e-golink" type="button">Copy tracked link for a story or Facebook</button><span class="aistat" id="e-golinkstat" role="status"></span></div>
+          <p class="hint">Clicks on this link count toward this post in the Kickstarter tracker on Results.</p>
+        </div>
+      </details>
+
+      <details class="esec" id="e-versec">
+        <summary>Make versions for other formats</summary>
+        <p class="hint">One shoot, several posts. Each version lands in Ideas with this idea, caption and search phrase, ready for Claude to rewrite.</p>
+        <div class="plats" id="e-versions"><label><input type="checkbox" value="Reel"> Reel</label><label><input type="checkbox" value="TikTok"> TikTok</label><label><input type="checkbox" value="Carousel"> Carousel</label><label><input type="checkbox" value="Story"> Story</label><label><input type="checkbox" value="Photo"> Photo</label></div>
+        <div class="airow"><button class="ghost" id="e-verbtn" type="button">Make versions</button><span class="aistat" id="e-verstat" role="status"></span></div>
+      </details>
+
       <div id="e-changewrap">
         <label class="f" for="e-change">Ask Claude for changes</label>
         <div class="airow" style="margin-top:0">
@@ -495,7 +582,7 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
 
 <div class="ov" id="ovs" aria-hidden="true">
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="s-heading">
-    <div class="ph"><h2 id="s-heading">Brand &amp; launch</h2><button class="iconbtn" data-close="ovs" aria-label="Close">×</button></div>
+    <div class="ph"><h2 id="s-heading">Settings</h2><button class="iconbtn" data-close="ovs" aria-label="Close">×</button></div>
     <fieldset id="s-fs">
       <label class="f" for="s-launch">Kickstarter launch date</label>
       <input type="date" id="s-launch" style="max-width:240px">
@@ -510,6 +597,17 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
       <h3 class="sec">Voice samples</h3>
       <p class="hint">Paste 10–20 captions Kim wrote herself (not AI), with an empty line between them. Claude copies their tone and rhythm so posts sound like a person, not a robot.</p>
       <textarea id="s-voice" rows="10" style="margin-top:8px" placeholder="Paste real captions here"></textarea>
+      <h3 class="sec">Brand book</h3>
+      <p class="hint">Voice, copy rules and examples from the ROEF brand book. Claude follows it in every script, caption and idea. Where it disagrees with the brand brain above, the brand brain wins.</p>
+      <textarea id="s-book" rows="12" style="margin-top:8px"></textarea>
+      <h3 class="sec">Kickstarter pre-launch page</h3>
+      <label class="f" for="s-launchurl">Link</label>
+      <input type="url" id="s-launchurl" placeholder="https://www.kickstarter.com/projects/…">
+      <p class="hint">Tracked links lead here once it's set. Until then they go to ridewithroef.com.</p>
+      <h3 class="sec">Email alerts</h3>
+      <label class="check"><input type="checkbox" id="s-mailme"> Email me when someone tags me or gives me a task, plus the Monday overview</label>
+      <p class="hint" id="s-mailstat"></p>
+      <div class="airow"><button class="ghost" id="s-mailtest" type="button">Send me a test email</button><span class="aistat" id="s-mailteststat" role="status"></span></div>
       <h3 class="sec">Google Drive</h3>
       <p class="hint">Lets everyone add photos and videos straight from Drive. The files stay in Drive. Sam fills these in once, from Google Cloud.</p>
       <div class="g2">
@@ -554,6 +652,54 @@ input[type=email],input[type=password]{width:100%;font-size:16px;padding:10px 12
     <div class="foot"><span></span><div class="r"><button class="ghost" id="f-readall" type="button">Mark all as read</button><button class="primary" data-close="ovf" type="button">Close</button></div></div>
   </div>
 </div>
+<div class="ov" id="ovt" aria-hidden="true">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="t-heading" style="max-width:560px">
+    <div class="ph"><h2 id="t-heading">Task</h2><button class="iconbtn" data-close="ovt" aria-label="Close">×</button></div>
+    <label class="f" for="t-title">What needs doing</label>
+    <input type="text" id="t-title" maxlength="300">
+    <div class="g2">
+      <div><label class="f" for="t-who">Who</label><select id="t-who"></select></div>
+      <div><label class="f" for="t-due">Due</label><input type="date" id="t-due"></div>
+    </div>
+    <label class="f" for="t-post">For post</label>
+    <select id="t-post"></select>
+    <label class="f" for="t-notes">Notes</label>
+    <textarea id="t-notes" rows="3"></textarea>
+    <p class="small" id="t-meta"></p>
+    <div class="foot">
+      <button class="ghost danger" id="t-del" type="button">Delete</button>
+      <div class="r"><button class="ghost" id="t-open" type="button">Open post</button><button class="ghost" data-close="ovt" type="button">Cancel</button><button class="primary" id="t-save" type="button">Save</button></div>
+    </div>
+  </div>
+</div>
+<div class="ov" id="ovr" aria-hidden="true">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="r-heading" style="max-width:620px">
+    <div class="ph"><h2 id="r-heading">Creator</h2><button class="iconbtn" data-close="ovr" aria-label="Close">×</button></div>
+    <div class="g2">
+      <div><label class="f" for="r-name">Name</label><input type="text" id="r-name" maxlength="200"></div>
+      <div><label class="f" for="r-handle">Handle</label><input type="text" id="r-handle" maxlength="200" placeholder="@…"></div>
+    </div>
+    <div class="g2">
+      <div><label class="f" for="r-plat">Platform</label><select id="r-plat"><option value="ig">Instagram</option><option value="tt">TikTok</option><option value="fb">Facebook</option><option value="yt">YouTube</option><option value="web">Website</option><option value="other">Other</option></select></div>
+      <div><label class="f" for="r-fol">Followers</label><input type="number" id="r-fol" min="0" inputmode="numeric"></div>
+    </div>
+    <div class="g2">
+      <div><label class="f" for="r-city">City</label><input type="text" id="r-city"></div>
+      <div><label class="f" for="r-dog">Dog</label><input type="text" id="r-dog" placeholder="e.g. Pomeranian, 6 kg"></div>
+    </div>
+    <div class="g2">
+      <div><label class="f" for="r-status">Status</label><select id="r-status"></select></div>
+      <div><label class="f" for="r-who">Who talks to them</label><select id="r-who"></select></div>
+    </div>
+    <label class="f" for="r-next">Next step</label><input type="text" id="r-next" placeholder="e.g. DM on Thursday with the prototype video">
+    <label class="f" for="r-link">Profile link</label><input type="url" id="r-link" placeholder="https://www.instagram.com/…">
+    <label class="f" for="r-notes">Notes</label><textarea id="r-notes" rows="3"></textarea>
+    <div class="foot">
+      <button class="ghost danger" id="r-del" type="button">Delete</button>
+      <div class="r"><button class="ghost" data-close="ovr" type="button">Cancel</button><button class="primary" id="r-save" type="button">Save</button></div>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -573,8 +719,9 @@ const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
 const str=x=>typeof x==='string'?x:'';
 const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const FORMATS=['Reel','TikTok','Carousel','Photo','Story'];
-const STATUS={idea:'Idea',draft:'Draft',approved:'Approved',posted:'Posted'};
-const VIEWS=['calendar','today','feed','list','shotlist','results','playbook'];
+const STATUS={idea:'Idea',draft:'Script',film:'Film',edit:'Edit',review:'Review',approved:'Ready',posted:'Posted'};
+const VIEWS=['home','ideas','plan','results','playbook'];
+const OLDV={calendar:['plan','calendar'],today:['home',''],feed:['plan','calendar'],list:['plan','calendar'],shotlist:['plan','tasks'],board:['plan','board'],tasks:['plan','tasks']};
 const PLAY='<svg class="play" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z" fill="#fff"/></svg>';
 const DEF_PILLARS=[
  {id:'build',name:'Behind the build',color:'#8A7356'},
@@ -593,13 +740,13 @@ RULES
 Only use facts written in this brand brain. Do not invent features, prices, test results or dates.`;
 
 const now=new Date();
-const S={editCount:null,lEdit:false,lDraft:null,members:[],me:'',comments:[],posts:[],settings:{},view:'calendar',ym:[now.getFullYear(),now.getMonth()],feed:'ig',q:'',fstatus:'all',openOnly:false,selDay:null,canWrite:true};
+const S={editCount:null,lEdit:false,lDraft:null,members:[],me:'',comments:[],posts:[],settings:{},view:'home',sub:'calendar',tasks:[],creators:[],clicks:[],stats:[],homeAll:false,mFilter:'',ym:[now.getFullYear(),now.getMonth()],selDay:null,canWrite:true};
 let db=null,sample=null,assets=null,imgOK=false;
 const pillars=()=>Array.isArray(S.settings.pillars)&&S.settings.pillars.length?S.settings.pillars:DEF_PILLARS;
 const pil=id=>pillars().find(p=>p.id===id)||{id:'',name:'No pillar',color:'#8a8486'};
 const brain=()=>str(S.settings.brain)||DEF_BRAIN;
 const launch=()=>isKey(S.settings.launchDate)?S.settings.launchDate:'';
-const plat=p=>(p.platforms||[]).map(x=>x==='ig'?'Instagram':'TikTok').join(' + ')||'No platform yet';
+const plat=p=>(p.platforms||[]).map(x=>({ig:'Instagram',tt:'TikTok',fb:'Facebook'})[x]||x).join(' + ')||'No platform yet';
 const isVideo=p=>['Reel','TikTok','Story'].includes(p.format);
 const inMonth=k=>isKey(k)&&k.startsWith(S.ym[0]+'-'+pad(S.ym[1]+1));
 const monthName=()=>new Date(S.ym[0],S.ym[1],1).toLocaleDateString('en-GB',{month:'long'});
@@ -610,21 +757,25 @@ function setNote(t){$('#note').textContent=t||''}
 const chains={};
 function queue(id,fn){chains[id]=(chains[id]||Promise.resolve()).then(fn,fn);return chains[id]}
 
+let renderWait=false;
 function render(){
+ const a=document.activeElement;
+ if(a&&a.closest&&a.closest('#view')&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&!/^(checkbox|radio|submit|button)$/.test(a.type||'')){
+  renderTop();if(!renderWait){renderWait=true;a.addEventListener('blur',()=>{renderWait=false;setTimeout(render,0)},{once:true})}return}
  renderTop();
  $$('.tabs button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===S.view)));
- $('#monthbar').toggleAttribute('data-off',['shotlist','playbook','today','results'].includes(S.view));
- $('#legend').hidden=['playbook','today','results'].includes(S.view);
+ const sub=S.sub||'calendar';
+ $('#monthbar').toggleAttribute('data-off',!(S.view==='plan'&&sub==='calendar'));
+ $('#legend').hidden=!(S.view==='plan'&&(sub==='calendar'||sub==='board'));
  $('#new').hidden=!S.canWrite;
- const v=$('#view');
  updateFY();
- v.innerHTML=S.view==='calendar'?calHTML():S.view==='today'?todayHTML():S.view==='feed'?feedHTML():S.view==='list'?listHTML():S.view==='shotlist'?shotHTML():S.view==='results'?resultsHTML():playHTML();
+ $('#view').innerHTML=S.view==='home'?homeHTML():S.view==='ideas'?ideasHTML():S.view==='plan'?planHTML():S.view==='results'?resultsHTML():playHTML();
 }
 function renderTop(){
  $('#mlabel').textContent=new Date(S.ym[0],S.ym[1],1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
  const mp=S.posts.filter(p=>inMonth(p.date));
  const ideas=S.posts.filter(p=>!isKey(p.date)).length;
- $('#stats').innerHTML=`<span><b>${mp.length}</b> posts</span><span><b>${mp.filter(p=>p.status==='approved').length}</b> approved</span><span><b>${mp.filter(p=>p.status==='posted').length}</b> posted</span><span><b>${ideas}</b> ideas</span>`;
+ $('#stats').innerHTML=`<span><b>${mp.length}</b> posts in ${esc(monthName())}</span><span><b>${mp.filter(p=>p.status==='posted').length}</b> posted</span><span><b>${ideas}</b> ideas</span><span><b>${(S.tasks||[]).filter(t=>!t.done).length}</b> open tasks</span>`;
  const L=launch();let t;
  if(L){const days=Math.round((parse(L)-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/864e5);
   t=days>0?`<b>${days} days</b> to Kickstarter · ${fmtDay(L)}`:days===0?'<b>Kickstarter launches today</b>':`Kickstarter live since ${fmtDay(L)}`}
@@ -635,7 +786,7 @@ function renderTop(){
 function chip(p){const c=pil(p.pillar);
  return `<button class="chip" draggable="true" data-id="${esc(p.id)}" style="--c:${col(c.color)}">${p.trend?'<span class="ex trend">Trend</span>':p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}${cBadge(p.id)}<small>${esc(p.format||'Post')}${isKey(p.date)?' · '+(STATUS[p.status]||'Draft'):''}</small></button>`}
 function rowHTML(p){const c=pil(p.pillar);
- return `<button class="row" data-id="${esc(p.id)}" style="--c:${col(c.color)}"><span class="d">${isKey(p.date)?fmtDay(p.date):'Idea bank'}</span><span><b>${p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}${cBadge(p.id)}</b><small>${esc(c.name)} · ${esc(p.format||'Post')} · ${plat(p)}</small></span><span class="pill ${esc(p.status)}">${STATUS[p.status]||'Draft'}</span></button>`}
+ return `<button class="row" data-id="${esc(p.id)}" style="--c:${col(c.color)}"><span class="d">${isKey(p.date)?fmtDay(p.date):'No date'}</span><span><b>${p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}${cBadge(p.id)}</b><small>${esc(c.name)} · ${esc(p.format||'Post')} · ${plat(p)}</small></span><span class="pill ${esc(p.status)}">${STATUS[p.status]||'Draft'}</span></button>`}
 
 function calHTML(){
  const [y,m]=S.ym;const start=monday(new Date(y,m,1));const last=new Date(y,m+1,0);
@@ -648,52 +799,9 @@ function calHTML(){
  const bank=S.posts.filter(p=>!isKey(p.date));
  let panel='<p class="hint mob" style="margin-top:12px">Tap a day to see or add its posts.</p>';
  if(S.selDay){const ps=byDay[S.selDay]||[];panel=`<div class="mob daypanel"><h3>${fmtDay(S.selDay)}</h3><div class="rows">${ps.map(rowHTML).join('')||'<p class="empty">Nothing planned.</p>'}</div>${S.canWrite?`<button class="ghost" data-new="${S.selDay}" style="margin-top:10px">+ Add post on this day</button>`:''}</div>`}
- return `<section class="bank" data-drop=""><div class="bh"><b>Idea bank</b><span>Drag an idea onto a day, or drop your own photos and videos on a day</span></div><div class="chips">${bank.map(chip).join('')||'<span class="empty">No loose ideas. Tap “+ Idea or post” to add one.</span>'}</div></section>
+ return `<section class="bank" data-drop=""><div class="bh"><b>Ideas</b><span>Drag an idea onto a day, or drop your own photos and videos on a day</span></div><div class="chips">${bank.map(chip).join('')||'<span class="empty">No loose ideas. Tap “+ Idea or post” to add one.</span>'}</div></section>
  <div class="cal">${DOW.map(d=>`<div class="dow">${d}</div>`).join('')}${cells}</div>${panel}`;
 }
-function feedHTML(){
- const endK=key(new Date(S.ym[0],S.ym[1]+1,0));
- const ps=S.posts.filter(p=>isKey(p.date)&&p.date<=endK&&(p.platforms||[]).includes(S.feed)).sort((a,b)=>b.date.localeCompare(a.date));
- const name=S.feed==='ig'?'Instagram':'TikTok';
- return `<div class="seg" role="group" aria-label="Platform"><button data-feed="ig" aria-pressed="${S.feed==='ig'}">Instagram</button><button data-feed="tt" aria-pressed="${S.feed==='tt'}">TikTok</button></div>
- <div class="feedhead"><div class="avatar">ROEF</div><div><b>byroef</b> <span class="mute">on ${name}</span><p>How the profile looks once everything up to the end of ${monthName()} is live. Newest top left, drafts faded.</p></div></div>
- <div class="grid">${ps.map(tile).join('')}</div>${ps.length?'':`<p class="empty" style="text-align:center">Nothing planned for ${name} yet.</p>`}`;
-}
-function tile(p){const c=pil(p.pillar);const faded=p.status!=='approved'&&p.status!=='posted';
- const img=p.assetId?`<img src="${mediaSrc(p.assetId)}" alt="">`:'';
- return `<button class="tile${faded?' faded':''}${img?' hasimg':''}" data-id="${esc(p.id)}" style="--c:${col(c.color)}" aria-label="${esc(p.title||'Untitled')}">${img}${isVideo(p)?PLAY:''}<span class="ct">${esc(p.cover||p.title||'Untitled')}</span><span class="meta"><span>${fmtShort(p.date)}</span><span>${esc(c.name)}</span></span></button>`}
-function listMatch(p){const q=S.q.trim().toLowerCase();
- return (S.fstatus==='all'||p.status===S.fstatus)&&(!q||[p.title,p.idea,p.captionEn,p.captionNl,p.hook].join(' ').toLowerCase().includes(q))}
-function listBody(){
- const bank=S.posts.filter(p=>!isKey(p.date)&&listMatch(p));
- const ps=S.posts.filter(p=>inMonth(p.date)&&listMatch(p)).sort((a,b)=>a.date.localeCompare(b.date));
- return `<section class="bank"><div class="bh"><b>Idea bank</b><span>${bank.length} idea${bank.length===1?'':'s'}</span></div><div class="chips">${bank.map(chip).join('')||'<span class="empty">No ideas match.</span>'}</div></section>
- <div class="rows">${ps.map(rowHTML).join('')||`<p class="empty">Nothing planned in ${monthName()} that matches.</p>`}</div>`}
-function listHTML(){
- return `<div class="filters"><input type="search" id="q" placeholder="Search titles and captions" value="${esc(S.q)}" aria-label="Search"><select id="fstatus" aria-label="Status"><option value="all">All statuses</option>${Object.entries(STATUS).map(([k,v])=>`<option value="${k}"${S.fstatus===k?' selected':''}>${v}</option>`).join('')}</select></div><div id="listbody">${listBody()}</div>`}
-function weekPosts(){
- const wk0=key(monday(now));
- let ps=S.posts.filter(p=>isKey(p.date)&&p.date>=wk0&&p.status!=='posted').sort((a,b)=>a.date.localeCompare(b.date));
- if(S.openOnly)ps=ps.filter(p=>!(p.shots||[]).length||(p.shots||[]).some(s=>!s.done));
- const w={};for(const p of ps){const k=key(monday(parse(p.date)));(w[k]=w[k]||[]).push(p)}return w}
-function weekEnd(w){const e=parse(w);e.setDate(e.getDate()+6);return key(e)}
-function shotHTML(){
- const weeks=weekPosts();
- const body=Object.keys(weeks).sort().map(w=>`<section><div class="wh"><h3>Week of ${fmtShort(w)} – ${fmtShort(weekEnd(w))} <span class="mute" style="font-size:16px">${weeks[w].length} post${weeks[w].length>1?'s':''}</span></h3><button class="ghost" data-wa="${w}">Copy for WhatsApp</button></div>${weeks[w].map(card).join('')}</section>`).join('');
- return `<div class="shothead"><p>Everything still to film, by week. Tick a shot once it's done. Posted posts drop off this list.</p><label class="check"><input type="checkbox" id="openonly"${S.openOnly?' checked':''}> Only what's still open</label></div>${body||'<p class="empty">Nothing left to film. Plan a post in the calendar first.</p>'}`}
-function card(p){const c=pil(p.pillar);const sh=p.shots||[];const done=sh.filter(s=>s.done).length;const u=safeUrl(p.link);
- return `<article class="card" style="--c:${col(c.color)}"><div class="tp"><span>${fmtDay(p.date)} · ${esc(c.name)} · ${esc(p.format||'Post')}${p.duration?' · '+esc(p.duration):''}</span><span>${done}/${sh.length} filmed</span></div>
- <h4><button class="linkish" data-id="${esc(p.id)}">${p.example?'<span class="ex">Example</span>':''}${esc(p.title||'Untitled')}</button></h4>
- <div class="tags">${p.hook?`<span class="tag">${esc(p.hook)}</span>`:''}${p.cover?`<span class="tag cover">Cover: ${esc(p.cover)}</span>`:''}</div>
- ${u?`<a class="ext" href="${esc(u)}" target="_blank" rel="noopener">View example ↗</a>`:''}
- ${sh.map((s,i)=>`<label class="shot${s.done?' done':''}"><input type="checkbox" data-shot="${esc(p.id)}" data-i="${i}"${s.done?' checked':''}${S.canWrite?'':' disabled'}><span>${i+1}. ${esc(s.text)}${s.overlay?` <em>Text: “${esc(s.overlay)}”</em>`:''}</span></label>`).join('')||'<p class="empty">No shots yet. Open the post and let Claude write them.</p>'}</article>`}
-function waText(w){const ps=weekPosts()[w]||[];
- let t=`*ROEF shotlist · ${fmtShort(w)} – ${fmtShort(weekEnd(w))}*\n`;
- for(const p of ps){t+=`\n*${fmtDay(p.date)} · ${p.title||'Untitled'}* (${p.format||'Post'}${p.duration?', '+p.duration:''})\n`;
-  if(p.hook)t+=`Opening text: ${p.hook}\n`;
-  (p.shots||[]).forEach((s,i)=>{t+=`${s.done?'✅':'⬜'} ${i+1}. ${s.text}${s.overlay?` (text: "${s.overlay}")`:''}\n`});
-  if(safeUrl(p.link))t+=`Example: ${p.link}\n`}
- return t}
 const todayKey=()=>key(new Date());
 const addDays=(k,n)=>{const d=parse(k);d.setDate(d.getDate()+n);return key(d)};
 const num=x=>Number(x)||0;
@@ -705,7 +813,7 @@ function calLink(p){
  const t=/^\d{2}:\d{2}$/.test(p.time||'')?p.time:'18:00';const d=p.date.replace(/-/g,'');const hm=t.replace(':','');
  const e=new Date(parse(p.date).getTime());e.setHours(Number(t.slice(0,2)),Number(t.slice(3))+15);
  const end=key(e).replace(/-/g,'')+'T'+pad(e.getHours())+pad(e.getMinutes())+'00';
- const u=location.href.split('#')[0]+'#today';
+ const u=location.href.split('#')[0]+'#home';
  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Post on '+plat(p)+': '+(p.title||'ROEF post'))+'&dates='+d+'T'+hm+'00/'+end+'&ctz=Europe/London&details='+encodeURIComponent('Everything is ready in the planner: '+u);
 }
 function readyCard(p,mode){const c=pil(p.pillar);const m=Array.isArray(p.media)?p.media:[];
@@ -714,25 +822,11 @@ function readyCard(p,mode){const c=pil(p.pillar);const m=Array.isArray(p.media)?
  <h4><button class="linkish" data-id="${esc(p.id)}">${esc(p.title||'Untitled')}</button>${cBadge(p.id)}</h4>
  <dl>${p.cover?`<dt>Cover</dt><dd>${esc(p.cover)}</dd>`:''}${p.hook?`<dt>Opening text</dt><dd>${esc(p.hook)}</dd>`:''}${p.spoken?`<dt>Say first</dt><dd>${esc(p.spoken)}</dd>`:''}${p.keyword?`<dt>Search phrase</dt><dd>${esc(p.keyword)}</dd>`:''}${p.sound?`<dt>Sound</dt><dd>${esc(p.sound)}${p.soundSearch?` · search “${esc(p.soundSearch)}”`:''}</dd>`:''}</dl>
  ${m.length?`<div class="thumbs">${m.map(x=>{const dv=x.drive&&safeUrl(x.drive.url);return `<a href="${dv?esc(x.drive.url):mediaSrc(x.id||x.thumb)}" target="_blank" rel="noopener" title="Open ${esc(x.name||'file')}${dv?' in Google Drive':''}"><img src="${x.thumb?mediaSrc(x.thumb):DRIVE_PH}" alt="${esc(x.name||'')}"></a>`}).join('')}</div>`:''}
- ${mode==='ready'?`<div class="btnrow">${copyBtn('captionEn','Copy caption EN')}${copyBtn('captionNl','Copy caption NL')}${copyBtn('hashtags','Copy hashtags')}${copyBtn('altText','Copy alt text')}<button class="ghost" type="button" data-copy="all" data-pid="${esc(p.id)}">Copy everything</button></div>
+ ${mode==='ready'?`<div class="btnrow">${copyBtn('captionEn','Copy caption')}${copyBtn('hashtags','Copy hashtags')}${copyBtn('altText','Copy alt text')}<button class="ghost" type="button" data-copy="all" data-pid="${esc(p.id)}">Copy everything</button></div>
  <div class="btnrow"><a class="ghost" style="display:inline-flex;align-items:center;text-decoration:none" href="${calLink(p)}" target="_blank" rel="noopener">Add reminder</a><button class="primary" type="button" data-posted="${esc(p.id)}">Mark as posted</button></div>`:''}
- ${mode==='approve'?`<div class="btnrow"><button class="primary" type="button" data-approve="${esc(p.id)}">Approve</button><button class="ghost" type="button" data-id="${esc(p.id)}">Open to check</button></div>`:''}
+ ${mode==='approve'?`<div class="btnrow"><button class="primary" type="button" data-approve="${esc(p.id)}">Approve (Ready)</button><button class="ghost" type="button" data-id="${esc(p.id)}">Open to check</button></div>`:''}
  ${mode==='results'?`<div class="btnrow"><button class="primary" type="button" data-id="${esc(p.id)}">Add results</button></div>`:''}
  </article>`}
-function todayHTML(){
- const tk=todayKey(),soon=addDays(tk,3),two=Date.now()-2*864e5;
- const dated=S.posts.filter(p=>isKey(p.date)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));
- const ready=dated.filter(p=>p.status==='approved'&&p.date<=tk);
- const approve=dated.filter(p=>(p.status==='draft'||p.status==='idea')&&p.date<=soon);
- const upcoming=dated.filter(p=>p.status==='approved'&&p.date>tk&&p.date<=soon);
- const needRes=dated.filter(p=>p.status==='posted'&&!hasResults(p)&&((p.postedAt&&p.postedAt<=two)||(!p.postedAt&&p.date<=addDays(tk,-2))));
- const sec=(t,list,mode,empty)=>`<h3 class="sech">${t} <span class="mute" style="font-size:16px">${list.length}</span></h3>${list.map(p=>readyCard(p,mode)).join('')||`<p class="empty">${empty}</p>`}`;
- return `<p class="hint" style="margin-top:0">Approved posts for today show up here with everything ready to copy. Post in the Instagram or TikTok app, so you can pick the right sound, then tap Mark as posted.</p>`
-  +sec('Ready to post',ready,'ready','Nothing approved for today.')
-  +sec('Needs approval (next 3 days)',approve,'approve','Nothing waiting for approval.')
-  +sec('Coming up (next 3 days)',upcoming,'ready','Nothing else approved for the next 3 days.')
-  +sec('Add results (posted 2+ days ago)',needRes,'results','No results to add right now.');
-}
 /* ---------- import results from a CSV file ---------- */
 let IMP=null;
 const IMP_COLS={
@@ -920,14 +1014,14 @@ async function syncMeta(){
  finally{const bb=$('#syncbtn');if(bb)bb.disabled=false}
 }
 function resultsHTML(){
- return impCard()+syncCard()+resultsBody();
+ return launchCard()+impCard()+syncCard()+resultsBody()+bankCard();
 }
 function resultsBody(){
  const rows=S.posts.filter(p=>p.status==='posted'&&hasResults(p)).map(p=>({p,t:totals(p)})).sort((a,b)=>b.t.views-a.t.views);
  const L=str(S.settings.learnings).trim();
  const learnBox=`<h3 class="sech">What Claude learned</h3>${L?`<div class="learn">${esc(L)}</div><p class="hint">Updated ${S.settings.learningsAt?new Date(S.settings.learningsAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):''}. Claude uses this in every script.</p>`:'<p class="empty">Nothing yet.</p>'}
  <div class="btnrow"><button class="primary" type="button" id="learnbtn"${rows.length<3?' disabled':''}>Ask Claude what's working</button><span class="aistat" id="learnstat" role="status">${rows.length<3?'Needs results for at least 3 posts.':''}</span></div>`;
- if(!rows.length)return `<p class="empty">No results yet. Two days after posting, open the post and fill in Results (Post today reminds you).</p>`+learnBox;
+ if(!rows.length)return `<p class="empty">No results yet. Two days after posting, open the post and fill in Results (Home reminds you).</p>`+learnBox;
  const sum=rows.reduce((a,{t})=>{a.views+=t.views;a.eng+=t.eng;a.follows+=t.follows;return a},{views:0,eng:0,follows:0});
  const group=fn=>{const g={};rows.forEach(({p,t})=>{const k=fn(p);(g[k]=g[k]||{n:0,views:0,eng:0});g[k].n++;g[k].views+=t.views;g[k].eng+=t.eng});return Object.entries(g).map(([k,v])=>({k,avg:v.views/v.n,rate:v.views?v.eng/v.views:0,n:v.n})).sort((a,b)=>b.avg-a.avg)};
  const bars=(list,colorOf)=>{const mx=Math.max(1,...list.map(x=>x.avg));return `<div class="bars">${list.map(x=>`<div class="barrow" style="--c:${colorOf(x.k)}"><b>${esc(x.k)}</b><i style="width:${Math.max(2,x.avg/mx*100)}%"></i><span>${fmtN(x.avg)} avg views · ${pct(x.rate)} · ${x.n} post${x.n>1?'s':''}</span></div>`).join('')}</div>`};
@@ -959,10 +1053,10 @@ async function runLearn(){
 }
 async function markPosted(id){const p=S.posts.find(x=>x.id===id);if(!p)return;try{await queue(id,()=>db.doc('posts/'+id).update({status:'posted',postedAt:Date.now()}));toast('Marked as posted. Add results in 2 days.')}catch(e){toast('Could not save. Try again.')}}
 async function approvePost(id){try{await queue(id,()=>db.doc('posts/'+id).update({status:'approved'}));toast('Approved')}catch(e){toast('Could not save. Try again.')}}
-function copyFor(id,k){const p=S.posts.find(x=>x.id===id);if(!p)return;let t;if(k==='all')t=[p.captionEn,p.captionNl,p.hashtags].map(x=>str(x).trim()).filter(Boolean).join('\n\n');else t=str(p[k]);copyText(t)}
+function copyFor(id,k){const p=S.posts.find(x=>x.id===id);if(!p)return;let t;if(k==='all')t=[p.captionEn,p.hashtags].map(x=>str(x).trim()).filter(Boolean).join('\n\n');else t=str(p[k]);copyText(t)}
 function linkify(t){return esc(t).replace(/https?:\/\/[^\s<]+/g,u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`)}
 function trendCard(){const T=str(S.settings.trendBrief).trim(),err=str(S.settings.trendError).trim();
- return `<div class="pcard" style="margin-bottom:18px"><h3>This week's trends</h3>${T?`<div class="prewrap">${linkify(T)}</div><p class="small">Researched ${esc(S.settings.trendAt||'')} by the trend scout, which runs every Monday morning. Trend ideas are in the idea bank, marked Trend.</p>`:'<p class="empty">No trend brief yet. The trend scout runs every Monday morning, or start it now.</p>'}${soundsHTML()}${err?`<p class="small" style="color:var(--red)">Last run failed: ${esc(err)}</p>`:''}<div class="btnrow"><button class="ghost" type="button" id="trendbtn">Refresh trends now</button><span class="aistat" id="trendstat" role="status"></span></div></div>`}
+ return `<div class="pcard" style="margin-bottom:18px"><h3>This week's trends</h3>${T?`<div class="prewrap">${linkify(T)}</div><p class="small">Researched ${esc(S.settings.trendAt||'')} by the trend scout, which runs every Monday morning. Trend ideas are in Ideas, under From trends.</p>`:'<p class="empty">No trend brief yet. The trend scout runs every Monday morning, or start it now.</p>'}${soundsHTML()}${err?`<p class="small" style="color:var(--red)">Last run failed: ${esc(err)}</p>`:''}<div class="btnrow"><button class="ghost" type="button" id="trendbtn">Refresh trends now</button><span class="aistat" id="trendstat" role="status"></span></div></div>`}
 async function refreshTrends(){
  const st=$('#trendstat'),b=$('#trendbtn');b.disabled=true;st.textContent='Starting…';
  try{const {data:{session}}=await sbc.auth.getSession();if(!session)throw new Error('login');
@@ -972,7 +1066,7 @@ async function refreshTrends(){
  }catch(e){st.textContent='Could not start the trend scout. Try again later.'}
  finally{const bb=$('#trendbtn');if(bb)bb.disabled=false}
 }
-function playHTML(){return `${learnCard()}${trendCard()}<div class="play-sec">
+function playHTML(){return `${brandCard()}<div class="play-grid" style="margin-top:14px">${styleCard()}${tplCard()}</div>${learnCard()}<div class="play-sec">
 <div class="pcard"><h3>What works right now</h3><ul>
 <li><b>Win the first two seconds.</b> Open on the payoff: the dog in the basket, mid-ride. Not a logo, not an intro.</li>
 <li><b>Text on the first frame.</b> Lots of people scroll with the sound off, so the opening text has to say what the video is about.</li>
@@ -994,9 +1088,9 @@ function playHTML(){return `${learnCard()}${trendCard()}<div class="play-sec">
 <li><b>6 to 2 weeks before:</b> 4–5 a week. One product detail at a time, street reactions, announce the date, push sign-ups. Switch on Kickstarter's pre-launch page and ask people to tap “Notify me”.</li>
 <li><b>Launch week:</b> daily. Launch post, early-bird spots going, first backers.</li>
 <li><b>During the campaign:</b> progress, answer comments with a video, repost riders.</li></ul>
-<p class="small">A suggested rhythm, not a rule. Set the launch date under Brand &amp; launch and the countdown follows.</p></div>
+<p class="small">A suggested rhythm, not a rule. Set the launch date under Settings and the countdown follows.</p></div>
 <div class="pcard"><h3>Get found in search</h3><ul>
-<li><b>One search phrase per post,</b> written the way people type it: “dog basket for e-bike”, “hondenmand fiets”.</li>
+<li><b>One search phrase per post,</b> written the way people type it: “dog basket for e-bike”, “dog bike basket”.</li>
 <li><b>Use it four times:</b> the first line of the caption, the opening text on screen, the first thing you say, and the alt text.</li>
 <li><b>Instagram alt text:</b> write your own under Advanced settings before posting. Describe what's in the photo, with the phrase.</li>
 <li><b>3–5 specific hashtags</b> beat 20 generic ones. Captions and alt text matter more than hashtags now.</li>
@@ -1006,11 +1100,10 @@ function playHTML(){return `${learnCard()}${trendCard()}<div class="play-sec">
 <div class="pcard"><h3>Before you post</h3><ul>
 <li>Vertical 9:16, filmed in daylight</li>
 <li>Opening text on the first frame, away from the bottom and the right-side buttons</li>
-<li>Cover text readable in the grid (check Feed preview)</li>
+<li>Cover text readable in the profile grid</li>
 <li>Search phrase in the first caption line, the opening text and the alt text</li>
 <li>Caption: first line works on its own, one call to action, 3–5 hashtags</li>
-<li>English and Dutch version where it makes sense</li>
-<li>Nothing from the “never mention” list in Brand &amp; launch</li></ul></div>
+<li>Nothing from the “never mention” list in Settings, and the brand book's copy rules</li></ul></div>
 <div class="pcard"><h3>Sources</h3><ul class="small">
 <li><a href="https://later.com/blog/instagram-seo/" target="_blank" rel="noopener">Later: Instagram SEO</a></li>
 <li><a href="https://buffer.com/resources/instagram-search/" target="_blank" rel="noopener">Buffer: Instagram SEO and alt text</a></li>
@@ -1023,10 +1116,272 @@ function playHTML(){return `${learnCard()}${trendCard()}<div class="play-sec">
 <li><a href="https://updates.kickstarter.com/how-to-maximize-pre-launch-sign-ups-for-your-kickstarter-campaign/" target="_blank" rel="noopener">Kickstarter: how to maximise pre-launch sign-ups</a></li></ul></div>
 </div>`}
 
+/* ---------- v2: stages, Home, Ideas, Plan (board, tasks, creators, media), launch links ---------- */
+const STAGES=[['idea','Idea'],['draft','Script'],['film','Film'],['edit','Edit'],['review','Review'],['approved','Ready'],['posted','Posted']];
+const STAGE_KEYS=STAGES.map(s=>s[0]);
+const nextStage=k=>{const i=STAGE_KEYS.indexOf(k);return i>=0&&i<STAGE_KEYS.length-1?STAGE_KEYS[i+1]:''};
+const PLAN_SUBS=[['calendar','Calendar'],['board','Board'],['tasks','Tasks'],['creators','Creators'],['media','Media']];
+const CR_PLAT={ig:'Instagram',tt:'TikTok',fb:'Facebook',yt:'YouTube',web:'Website',other:'Other'};
+const CR_STATUS={todo:'To contact',contacted:'Contacted',replied:'Replied',agreed:'Agreed',posted:'Posted',no:'Not now'};
+const DEF_TEMPLATES=[
+ {id:'t-ride',name:'Ride with the dog',format:'Reel',pillar:'ride',idea:'A real ride through the city with the dog in the basket. Open on the dog mid-ride.',hook:'Best seat on the bike'},
+ {id:'t-detail',name:'One detail',format:'Reel',pillar:'details',idea:'Show one product detail in under 15 seconds: what it is and why it matters on the bike.',hook:'One detail. Why it matters.'},
+ {id:'t-build',name:'Behind the build',format:'Carousel',pillar:'build',idea:'A design choice or prototype step, with sketches, parts and the real result.',hook:'How we built it'},
+ {id:'t-question',name:'Answer a question',format:'TikTok',pillar:'details',idea:'Answer one question people ask in the comments, shown on the bike.',hook:'Will it fit my bike?'}];
+const templates=()=>Array.isArray(S.settings.templates)&&S.settings.templates.length?S.settings.templates:DEF_TEMPLATES;
+const people=()=>S.members.filter(m=>m&&m.email);
+const firstName=e=>e?String(nameOf(e)).split(/\s+/)[0]:'';
+const initial=e=>e?`<span class="av" title="${esc(nameOf(e))}">${esc(firstName(e).slice(0,1).toUpperCase())}</span>`:'<span class="av none" title="Nobody yet">?</span>';
+const kimEmail=()=>{const k=people().find(m=>/^kim\b/i.test(m.name||''));return k?k.email:''};
+const peopleOpts=(sel,none)=>`<option value="">${none||'Nobody yet'}</option>`+people().map(m=>`<option value="${esc(m.email)}"${m.email===sel?' selected':''}>${esc(m.name||m.email)}</option>`).join('');
+const postTitle=id=>{const p=S.posts.find(x=>x.id===id);return p?(p.title||'Untitled'):''};
+
+/* ----- tasks ----- */
+async function loadTasks(){if(!sbc)return;try{const {data,error}=await sbc.from('tasks').select('id,post_id,title,assignee,due,done,done_at,notes,step,created_by,created_at').order('created_at',{ascending:true});if(error)throw error;S.tasks=data||[];render();if(edOpen())renderEdTasks()}catch(e){}}
+const openTasks=()=>S.tasks.filter(t=>!t.done);
+const sortTasks=a=>a.slice().sort((x,y)=>(x.due||'9999').localeCompare(y.due||'9999')||String(x.created_at).localeCompare(String(y.created_at)));
+function dueText(d){if(!d)return 'No date';const tk=todayKey();if(d<tk)return 'Overdue · '+fmtShort(d);if(d===tk)return 'Today';if(d===addDays(tk,1))return 'Tomorrow';return fmtDay(d)}
+function taskRow(t,o={}){const late=!t.done&&t.due&&t.due<todayKey();const pt=t.post_id&&!o.noPost?postTitle(t.post_id):'';
+ return `<div class="trow${t.done?' done':''}${late?' late':''}"><input type="checkbox" data-tdone="${esc(t.id)}"${t.done?' checked':''} aria-label="Done: ${esc(t.title)}"><button class="tt" type="button" data-topen="${esc(t.id)}"><span>${esc(t.title)}</span><small>${t.assignee?esc(firstName(t.assignee)):'Nobody yet'} · ${esc(dueText(t.due))}${pt?' · '+esc(pt):''}</small></button>${initial(t.assignee)}</div>`}
+function quickTask(scope,post){return `<form class="tadd" data-tadd="${esc(scope)}"${post?` data-post="${esc(post)}"`:''}><input type="text" name="title" placeholder="Add a task, e.g. Film the canal ride" aria-label="New task" maxlength="300" required><select name="assignee" aria-label="Who">${peopleOpts(scope==='mine'?S.me:'','Who?')}</select><input type="date" name="due" aria-label="Due date"><button class="primary" type="submit">Add</button></form>`}
+async function addTask(t){
+ if(!sbc)return null;const row={title:str(t.title).trim().slice(0,300),assignee:lowerE(t.assignee),due:isKey(t.due)?t.due:null,post_id:t.post_id||null,step:str(t.step),notes:str(t.notes)};
+ if(!row.title)return null;
+ const {data,error}=await sbc.from('tasks').insert(row).select('id,post_id,title,assignee,due,done,done_at,notes,step,created_by,created_at').single();
+ if(error)throw error;S.tasks.push(data);return data}
+async function setTask(id,patch){const t=S.tasks.find(x=>x.id===id);if(!t)return;const old=Object.assign({},t);Object.assign(t,patch);render();if(edOpen())renderEdTasks();
+ try{const {error}=await sbc.from('tasks').update(patch).eq('id',id);if(error)throw error}catch(e){Object.assign(t,old);render();toast('Could not save the task.')}}
+async function toggleTask(id,done){await setTask(id,{done,done_at:done?new Date().toISOString():null});if(done)toast('Done')}
+async function removeTask(id){const i=S.tasks.findIndex(x=>x.id===id);if(i<0)return;const t=S.tasks.splice(i,1)[0];render();if(edOpen())renderEdTasks();
+ try{const {error}=await sbc.from('tasks').delete().eq('id',id);if(error)throw error}catch(e){S.tasks.push(t);render();toast('Could not delete the task.')}}
+function stdTasks(p,pid){
+ const d=isKey(p.date)?p.date:'';const at=n=>d?addDays(d,n):'';const own=lowerE(p.owner),kim=kimEmail();
+ return [['Write the script and caption',-5,own,'draft'],['Film it',-4,own,'film'],['Edit the video',-2,own,'edit'],['Check and approve',-1,kim||own,'review'],['Post it',0,own,'approved'],['Check the results',2,own,'posted']]
+  .map(([title,n,who,step])=>({title,due:at(n),assignee:who,post_id:pid,step}))}
+async function addStdTasks(pid){
+ const p=S.posts.find(x=>x.id===pid);if(!p)return;const have=new Set(S.tasks.filter(t=>t.post_id===pid).map(t=>t.step));
+ const todo=stdTasks(p,pid).filter(t=>!have.has(t.step));if(!todo.length)return toast('This post already has the standard tasks.');
+ try{for(const t of todo)await addTask(t);render();if(edOpen())renderEdTasks();toast(`${todo.length} tasks added.`)}catch(e){toast('Could not add the tasks.')}}
+let TK=null;
+function openTask(id,preset){
+ const t=id?S.tasks.find(x=>x.id===id):Object.assign({id:null,title:'',assignee:'',due:'',post_id:'',notes:''},preset||{});if(!t)return;TK=t;
+ $('#t-heading').textContent=id?'Task':'New task';$('#t-title').value=t.title||'';$('#t-who').innerHTML=peopleOpts(t.assignee);$('#t-due').value=t.due||'';$('#t-notes').value=t.notes||'';
+ const ps=S.posts.filter(p=>p.status!=='posted'||p.id===t.post_id).sort((a,b)=>(a.date||'9').localeCompare(b.date||'9'));
+ $('#t-post').innerHTML='<option value="">No post</option>'+ps.map(p=>`<option value="${esc(p.id)}"${p.id===t.post_id?' selected':''}>${esc((isKey(p.date)?fmtShort(p.date)+' · ':'')+(p.title||'Untitled'))}</option>`).join('');
+ $('#t-del').hidden=!id;$('#t-del').textContent='Delete';$('#t-open').hidden=!t.post_id;$('#t-meta').textContent=id?`Added by ${firstName(t.created_by)||'someone'}${t.created_at?' · '+ago(t.created_at):''}${t.done?' · done':''}`:'';
+ openOv('ovt');setTimeout(()=>$('#t-title').focus(),40)}
+async function saveTask(){
+ const v={title:$('#t-title').value.trim(),assignee:$('#t-who').value,due:$('#t-due').value||null,post_id:$('#t-post').value||null,notes:$('#t-notes').value.trim()};
+ if(!v.title){$('#t-title').focus();return}
+ const b=$('#t-save');b.disabled=true;
+ try{if(TK&&TK.id)await setTask(TK.id,v);else{await addTask(v);render();if(edOpen())renderEdTasks()}closeOv('ovt');toast('Saved')}catch(e){toast('Could not save the task.')}finally{b.disabled=false}}
+let tDelArm=0;
+async function deleteTask(){if(!TK||!TK.id)return;if(Date.now()-tDelArm>3000){tDelArm=Date.now();$('#t-del').textContent='Tap again to delete';return}await removeTask(TK.id);closeOv('ovt');toast('Deleted')}
+function renderEdTasks(){const box=$('#e-tasks');if(!box||!ED)return;
+ if(!ED.id){box.innerHTML='<p class="empty">Save the post first, then add tasks.</p>';return}
+ const ts=sortTasks(S.tasks.filter(t=>t.post_id===ED.id));
+ box.innerHTML=(ts.map(t=>taskRow(t,{noPost:true})).join('')||'<p class="empty">No tasks yet.</p>')+`<div class="btnrow"><button class="ghost" type="button" data-tstd="${esc(ED.id)}">Add the standard tasks</button><button class="ghost" type="button" data-tnew="${esc(ED.id)}">+ Task</button></div><p class="hint">Standard tasks: script, film, edit, check, post and results, with due dates counted back from the post date.</p>`}
+
+/* ----- Home ----- */
+function homeHTML(){
+ const tk=todayKey(),soon=addDays(tk,3),two=Date.now()-2*864e5;
+ const all=!!S.homeAll;const pool=sortTasks(openTasks().filter(t=>all||t.assignee===S.me));
+ const top=sortTasks(openTasks().filter(t=>t.assignee===S.me)).slice(0,3);
+ const grp={late:[],today:[],week:[],later:[]};
+ for(const t of pool){if(t.due&&t.due<tk)grp.late.push(t);else if(t.due===tk)grp.today.push(t);else if(t.due&&t.due<=addDays(tk,7))grp.week.push(t);else grp.later.push(t)}
+ const dated=S.posts.filter(p=>isKey(p.date)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));
+ const ready=dated.filter(p=>p.status==='approved'&&p.date<=tk);
+ const review=S.posts.filter(p=>p.status==='review').sort((a,b)=>(a.date||'9').localeCompare(b.date||'9'));
+ const upcoming=dated.filter(p=>p.status!=='posted'&&p.status!=='review'&&p.date>tk&&p.date<=soon);
+ const needRes=dated.filter(p=>p.status==='posted'&&(p.platforms||[]).includes('tt')&&!num(((p.results||{}).tt||{}).views)&&((p.postedAt&&p.postedAt<=two)||(!p.postedAt&&p.date<=addDays(tk,-2))));
+ const tags=myUnread().slice(0,5);
+ const fresh=S.posts.filter(p=>p.status==='idea'&&(p.source==='engine'||p.trend)).sort((a,b)=>num(b.engineAt||b.updatedAt)-num(a.engineAt||a.updatedAt)).slice(0,3);
+ const sec=(t,n,body,extra)=>`<section class="hsec"><h3 class="sech">${t}${n!==''?` <span class="mute" style="font-size:16px">${n}</span>`:''}${extra||''}</h3>${body}</section>`;
+ const g=(label,list)=>list.length?`<p class="glabel">${label}</p>${list.map(t=>taskRow(t)).join('')}`:'';
+ const hello=firstName(S.me)?'Hi '+esc(firstName(S.me)):'Today';
+ return `<div class="home">
+ <div class="pcard top3"><h3>${hello}: your top 3</h3>${top.length?top.map((t,i)=>`<div class="t3"><b>${i+1}</b>${taskRow(t)}</div>`).join(''):'<p class="empty">Nothing on your list. Pick something from Ideas or add a task below.</p>'}</div>
+ ${sec('Ready to post',ready.length,ready.map(p=>readyCard(p,'ready')).join('')||'<p class="empty">Nothing ready for today.</p>')}
+ ${sec(all?'Everyone\'s tasks':'My tasks',pool.length,(g('Overdue',grp.late)+g('Today',grp.today)+g('Next 7 days',grp.week)+g('Later or no date',grp.later))||'<p class="empty">No open tasks.</p>',` <button class="link" type="button" data-homeall>${all?'Show only mine':'Show everyone'}</button>`)+quickTask('mine')}
+ ${review.length?sec('Waiting for Kim\'s check',review.length,review.map(p=>readyCard(p,'approve')).join('')):''}
+ ${sec('Coming up (next 3 days)',upcoming.length,upcoming.length?`<div class="rows">${upcoming.map(rowHTML).join('')}</div>`:'<p class="empty">Nothing planned for the next 3 days.</p>')}
+ ${tags.length?sec('You were tagged',tags.length,tags.map(c=>`<button type="button" class="fy unread" data-fy="${esc(c.post_id)}"><span><b>${esc(nameOf(c.author))}</b> tagged you on <b>${esc(titleOf(c.post_id))}</b></span><small>${esc(ago(c.created_at))}</small><span class="cb">${esc(String(c.body).slice(0,200))}</span></button>`).join('')):''}
+ ${needRes.length?sec('Add TikTok numbers',needRes.length,'<p class="hint">Instagram and Facebook fill in by themselves. TikTok still needs the numbers or a CSV on Results.</p>'+needRes.map(p=>readyCard(p,'results')).join('')):''}
+ ${sec('New ideas',fresh.length,fresh.map(ideaCard).join('')||'<p class="empty">No new ideas yet.</p>',' <button class="link" type="button" data-view="ideas">All ideas</button>')}
+ </div>`}
+
+/* ----- Ideas ----- */
+function ideaSrc(p){return p.source==='engine'?(p.basis?esc(p.basis):'Claude'):p.trend?'Trend':p.example?'Example':'Team'}
+function ideaCard(p){const c=pil(p.pillar);
+ return `<article class="icard" style="--c:${col(c.color)}"><div class="tp"><span class="ex${p.trend?' trend':''}">${ideaSrc(p)}</span><span>${esc(c.name)} · ${esc(p.format||'Post')}</span></div>
+ <h4><button class="linkish" type="button" data-id="${esc(p.id)}">${esc(p.title||'Untitled')}</button>${cBadge(p.id)}</h4>
+ ${p.hook?`<p class="ihook">“${esc(p.hook)}”</p>`:''}${p.why?`<p class="small">${esc(p.why)}</p>`:p.idea?`<p class="small">${esc(String(p.idea).slice(0,220))}</p>`:''}
+ <div class="btnrow"><button class="primary" type="button" data-id="${esc(p.id)}">Plan it</button><button class="ghost" type="button" data-idel="${esc(p.id)}">Not for us</button></div></article>`}
+function ideasHTML(){
+ const ideas=S.posts.filter(p=>p.status==='idea').sort((a,b)=>num(b.engineAt||b.updatedAt)-num(a.engineAt||a.updatedAt));
+ const eng=ideas.filter(p=>p.source==='engine'),tr=ideas.filter(p=>p.trend&&p.source!=='engine'),own=ideas.filter(p=>p.source!=='engine'&&!p.trend);
+ const measured=S.posts.filter(p=>p.status==='posted'&&hasResults(p)).length;
+ const grid=(list,empty)=>list.length?`<div class="igrid">${list.map(ideaCard).join('')}</div>`:`<p class="empty">${empty}</p>`;
+ return `<div class="pcard"><h3>Get new ideas</h3><p style="margin:0">Claude looks at what worked in Results, this week's trends and sounds, your hashtags and search terms, the brand book and Kim's writing style, then suggests 6 ideas with the reason for each.</p>
+ <div class="btnrow"><button class="primary" type="button" id="ideabtn">Get 6 new ideas</button><button class="ghost" type="button" data-new="">+ Your own idea</button><span class="aistat" id="ideastat" role="status">${measured<3?'Tip: ideas get sharper once 3 or more posts have numbers.':''}</span></div></div>
+ <h3 class="sech">From Claude <span class="mute" style="font-size:16px">${eng.length}</span></h3>${grid(eng,'No ideas from Claude yet. Tap "Get 6 new ideas".')}
+ <h3 class="sech">From trends <span class="mute" style="font-size:16px">${tr.length}</span></h3>${grid(tr,'The trend scout adds ideas every Monday morning.')}
+ <h3 class="sech">From the team <span class="mute" style="font-size:16px">${own.length}</span></h3>${grid(own,'No team ideas yet.')}
+ ${trendCard()}${bankCard()}`}
+async function runIdeas(){
+ if(!sample)return toast('Claude is not available here.');const b=$('#ideabtn'),st=$('#ideastat');if(!b)return;b.disabled=true;st.textContent='Claude is reading your results and trends… this can take a minute.';
+ const rows=S.posts.filter(p=>p.status==='posted'&&hasResults(p)).map(p=>{const t=totals(p);return {title:p.title,pillar:pil(p.pillar).name,format:p.format,hook:p.hook,keyword:p.keyword,hashtags:p.hashtags,views:t.views,engagementRate:+t.rate.toFixed(4),saves:t.saves,shares:t.shares,comments:t.comments}}).sort((a,b)=>b.views-a.views).slice(0,20);
+ const bank=tagBank().slice(0,20).map(x=>({tag:x.k,kind:x.kind,posts:x.n,avgViews:Math.round(x.avg),engagementRate:+x.rate.toFixed(4)}));
+ const recent=S.posts.filter(p=>p.title).slice(-60).map(p=>p.title);
+ const pn=pillars().map(p=>p.name);
+ const prompt=`You are the content strategist for ROEF, a startup building up to its Kickstarter launch (premium dog basket for bikes). Propose new short-form content ideas for Instagram, TikTok and Facebook. Follow the brand book and the brand rules exactly. Never break the never-mention list. Do not invent facts, numbers or quotes.
+
+${brandBlock()}BRAND RULES
+${brain()}
+
+${perfBlock()}${lessonBlock()}RESULTS PER POST (real numbers, Instagram + TikTok + Facebook combined; small numbers are weak evidence, say so)
+${JSON.stringify(rows)}
+
+HASHTAGS AND SEARCH PHRASES WITH THEIR RESULTS
+${JSON.stringify(bank)}
+
+POSTS ALREADY IN THE PLANNER (do not repeat these)
+${recent.join(' | ')}
+
+CONTENT PILLARS: ${pn.join(', ')}
+FORMATS: ${FORMATS.join(', ')}
+
+TASK
+Suggest exactly 6 new ideas: 2 that double down on what worked in the results (or, if there are fewer than 3 measured posts, on ROEF's strongest story), 2 built on this week's trends or sounds that fit the brand, and 2 built on a search phrase or hashtag people use. Each idea is one clear video or post that can be filmed in Amsterdam with the prototype and a dog. English only. The reason must point to the evidence (a post and its numbers, a named trend, or a search phrase).
+Reply with only one JSON object, no other text:
+{"ideas":[{"title":"max 6 words","basis":"one of: Results, Trend, Search","why":"1-2 sentences with the evidence","pillar":"one of the pillar names","format":"one of the formats","hook":"on-screen text for the first frame, max 8 words","idea":"2-3 sentences: what to film and the payoff","keyword":"one search phrase people type","hashtags":"3 to 5 hashtags separated by spaces","sound":"sound or beat that fits the sound rules, or voiceover"}]}`;
+ try{const r=await sample.json(prompt,{cache:false});const list=(r&&Array.isArray(r.ideas)?r.ideas:[]).filter(x=>x&&str(x.title).trim()).slice(0,8);if(!list.length)throw {code:'invalid_json'};
+  st.textContent='Saving the ideas…';const t0=Date.now();
+  for(const [i,x] of list.entries()){const d=blank('');delete d.id;const pl=pillars().find(p=>p.name.toLowerCase()===str(x.pillar).toLowerCase());
+   Object.assign(d,{title:str(x.title).trim().slice(0,80),idea:str(x.idea).trim(),why:str(x.why).trim(),basis:['Results','Trend','Search'].includes(x.basis)?x.basis:'Claude',pillar:pl?pl.id:d.pillar,format:FORMATS.includes(x.format)?x.format:'Reel',hook:str(x.hook).trim(),keyword:str(x.keyword).trim(),hashtags:str(x.hashtags).trim(),sound:str(x.sound).trim(),status:'idea',source:'engine',engineAt:t0+i,lang:'en',example:false,updatedAt:t0});
+   await queue('new'+i,()=>db.collection('posts').doc().set(d))}
+  st.textContent=`${list.length} new ideas added below.`;toast('New ideas added');
+ }catch(e){st.textContent=aiErr(e)}finally{const bb=$('#ideabtn');if(bb)bb.disabled=false}}
+let iDelArm={};
+async function dismissIdea(id,btn){if(Date.now()-(iDelArm[id]||0)>3000){iDelArm[id]=Date.now();btn.textContent='Tap again to remove';return}
+ try{await queue(id,()=>db.doc('posts/'+id).delete());toast('Removed')}catch(e){toast('Could not remove it.')}}
+
+/* ----- hashtag and search phrase bank ----- */
+function tagBank(){const m={};const add=(k,kind,t)=>{const o=m[kind+k]||(m[kind+k]={k,kind,n:0,views:0,eng:0});o.n++;o.views+=t.views;o.eng+=t.eng};
+ for(const p of S.posts){if(p.status!=='posted'||!hasResults(p))continue;const t=totals(p);
+  new Set((str(p.hashtags).match(/#[\p{L}\p{N}_]+/gu)||[]).map(x=>x.toLowerCase())).forEach(h=>add(h,'Hashtag',t));
+  const kw=str(p.keyword).trim().toLowerCase();if(kw)add(kw,'Search phrase',t)}
+ return Object.values(m).map(o=>Object.assign(o,{avg:o.views/o.n,rate:o.views?o.eng/o.views:0})).sort((a,b)=>b.avg-a.avg)}
+function bankCard(){const B=tagBank();const posts=S.posts.filter(p=>p.status==='posted'&&hasResults(p));const avg=posts.length?posts.reduce((a,p)=>a+totals(p).views,0)/posts.length:0;
+ const verdict=x=>x.n<2?'Too early':x.avg>=avg*1.2?'Use more':x.avg<=avg*.6?'Weak':'Average';
+ return `<div class="pcard" style="margin-top:18px"><h3>Hashtags and search phrases</h3>${B.length?`<div class="scroll"><table class="rtab"><thead><tr><th>Tag or phrase</th><th>Type</th><th class="n">Posts</th><th class="n">Avg views</th><th class="n">Engagement</th><th>Verdict</th></tr></thead><tbody>${B.slice(0,30).map(x=>`<tr><td>${esc(x.k)}</td><td>${x.kind}</td><td class="n">${x.n}</td><td class="n">${fmtN(x.avg)}</td><td class="n">${pct(x.rate)}</td><td>${verdict(x)}</td></tr>`).join('')}</tbody></table></div><p class="small">Scored from posts with numbers. "Use more" means at least 20% above your average views; one post alone is too early to judge.</p>`:'<p class="empty">Fills in once posts with hashtags have numbers.</p>'}</div>`}
+
+/* ----- Plan ----- */
+function planHTML(){const sub=PLAN_SUBS.some(s=>s[0]===S.sub)?S.sub:'calendar';
+ const seg=`<div class="seg" role="group" aria-label="Plan view">${PLAN_SUBS.map(([k,l])=>`<button type="button" data-sub="${k}" aria-pressed="${sub===k}">${l}</button>`).join('')}</div>`;
+ return seg+(sub==='calendar'?calHTML():sub==='board'?boardHTML():sub==='tasks'?tasksHTML():sub==='creators'?creatorsHTML():mediaHTML())}
+function bcard(p){const c=pil(p.pillar);const ts=S.tasks.filter(t=>t.post_id===p.id);const dn=ts.filter(t=>t.done).length;const nx=nextStage(p.status);
+ return `<article class="bcard" draggable="true" data-bid="${esc(p.id)}" style="--c:${col(c.color)}"><button class="linkish" type="button" data-id="${esc(p.id)}">${esc(p.title||'Untitled')}</button>${cBadge(p.id)}
+ <small>${isKey(p.date)?esc(fmtShort(p.date)):'No date'} · ${esc(p.format||'Post')}${ts.length?` · ${dn}/${ts.length} tasks`:''}</small>
+ <div class="bfoot">${initial(p.owner)}${nx&&S.canWrite?`<button class="ghost sm" type="button" data-stage="${esc(p.id)}" data-to="${nx}" title="Move to ${esc(STATUS[nx])}">${esc(STATUS[nx])} →</button>`:''}</div></article>`}
+function boardHTML(){const old=addDays(todayKey(),-21);
+ return `<p class="hint" style="margin-top:0">Every post moves left to right. Drag a card, or tap the button to move it on. Review means Kim checks it; Ready means approved.</p><div class="board">${STAGES.map(([k,l])=>{const ps=S.posts.filter(p=>(p.status||'idea')===k&&(k!=='posted'||(p.date||'')>=old)).sort((a,b)=>(a.date||'9').localeCompare(b.date||'9'));
+  return `<section class="bcol" data-stage-col="${k}"><h4>${esc(l)} <span class="mute">${ps.length}</span></h4>${k==='idea'?`<p class="small">${ps.length?'':'Ideas live in the Ideas tab.'}</p>`:''}${(k==='idea'?ps.slice(0,6):ps).map(bcard).join('')}${k==='idea'&&ps.length>6?`<button class="link" type="button" data-view="ideas">+${ps.length-6} more in Ideas</button>`:''}</section>`}).join('')}</div>`}
+async function setStage(id,to){const p=S.posts.find(x=>x.id===id);if(!p||!STATUS[to]||p.status===to)return;
+ const patch={status:to,updatedAt:Date.now()};if(to==='posted'&&!p.postedAt)patch.postedAt=Date.now();
+ Object.assign(p,patch);render();
+ try{await queue(id,()=>db.doc('posts/'+id).update(patch));toast('Moved to '+STATUS[to])}catch(e){toast('Could not move it.')}}
+function tasksHTML(){const by={};for(const t of openTasks())(by[t.assignee||'']=by[t.assignee||'']||[]).push(t);
+ const order=[...people().map(m=>m.email),''].filter(e=>by[e]);
+ const doneRecent=S.tasks.filter(t=>t.done&&t.done_at&&Date.now()-new Date(t.done_at).getTime()<7*864e5);
+ return `<div class="pcard">${quickTask('all')}</div><div class="tcols">${order.map(e=>`<section class="pcard"><h3>${initial(e)} ${e?esc(nameOf(e)):'Nobody yet'} <span class="mute">${by[e].length}</span></h3>${sortTasks(by[e]).map(t=>taskRow(t)).join('')}</section>`).join('')||'<p class="empty">No open tasks. Add one above, or open a post and tap "Add the standard tasks".</p>'}</div>
+ ${doneRecent.length?`<details class="pcard" style="margin-top:14px"><summary>Done in the last 7 days (${doneRecent.length})</summary>${doneRecent.map(t=>taskRow(t)).join('')}</details>`:''}`}
+
+/* ----- creators ----- */
+async function loadCreators(){if(!sbc)return;try{const {data,error}=await sbc.from('creators').select('*').order('created_at');if(error)throw error;S.creators=data||[];if(S.view==='plan'&&S.sub==='creators')render()}catch(e){}}
+function creatorsHTML(){const C=S.creators||[];const cnt=k=>C.filter(c=>c.status===k).length;
+ return `<div class="pcard"><h3>Dog creators and partners</h3><p style="margin:0">People to reach before launch: dog accounts, bike shops, Amsterdam riders. Keep who talks to whom and what's next in one place.</p><div class="kpis" style="margin-top:12px">${Object.entries(CR_STATUS).map(([k,l])=>`<div class="kpi"><b>${cnt(k)}</b><span>${l}</span></div>`).join('')}</div><div class="btnrow"><button class="primary" type="button" data-cnew>+ Add creator</button></div></div>
+ ${C.length?`<div class="scroll"><table class="rtab ctab"><thead><tr><th>Name</th><th>Platform</th><th class="n">Followers</th><th>Status</th><th>Who</th><th>Next step</th></tr></thead><tbody>${C.slice().sort((a,b)=>Object.keys(CR_STATUS).indexOf(a.status)-Object.keys(CR_STATUS).indexOf(b.status)).map(c=>`<tr><td><button class="linkish" type="button" data-copen="${esc(c.id)}">${esc(c.name||c.handle||'Unnamed')}</button>${c.handle?`<br><small>${safeUrl(c.link)?`<a href="${esc(c.link)}" target="_blank" rel="noopener">${esc(c.handle)}</a>`:esc(c.handle)}</small>`:''}</td><td>${esc(CR_PLAT[c.platform]||'')}</td><td class="n">${c.followers!=null?fmtN(c.followers):''}</td><td><select data-cstat="${esc(c.id)}" aria-label="Status for ${esc(c.name||c.handle)}">${Object.entries(CR_STATUS).map(([k,l])=>`<option value="${k}"${c.status===k?' selected':''}>${l}</option>`).join('')}</select></td><td>${initial(c.owner)}</td><td>${esc(c.next_step||'')}</td></tr>`).join('')}</tbody></table></div>`:'<p class="empty">No creators yet.</p>'}`}
+let CR=null;
+function openCreator(id){const c=id?(S.creators||[]).find(x=>x.id===id):{id:null,name:'',handle:'',platform:'ig',followers:null,city:'',dog:'',status:'todo',owner:S.me,next_step:'',notes:'',link:''};if(!c)return;CR=c;
+ $('#r-heading').textContent=id?'Creator':'New creator';$('#r-name').value=c.name||'';$('#r-handle').value=c.handle||'';$('#r-plat').value=c.platform||'ig';$('#r-fol').value=c.followers??'';$('#r-city').value=c.city||'';$('#r-dog').value=c.dog||'';
+ $('#r-status').innerHTML=Object.entries(CR_STATUS).map(([k,l])=>`<option value="${k}"${c.status===k?' selected':''}>${l}</option>`).join('');$('#r-who').innerHTML=peopleOpts(c.owner);$('#r-next').value=c.next_step||'';$('#r-notes').value=c.notes||'';$('#r-link').value=c.link||'';
+ $('#r-del').hidden=!id;$('#r-del').textContent='Delete';openOv('ovr');setTimeout(()=>$('#r-name').focus(),40)}
+async function saveCreator(){const f=Number($('#r-fol').value);
+ const v={name:$('#r-name').value.trim(),handle:$('#r-handle').value.trim(),platform:$('#r-plat').value,followers:$('#r-fol').value===''?null:Math.max(0,Math.round(f)||0),city:$('#r-city').value.trim(),dog:$('#r-dog').value.trim(),status:$('#r-status').value,owner:$('#r-who').value,next_step:$('#r-next').value.trim(),notes:$('#r-notes').value.trim(),link:safeUrl($('#r-link').value.trim())};
+ if(!v.name&&!v.handle){$('#r-name').focus();return}
+ const b=$('#r-save');b.disabled=true;
+ try{if(CR&&CR.id){const {error}=await sbc.from('creators').update(v).eq('id',CR.id);if(error)throw error}else{const {error}=await sbc.from('creators').insert(v);if(error)throw error}await loadCreators();closeOv('ovr');toast('Saved')}catch(e){toast('Could not save.')}finally{b.disabled=false}}
+let rDelArm=0;
+async function deleteCreator(){if(!CR||!CR.id)return;if(Date.now()-rDelArm>3000){rDelArm=Date.now();$('#r-del').textContent='Tap again to delete';return}
+ try{const {error}=await sbc.from('creators').delete().eq('id',CR.id);if(error)throw error;await loadCreators();closeOv('ovr');toast('Deleted')}catch(e){toast('Could not delete.')}}
+async function setCreatorStatus(id,status){const c=(S.creators||[]).find(x=>x.id===id);if(!c)return;const old=c.status;c.status=status;
+ try{const {error}=await sbc.from('creators').update({status}).eq('id',id);if(error)throw error;render()}catch(e){c.status=old;render();toast('Could not save.')}}
+
+/* ----- media library ----- */
+function mediaHTML(){const f=S.mFilter||'';const items=[];
+ for(const p of S.posts)for(const m of (Array.isArray(p.media)?p.media:[])){if(!m||(!m.thumb&&!m.drive))continue;if(f&&p.pillar!==f)continue;items.push({p,m})}
+ const unused=items.filter(x=>x.p.status!=='posted'),used=items.filter(x=>x.p.status==='posted');
+ const tile=({p,m})=>{const dv=m.drive&&safeUrl(m.drive.url);return `<figure class="mtile"><button type="button" data-id="${esc(p.id)}" title="Open ${esc(p.title||'post')}"><img src="${m.thumb?mediaSrc(m.thumb):DRIVE_PH}" alt="${esc(m.name||'')}" loading="lazy"></button><figcaption><b>${esc(p.title||'Untitled')}</b><small>${esc(pil(p.pillar).name)} · ${m.kind==='video'?'Video':'Photo'}${dv?` · <a href="${esc(m.drive.url)}" target="_blank" rel="noopener">Drive</a>`:''}</small></figcaption></figure>`};
+ return `<div class="pcard"><h3>Media library</h3><p style="margin:0">Every photo and video attached to a post, from uploads and Google Drive. Footage in posts that aren't posted yet comes first, so nothing filmed gets forgotten.</p><label class="f" for="mfilter">Pillar</label><select id="mfilter" style="max-width:280px"><option value="">All pillars</option>${pillars().map(p=>`<option value="${esc(p.id)}"${f===p.id?' selected':''}>${esc(p.name)}</option>`).join('')}</select></div>
+ <h3 class="sech">Not posted yet <span class="mute" style="font-size:16px">${unused.length}</span></h3>${unused.length?`<div class="mgrid">${unused.map(tile).join('')}</div>`:'<p class="empty">Nothing waiting. Add footage to a post with "Add from Google Drive" or drag it in.</p>'}
+ <h3 class="sech">Already posted <span class="mute" style="font-size:16px">${used.length}</span></h3>${used.length?`<div class="mgrid">${used.map(tile).join('')}</div>`:'<p class="empty">Nothing posted with media yet.</p>'}`}
+
+/* ----- launch tracker: tracked links and clicks ----- */
+async function loadClicks(){if(!sbc)return;try{const since=new Date(Date.now()-120*864e5).toISOString();const {data,error}=await sbc.from('clicks').select('post_id,channel,clicked_at').gte('clicked_at',since).order('clicked_at',{ascending:false}).limit(5000);if(error)throw error;S.clicks=data||[];if(S.view==='results')render()}catch(e){}}
+const goLink=(pid,ch)=>`${SB_URL}/functions/v1/go?p=${encodeURIComponent(pid||'bio')}&c=${encodeURIComponent(ch||'link')}`;
+function launchCard(){const C=S.clicks||[];const wk=C.filter(x=>Date.now()-new Date(x.clicked_at).getTime()<7*864e5).length;
+ const byCh={},byP={};for(const x of C){byCh[x.channel||'link']=(byCh[x.channel||'link']||0)+1;if(x.post_id&&x.post_id!=='bio')byP[x.post_id]=(byP[x.post_id]||0)+1}
+ const dest=safeUrl(S.settings.launchUrl)||'https://ridewithroef.com';const su=Array.isArray(S.settings.signups)?S.settings.signups:[];const lastSu=su.length?su[su.length-1]:null;
+ return `<div class="pcard" style="margin-bottom:16px"><h3>Kickstarter tracker</h3><p style="margin:0">Followers don't fund a campaign; sign-ups on the pre-launch page do. Use these tracked links so every click is counted. They lead to <a href="${esc(dest)}" target="_blank" rel="noopener">${esc(dest.replace(/^https?:\/\//,''))}</a>${S.settings.launchUrl?'':' until the Kickstarter pre-launch page exists (set it in Settings)'}.</p>
+ <div class="kpis" style="margin-top:12px"><div class="kpi"><b>${C.length}</b><span>clicks (120 days)</span></div><div class="kpi"><b>${wk}</b><span>clicks this week</span></div><div class="kpi"><b>${lastSu?esc(String(lastSu.n)):'–'}</b><span>sign-ups${lastSu?' on '+esc(fmtShort(lastSu.date)):''}</span></div></div>
+ <div class="btnrow"><button class="ghost" type="button" data-golink="bio">Copy link for the Instagram and TikTok bio</button><button class="ghost" type="button" data-golink="story">Copy link for a story sticker</button></div>
+ ${Object.keys(byCh).length?`<p class="small">By place: ${Object.entries(byCh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${esc(k)} ${v}`).join(' · ')}</p>`:''}
+ ${Object.keys(byP).length?`<p class="small">By post: ${Object.entries(byP).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>`${esc(postTitle(k)||'deleted post')} ${v}`).join(' · ')}</p>`:''}
+ <form class="tadd" id="suform"><label class="small" for="su-n" style="align-self:center">Sign-ups so far</label><input type="number" min="0" id="su-n" inputmode="numeric" placeholder="e.g. 120" style="max-width:140px"><button class="ghost" type="submit">Save</button></form>
+ <p class="small">Instagram captions can't hold links, so clicks come from the bio, story stickers, Facebook and TikTok. Type the sign-up count from Kickstarter or your email tool once a week.</p></div>`}
+async function saveSignups(){const n=Number($('#su-n').value);if(!$('#su-n').value||!(n>=0))return;const su=(Array.isArray(S.settings.signups)?S.settings.signups:[]).filter(x=>x.date!==todayKey()).concat([{date:todayKey(),n:Math.round(n)}]).slice(-60);
+ try{await queue('settings',()=>db.doc('settings/main').update({signups:su}));toast('Saved')}catch(e){toast('Could not save.')}}
+
+async function mailTest(){const st=$('#s-mailteststat'),b=$('#s-mailtest');b.disabled=true;st.textContent='Sending…';
+ try{const {data:{session}}=await sbc.auth.getSession();if(!session)throw new Error('login');
+  const res=await fetch(SB_URL+'/functions/v1/notify',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,apikey:SB_KEY},body:'{"mode":"test"}'});
+  const out=await res.json().catch(()=>({}));
+  st.textContent=out.sent?'Sent. Check your inbox (and spam).':out.error==='not_connected'?'Email is not set up yet. Sam needs to connect the free Google mailer (README, Email alerts).':'Could not send: '+String(out.error||'unknown error').slice(0,120);
+ }catch(e){st.textContent='Could not send the test email.'}finally{b.disabled=false}}
+/* ----- repurpose a post into other formats ----- */
+async function makeVersions(){if(!ED||!ED.id)return toast('Save the post first.');readEditor();
+ const picks=$$('#e-versions input:checked').map(i=>i.value).filter(f=>FORMATS.includes(f)&&f!==ED.format);if(!picks.length)return toast('Tick at least one other format.');
+ const st=$('#e-verstat');st.textContent='Making versions…';const t0=Date.now();
+ try{for(const [i,f] of picks.entries()){const d=blank('');delete d.id;Object.assign(d,{title:`${(ED.title||'Untitled').replace(/ · (Reel|TikTok|Carousel|Photo|Story)$/,'')} · ${f}`,idea:[ED.idea,ED.hook?'Opening: '+ED.hook:'',ED.captionEn?'Caption so far: '+ED.captionEn:''].filter(Boolean).join('\n'),pillar:ED.pillar,format:f,platforms:f==='TikTok'?['tt']:['ig'],status:'idea',parentId:ED.id,keyword:ED.keyword,hashtags:ED.hashtags,owner:ED.owner||'',lang:'en',example:false,updatedAt:t0+i});
+   await queue('ver'+i,()=>db.collection('posts').doc().set(d))}
+  st.textContent=`${picks.length} version${picks.length>1?'s':''} added to Ideas. Open one and tap "Write script with Claude".`;$$('#e-versions input').forEach(i=>{i.checked=false})}catch(e){st.textContent='Could not make the versions.'}}
+
+/* ----- templates ----- */
+function useTemplate(id){const t=templates().find(x=>x.id===id);if(!t||!ED)return;
+ if(!$('#e-idea').value.trim())$('#e-idea').value=t.idea||'';if(FORMATS.includes(t.format))$('#e-format').value=t.format;if(pillars().some(p=>p.id===t.pillar))$('#e-pillar').value=t.pillar;if(t.hook&&!$('#e-hook').value.trim())$('#e-hook').value=t.hook;
+ if(!$('#e-title').value.trim())$('#e-title').value=t.name;$('#e-aistat').textContent='Template filled in. Change the idea, then tap Write script with Claude.'}
+let TPL=null;
+function tplCard(){const T=TPL||templates();
+ return `<div class="pcard"><h3>Formats you repeat</h3><p class="small" style="margin-top:0">Pick one under "Start from a format" when you make a new post.</p>${TPL?T.map((t,i)=>`<div class="tplrow"><input type="text" value="${esc(t.name)}" data-tpl="${i}" data-k="name" aria-label="Format name"><select data-tpl="${i}" data-k="format" aria-label="Format">${FORMATS.map(f=>`<option${f===t.format?' selected':''}>${f}</option>`).join('')}</select><select data-tpl="${i}" data-k="pillar" aria-label="Pillar">${pillars().map(p=>`<option value="${esc(p.id)}"${p.id===t.pillar?' selected':''}>${esc(p.name)}</option>`).join('')}</select><textarea data-tpl="${i}" data-k="idea" rows="2" aria-label="What to film">${esc(t.idea)}</textarea><input type="text" value="${esc(t.hook||'')}" data-tpl="${i}" data-k="hook" placeholder="Opening text" aria-label="Opening text"><button class="iconbtn sm" type="button" data-tplrm="${i}" aria-label="Remove ${esc(t.name)}">×</button></div>`).join('')+`<div class="btnrow"><button class="ghost" type="button" data-tpladd>+ Format</button><button class="primary" type="button" data-tplsave>Save formats</button><button class="ghost" type="button" data-tplcancel>Cancel</button></div>`
+ :`<ul>${T.map(t=>`<li><b>${esc(t.name)}</b> · ${esc(t.format)} · ${esc(pil(t.pillar).name)}<br><span class="small">${esc(t.idea)}</span></li>`).join('')}</ul><div class="btnrow"><button class="ghost" type="button" data-tpledit>Edit formats</button></div>`}</div>`}
+async function saveTemplates(){const T=(TPL||[]).map(t=>({id:t.id||('t'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),name:str(t.name).trim()||'Untitled',format:FORMATS.includes(t.format)?t.format:'Reel',pillar:str(t.pillar),idea:str(t.idea).trim(),hook:str(t.hook).trim()}));
+ try{await queue('settings',()=>db.doc('settings/main').update({templates:T}));TPL=null;render();toast('Saved')}catch(e){toast('Could not save.')}}
+
+/* ----- brand book and writing style ----- */
+function brandBlock(){const b=str(S.settings.brandBook).trim();return b?`BRAND BOOK (voice and copy rules: follow them exactly; where the brand book and the brand rules below disagree, the brand rules win)\n${b.slice(0,6000)}\n\n`:''}
+function postedCaptions(){return (S.stats||[]).filter(x=>str(x.caption).trim().length>20).slice(0,8).map(x=>str(x.caption).trim().slice(0,600))}
+function brandCard(){const b=str(S.settings.brandBook).trim();
+ const sw=[['Black','#000000'],['ROEF red','#701F29'],['Grey','#F1F2F3'],['White','#FFFFFF'],['Light grey','#EAEBEE'],['Mid grey','#BFBFC0']];
+ return `<div class="pcard"><h3>Brand book</h3>${b?`<details><summary>Voice, copy rules and examples</summary><div class="prewrap" style="margin-top:8px">${esc(b)}</div></details>`:'<p class="empty">Not added yet. Paste it under Settings.</p>'}
+ <div class="swatches">${sw.map(([n,c])=>`<span><i style="background:${c}"></i>${n}<small>${c}</small></span>`).join('')}</div><p class="small">Type: Inter (ExtraBold headings, SemiBold subheadings, Regular text), Nunito Italic for emphasis. Claude reads the brand book before every script and idea.</p></div>`}
+function styleCard(){const v=str(S.settings.voiceSamples).trim();const n=v?v.split(/\n\s*\n/).filter(x=>x.trim()).length:0;const pc=postedCaptions().length;
+ return `<div class="pcard"><h3>Writing style</h3><ul><li><b>${n}</b> captions Kim wrote herself (Settings, Voice samples)</li><li><b>${pc}</b> captions you actually posted, read from Instagram and Facebook after each sync</li><li><b>${S.editCount==null?'…':S.editCount}</b> changes the team made to Claude's text</li></ul><p class="small">Claude copies the tone of all three. The more Kim edits and posts, the closer it gets.</p></div>`}
+
 /* ---------- editor ---------- */
 let ED=null,edImg=null,edCtl=null,delArm=0,edMedia=[],imgMax=4,statEl=null,edSugg=[];
 const MAXUP=50*1024*1024;
-function blank(date){return {id:null,title:'',status:date?'draft':'idea',date:date||'',pillar:pillars()[0]?.id||'',format:'Reel',platforms:['ig','tt'],lang:'both',duration:'',hook:'',cover:'',shots:[],captionEn:'',captionNl:'',hashtags:'',cta:'',why:'',tips:'',idea:'',link:'',like:'',assetId:'',media:[],keyword:'',searchTerms:'',spoken:'',altText:'',platSugg:'',sound:'',soundSearch:'',soundNote:'',time:'18:00',postLinks:{ig:'',tt:'',fb:''},results:{ig:{},tt:{},fb:{}},resultsAt:0,postedAt:0}}
+function blank(date){return {id:null,title:'',status:date?'draft':'idea',date:date||'',pillar:pillars()[0]?.id||'',format:'Reel',platforms:['ig','tt','fb'],lang:'en',owner:S.me||'',duration:'',hook:'',cover:'',shots:[],captionEn:'',captionNl:'',hashtags:'',cta:'',why:'',tips:'',idea:'',link:'',like:'',assetId:'',media:[],keyword:'',searchTerms:'',spoken:'',altText:'',platSugg:'',sound:'',soundSearch:'',soundNote:'',time:'18:00',postLinks:{ig:'',tt:'',fb:''},results:{ig:{},tt:{},fb:{}},resultsAt:0,postedAt:0}}
 function openEditor(id,date){
  if(id){const p=S.posts.find(x=>x.id===id);if(!p)return false;ED=Object.assign(blank(),JSON.parse(JSON.stringify(p)));}
  else{if(!S.canWrite){toast('View only: ask Sam for edit access.');return false}ED=blank(date);}
@@ -1082,15 +1437,18 @@ async function collectImages(mode){
  return {imgs:imgs.slice(0,imgMax),labels:labels.slice(0,imgMax)};
 }
 function fillEditor(){
- $('#e-heading').textContent=ED.id?'Edit post':'New idea or post';
+ $('#e-heading').textContent=ED.id?'Edit post':'New post';
  $('#e-pillar').innerHTML=pillars().map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('')+(pillars().some(p=>p.id===ED.pillar)?'':'<option value="">No pillar</option>');
  $('#e-format').innerHTML=FORMATS.map(f=>`<option>${f}</option>`).join('');
  const set=(id,v)=>{$('#'+id).value=v??''};
- set('e-idea',ED.idea);set('e-link',ED.link);set('e-like',ED.like);set('e-pillar',ED.pillar);set('e-format',FORMATS.includes(ED.format)?ED.format:'Reel');set('e-lang',ED.lang||'both');
- $('#e-ig').checked=(ED.platforms||[]).includes('ig');$('#e-tt').checked=(ED.platforms||[]).includes('tt');
+ set('e-idea',ED.idea);set('e-link',ED.link);set('e-like',ED.like);set('e-pillar',ED.pillar);set('e-format',FORMATS.includes(ED.format)?ED.format:'Reel');set('e-lang','en');
+ $('#e-ig').checked=(ED.platforms||[]).includes('ig');$('#e-tt').checked=(ED.platforms||[]).includes('tt');$('#e-fb').checked=(ED.platforms||[]).includes('fb');
+ $('#e-owner').innerHTML=peopleOpts(lowerE(ED.owner));
+ $('#e-tpl').innerHTML='<option value="">No format</option>'+templates().map(t=>`<option value="${esc(t.id)}">${esc(t.name)} · ${esc(t.format)}</option>`).join('');$('label[for=e-tpl]').hidden=$('#e-tpl').hidden=!!ED.id;
  $('#e-imgprev').innerHTML='';
  fillPost();renderMedia();mstat('');
- $('#e-aibox').open=!(ED.shots&&ED.shots.length);
+ {const hasScript=!!((ED.shots&&ED.shots.length)||str(ED.hook).trim());$('#e-aibox').open=!hasScript;$('#e-scriptsec').open=hasScript;$('#e-capsec').open=!!str(ED.captionEn).trim();$('#e-ressec').open=ED.status==='posted';$('#e-versec').open=false;$('#e-tasksec').open=!!ED.id;$('#e-mediasec').open=!ED.id||!!edMedia.length}
+ renderEdTasks();$('#e-verstat').textContent='';$('#e-golinkstat').textContent='';$('#e-golink').disabled=!ED.id;$('#e-verbtn').disabled=!ED.id;
  $('#e-soundstat').textContent='';$('#e-dstat').textContent='';$('#c-stat').textContent='';$('#c-body').value='';hideMList();renderSndChips();renderComments();
  $('#e-aistat').textContent='';$('#e-seostat').textContent='';$('#e-changestat').textContent='';$('#e-humanstat').textContent='';$('#e-findstat').textContent='';edSugg=[];renderSugg();setAI(false);
  $('#e-del').hidden=!ED.id||!S.canWrite;$('#e-del').textContent='Delete';delArm=0;
@@ -1108,8 +1466,8 @@ function renderShots(){
  $('#e-shots').innerHTML=(ED.shots||[]).map((s,i)=>`<div class="srow"><span class="sn">${i+1}</span><input type="checkbox" class="s-done"${s.done?' checked':''} aria-label="Shot ${i+1} filmed"><div class="sf"><textarea class="s-text" rows="2" placeholder="What to film">${esc(s.text)}</textarea><input type="text" class="s-ov" placeholder="On-screen text (optional)" value="${esc(s.overlay)}"></div><button class="iconbtn sm" type="button" data-rm="${i}" aria-label="Remove shot ${i+1}">×</button></div>`).join('')||'<p class="empty">No shots yet. Let Claude write them, or add your own.</p>'}
 function readEditor(){
  const v=id=>$('#'+id).value;
- Object.assign(ED,{idea:v('e-idea'),link:v('e-link').trim(),like:v('e-like'),pillar:v('e-pillar'),format:v('e-format'),lang:v('e-lang'),
-  platforms:[...($('#e-ig').checked?['ig']:[]),...($('#e-tt').checked?['tt']:[])],title:v('e-title').trim(),date:v('e-date'),status:v('e-status'),duration:v('e-dur'),
+ Object.assign(ED,{idea:v('e-idea'),link:v('e-link').trim(),like:v('e-like'),pillar:v('e-pillar'),format:v('e-format'),lang:'en',owner:lowerE(v('e-owner')),
+  platforms:[...($('#e-ig').checked?['ig']:[]),...($('#e-tt').checked?['tt']:[]),...($('#e-fb').checked?['fb']:[])],title:v('e-title').trim(),date:v('e-date'),status:v('e-status'),duration:v('e-dur'),
   hook:v('e-hook'),cover:v('e-cover'),captionEn:v('e-capen'),captionNl:v('e-capnl'),hashtags:v('e-tags'),cta:v('e-cta'),why:v('e-why'),tips:v('e-tips'),keyword:v('e-keyword'),searchTerms:v('e-terms'),spoken:v('e-spoken'),altText:v('e-alt'),platSugg:v('e-platsugg'),sound:v('e-sound').trim(),soundSearch:v('e-soundsearch').trim(),soundNote:v('e-soundnote').trim(),time:v('e-time')||'18:00',postLinks:{ig:v('e-lig').trim(),tt:v('e-ltt').trim(),fb:v('e-lfb').trim()}});
  {const res={ig:{},tt:{},fb:{}};let any=false;$$('#e-results .rin').forEach(i=>{if(i.value!==''){const n=Math.max(0,Number(i.value)||0);res[i.dataset.rp][i.dataset.rk]=n;any=true}});ED.results=res;if(any&&!ED.resultsAt)ED.resultsAt=Date.now();if(!any)ED.resultsAt=0;}
  ED.shots=$$('#e-shots .srow').map(r=>({text:r.querySelector('.s-text').value,overlay:r.querySelector('.s-ov').value,done:r.querySelector('.s-done').checked}));
@@ -1118,7 +1476,7 @@ async function saveEditor(){
  if(!S.canWrite)return;readEditor();
  const d=Object.assign({},ED);const id=d.id;delete d.id;
  d.shots=d.shots.filter(s=>s.text.trim()||s.overlay.trim());
- if(!isKey(d.date)){d.date='';d.status='idea'}else if(d.status==='idea')d.status='draft';
+ if(!isKey(d.date)){d.date='';if(!STATUS[d.status])d.status='idea'}else if(d.status==='idea'||!STATUS[d.status])d.status='draft';
  if(!d.title)d.title=(d.idea||d.hook||'').split('\n')[0].slice(0,60).trim()||'Untitled';
  d.example=false;d.updatedAt=Date.now();
  const btn=$('#e-save');btn.disabled=true;btn.textContent='Saving…';
@@ -1141,7 +1499,7 @@ async function saveEditor(){
   if(!db){if(id){const p=S.posts.find(x=>x.id===id);Object.assign(p,d)}else S.posts.push(Object.assign({id:'local'+Date.now()},d));render()}
   else{const ref=id?db.doc('posts/'+id):db.collection('posts').doc();await queue(ref.id,()=>ref.set(d));logEdits(ref.id,d)}
   closeOv('ov');
-  toast(big?`Saved. ${big} video${big>1?'s were':' was'} over 50 MB, so only a still was kept. Keep the original in your Drive.`:failed?'Saved, but some files did not upload. Try adding them again.':unstored?'Saved. Photos and videos were not stored (editors only).':'Saved');
+  toast(!id&&!big&&!failed&&!unstored?'Saved. Open it again to add tasks.':big?`Saved. ${big} video${big>1?'s were':' was'} over 50 MB, so only a still was kept. Keep the original in your Drive.`:failed?'Saved, but some files did not upload. Try adding them again.':unstored?'Saved. Photos and videos were not stored (editors only).':'Saved');
  }catch(e){
   toast(e&&e.code==='quota_exceeded'?'Storage is full: delete old posts first.':'Could not save. Try again.');
   if(e&&e.code==='invalid_argument'&&S.canWrite===null)S.canWrite=false;
@@ -1154,7 +1512,7 @@ async function deleteEditor(){
  try{if(db)await queue(id,()=>db.doc('posts/'+id).delete());else{S.posts=S.posts.filter(p=>p.id!==id);render()}closeOv('ov');toast('Deleted')}
  catch(e){toast('Could not delete. Try again.')}
 }
-function captionText(){readEditor();return [ED.captionEn,ED.captionNl,ED.hashtags].map(s=>s.trim()).filter(Boolean).join('\n\n')}
+function captionText(){readEditor();return [ED.captionEn,ED.hashtags].map(s=>s.trim()).filter(Boolean).join('\n\n')}
 async function copyText(t){
  if(!t)return toast('Nothing to copy yet.');
  try{await navigator.clipboard.writeText(t);toast('Copied')}
@@ -1171,14 +1529,14 @@ function aiPrompt(mode,instr,labels){
  labels=labels||[];
  const imgNote=labels.length?`ATTACHED IMAGES (in order)\n${labels.map((l,i)=>`${i+1}. ${l}`).join('\n')}\nDescribe only what you can actually see. Never invent features that aren't in the brand facts.\n`:'';
  const L=launch();
- const langRule=ED.lang==='en'?'Write captionEn only; captionNl must be an empty string. On-screen text in English.':ED.lang==='nl'?'Write captionNl only, in Dutch; captionEn must be an empty string. On-screen text in Dutch.':'Write both captionEn and captionNl. The Dutch caption is its own natural version, not a word-for-word translation. On-screen text in English.';
+ const langRule='Write captionEn only, in English; captionNl must be an empty string. On-screen text in English.';
  const ctx={pillar:pil(ED.pillar).name,format:ED.format,platforms:plat(ED),kickstarterLaunch:L?L:'not confirmed yet (early 2027): do not name a date',plannedPostDate:isKey(ED.date)?ED.date:'not planned yet',today:key(now)};
  const spec=`Reply with only one JSON object, no other text, in exactly this shape:
 {"title":"short internal title, max 6 words","format":"one of Reel, TikTok, Carousel, Photo, Story","duration":"e.g. 15–20 sec, or number of slides for a carousel","hook":"on-screen text for the first frame, max 8 words, makes sense with the sound off","cover":"cover text for the profile grid, max 5 words","shots":[{"text":"what to film in one plain line, with angle or framing","overlay":"on-screen text for this shot, or empty string"}],"captionEn":"","captionNl":"","hashtags":"3 to 5 specific hashtags separated by spaces","cta":"one clear call to action","why":"1-2 sentences on why this should work for ROEF right now","tips":"2-4 short filming tips on light, angle, sound and length, one per line","sound":"which sound or beat to use, following the SOUND RULES","soundSearch":"what to type in the app's sound search","soundNote":"one line on how to use the sound, e.g. cut on the beat","keyword":"one main search phrase people would really type","searchTerms":"3 to 6 related search phrases, comma separated","spoken":"first spoken line for a voiceover, containing the search phrase, max 15 words","altText":"Instagram alt text: plain description of the visuals including the search phrase, max 200 characters"}
 Use 4 to 7 shots (for a carousel: one shot per slide). Captions: a first sentence that contains the search phrase, then 1-3 short lines, then the call to action. Put the search phrase in the opening text too. At most one emoji per caption.`;
  const base=`You write short-form social media content for ROEF, a startup building up to its Kickstarter launch. Follow the brand rules exactly and never break the "never mention" list. Do not invent facts, numbers, test results or customer quotes.
 
-BRAND RULES
+${brandBlock()}BRAND RULES
 ${brain()}
 
 ${perfBlock()}${voiceBlock()}${lessonBlock()}HUMAN WRITING RULES
@@ -1187,7 +1545,8 @@ ${perfBlock()}${voiceBlock()}${lessonBlock()}HUMAN WRITING RULES
 - Avoid AI-sounding words and patterns: elevate, unleash, game-changer, seamless, effortless, embark, journey, discover, delve, ultimate, perfect companion, "not just X, it's Y", "Imagine...", lists of three adjectives.
 - Vary sentence length. One idea per line. No hashtags inside sentences.
 - At most one emoji and one exclamation mark per caption.
-- Dutch: everyday spoken Dutch, not a translation.
+- Brand book: short sentences, one thought per sentence. No diminutives (never "little basket", "pup", "doggo"). Never "vibe" or "companion". No slang. Focus on freedom and moving through the city together.
+- English only.
 
 SOUND RULES (@byroef is a business account on TikTok and Instagram)
 - TikTok: only sounds from the Commercial Music Library ("Commercial sounds") can be used. Instagram: Sound Collection, royalty-free music or original audio.
@@ -1238,7 +1597,7 @@ ${JSON.stringify(contentOf(ED))}
 Idea: ${ED.idea.trim()||'(none given)'}
 ${imgNote}${suggBlock()}
 TASK
-Optimise this post so people find it in Instagram and TikTok search. Pick ONE main search phrase that people really type (English; if Dutch is used, add a Dutch phrase to searchTerms). Use it naturally in the first sentence of each caption, the opening on-screen text, the first spoken line and the alt text. No keyword stuffing. Keep the brand voice and the post's idea. Do not change the shots. If no images are attached, work from the text.
+Optimise this post so people find it in Instagram and TikTok search. Pick ONE main search phrase that people really type, in English. Use it naturally in the first sentence of each caption, the opening on-screen text, the first spoken line and the alt text. No keyword stuffing. Keep the brand voice and the post's idea. Do not change the shots. If no images are attached, work from the text.
 Reply with only one JSON object, no other text:
 {"keyword":"","searchTerms":"3 to 6 related phrases, comma separated","hook":"opening on-screen text with the phrase, max 8 words","spoken":"first spoken line with the phrase, max 15 words","cover":"cover text, max 5 words","captionEn":"","captionNl":"","hashtags":"3 to 5 specific hashtags separated by spaces","altText":"plain description of what is in the photo or video for Instagram alt text, including the phrase naturally, max 200 characters","notes":"1-2 short lines: what you saw in the footage and anything to fix, e.g. too dark, no text on the first frame, dog not visible early"}`;
  return base+`
@@ -1251,7 +1610,7 @@ ${instr}
 Apply the change request, keep what wasn't asked to change, and return the full updated post.
 ${spec}`;
 }
-function voiceBlock(){const v=str(S.settings.voiceSamples).trim();return v?`VOICE SAMPLES (real captions written by Kim: match their tone, rhythm, length, casing and punctuation; never copy them word for word)\n${v.slice(0,6000)}\n\n`:''}
+function voiceBlock(){const v=str(S.settings.voiceSamples).trim();const pc=postedCaptions();return (v?`VOICE SAMPLES (real captions written by Kim: match their tone, rhythm, length, casing and punctuation; never copy them word for word)\n${v.slice(0,6000)}\n\n`:'')+(pc.length?`CAPTIONS ROEF ACTUALLY POSTED (the final versions after Kim's edits: match this style, never copy word for word)\n${pc.map(x=>'- '+x.replace(/\n+/g,' / ')).join('\n')}\n\n`:'')}
 function suggBlock(){const a=edSugg.slice(0,20).map(x=>x.text);const p=str(ED&&ED.platSugg).trim();if(!a.length&&!p)return '';return `REAL SEARCH SUGGESTIONS (what people actually type; prefer a main search phrase from these when one fits, and never invent search volumes)\n${a.length?'Google/YouTube: '+a.join(' | ')+'\n':''}${p?'Instagram/TikTok search bar: '+p+'\n':''}\n`}
 function aiErr(e){const c=e&&e.code;return ({no_api_key:"The Claude key isn't set up yet. Sam needs to add it in Supabase (Edge Functions, Secrets).",cancelled:'Stopped.',rate_limited:'Claude is busy or your usage limit is reached. Try again in a bit.',refused:"Claude wouldn't write this one. Try rewording the idea.",invalid_json:'The answer came back garbled. Try again.',image_rejected:"That image didn't work. Try a PNG or JPG under 20 MB.",session_expired:'Sign in to Claude again, then retry.',not_granted:'Claude was not allowed on this page.',sampling_disabled:'Claude is not available on this account.',empty_completion:'Claude returned nothing. Try a shorter idea.'})[c]||'Something went wrong. Try again.'}
 async function runAI(mode){
@@ -1410,7 +1769,7 @@ function gToken(){return new Promise((res,rej)=>{
  try{gTC.requestAccessToken({prompt:gTok?'':'consent'})}catch(e){rej(e)}})}
 async function openDrive(){
  const st=$('#e-dstat');
- if(!gReady())return st.textContent="Google Drive isn't connected yet. Sam adds the Google details in Brand & launch.";
+ if(!gReady())return st.textContent="Google Drive isn't connected yet. Sam adds the Google details in Settings.";
  st.textContent='Opening Google Drive…';
  try{await gPrepare();const tok=await gToken();const c=gCfg();
   const mimes='image/png,image/jpeg,image/webp,image/gif,image/heic,image/heif,video/mp4,video/quicktime,video/webm,video/x-m4v';
@@ -1422,7 +1781,7 @@ async function openDrive(){
   {const v=view().setEnableDrives(true);try{v.setLabel('Shared drives')}catch(e){}b.addView(v)}
   b.build().setVisible(true);st.textContent='';
  }catch(e){const m=String(e&&e.message||e);
-  st.textContent=/popup/i.test(m)?'Your browser blocked the Google sign-in window. Allow pop-ups for this site, then try again.':/denied|access_denied/i.test(m)?'Google sign-in was cancelled.':'Could not open Google Drive. Check the Google details in Brand & launch, or try again.'}
+  st.textContent=/popup/i.test(m)?'Your browser blocked the Google sign-in window. Allow pop-ups for this site, then try again.':/denied|access_denied/i.test(m)?'Google sign-in was cancelled.':'Could not open Google Drive. Check the Google details in Settings, or try again.'}
 }
 async function driveThumb(doc,tok,kind){
  const H={Authorization:'Bearer '+tok},id=encodeURIComponent(doc.id);
@@ -1442,7 +1801,7 @@ async function onPicked(d,tok){
 }
 
 /* ---------- new version check ---------- */
-const BUILD='2026-11-22-learn';
+const BUILD='2026-11-26-v2';
 let verWarned=false;
 async function checkVersion(){if(verWarned)return;try{const r=await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)return;const m=(await r.text()).match(/const BUILD='([^']+)'/);if(m&&m[1]!==BUILD){verWarned=true;$('#vnote').hidden=false}}catch(e){}}
 /* ---------- learning from edits ---------- */
@@ -1518,14 +1877,15 @@ async function toggleShot(id,i,done){
 let SP=[];
 function openSettings(){
  if(!S.canWrite)return toast('View only: ask Sam for edit access.');
- $('#s-launch').value=launch();$('#s-brain').value=brain();$('#s-voice').value=str(S.settings.voiceSamples);
+ $('#s-launch').value=launch();$('#s-brain').value=brain();$('#s-voice').value=str(S.settings.voiceSamples);$('#s-book').value=str(S.settings.brandBook);$('#s-launchurl').value=str(S.settings.launchUrl);
+ $('#s-mailme').checked=!(Array.isArray(S.settings.mailOff)?S.settings.mailOff:[]).includes(S.me);$('#s-mailstat').textContent=str(S.settings.mailError)?'Email is not working yet: '+str(S.settings.mailError):(S.settings.mailLastAt?'Last email sent '+new Date(S.settings.mailLastAt).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+'.':'');
  $('#s-gclient').value=str(S.settings.gClientId);$('#s-gkey').value=str(S.settings.gApiKey);$('#s-gapp').value=str(S.settings.gAppId);$('#s-gfolder').value=str(S.settings.gFolder);
  SP=pillars().map(p=>({id:p.id,name:p.name,color:col(p.color)}));renderSP();openOv('ovs');
 }
 function renderSP(){$('#s-pillars').innerHTML=SP.map((p,i)=>`<div class="prow"><input type="color" value="${esc(p.color)}" data-pc="${i}" aria-label="Colour for ${esc(p.name)}"><input type="text" value="${esc(p.name)}" data-pn="${i}" aria-label="Pillar name"><button class="iconbtn sm" type="button" data-prm="${i}" aria-label="Remove ${esc(p.name)}">×</button></div>`).join('')}
 async function saveSettings(){
  const pillarsV=SP.map(p=>({id:p.id,name:p.name.trim()||'Untitled',color:col(p.color)}));
- const d={launchDate:$('#s-launch').value||'',brain:$('#s-brain').value.trim()||DEF_BRAIN,pillars:pillarsV.length?pillarsV:DEF_PILLARS,voiceSamples:$('#s-voice').value.trim(),
+ const d={launchDate:$('#s-launch').value||'',brain:$('#s-brain').value.trim()||DEF_BRAIN,pillars:pillarsV.length?pillarsV:DEF_PILLARS,voiceSamples:$('#s-voice').value.trim(),brandBook:$('#s-book').value.trim(),launchUrl:safeUrl($('#s-launchurl').value.trim()),mailOff:(()=>{const o=new Set(Array.isArray(S.settings.mailOff)?S.settings.mailOff:[]);if(S.me){if($('#s-mailme').checked)o.delete(S.me);else o.add(S.me)}return [...o]})(),
   gClientId:$('#s-gclient').value.trim(),gApiKey:$('#s-gkey').value.trim(),gAppId:$('#s-gapp').value.replace(/\D/g,''),gFolder:$('#s-gfolder').value.trim()};
  if(d.gClientId!==str(S.settings.gClientId)||d.gApiKey!==str(S.settings.gApiKey)){gLoading=null;gTok=null}
  const btn=$('#s-save');btn.disabled=true;
@@ -1536,7 +1896,7 @@ async function saveSettings(){
 /* ---------- overlays, view switching ---------- */
 function openOv(id){const o=$('#'+id);o.classList.add('open');o.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeOv(id){const o=$('#'+id);o.classList.remove('open');o.setAttribute('aria-hidden','true');if(id==='ov'&&edCtl)edCtl.abort();if(!$$('.ov.open').length)document.body.style.overflow=''}
-function setView(v){if(!VIEWS.includes(v))v='calendar';S.view=v;if(v==='results'&&sbc)loadStats();if(v==='playbook'&&sbc)loadEditCount();try{if(location.hash!=='#'+v)history.replaceState(null,'','#'+v)}catch(e){try{location.hash=v}catch(e2){}}render()}
+function setView(v){if(OLDV[v]){if(OLDV[v][1])S.sub=OLDV[v][1];v=OLDV[v][0]}if(!VIEWS.includes(v))v='home';S.view=v;if(v==='results'&&sbc){loadStats();loadClicks()}if(v==='plan'&&S.sub==='creators'&&sbc)loadCreators();if(v==='playbook'&&sbc)loadEditCount();try{if(location.hash!=='#'+v)history.replaceState(null,'','#'+v)}catch(e){try{location.hash=v}catch(e2){}}render()}
 
 document.addEventListener('click',e=>{
  const t=e.target;let el;
@@ -1561,8 +1921,30 @@ document.addEventListener('click',e=>{
  if(t.closest('#l-cancel')){S.lEdit=false;S.lDraft=null;return render()}
  if(t.closest('#l-save'))return saveLessons();
  if(el=t.closest('[data-view]'))return setView(el.dataset.view);
- if(el=t.closest('[data-feed]')){S.feed=el.dataset.feed;return render()}
- if(el=t.closest('[data-wa]'))return copyText(waText(el.dataset.wa));
+ if(el=t.closest('[data-sub]')){S.sub=el.dataset.sub;if(S.sub==='creators')loadCreators();return render()}
+ if(t.closest('[data-homeall]')){S.homeAll=!S.homeAll;return render()}
+ if(el=t.closest('[data-topen]'))return openTask(el.dataset.topen);
+ if(el=t.closest('[data-tnew]')){const pid=el.dataset.tnew;const p=S.posts.find(x=>x.id===pid);return openTask(null,{post_id:pid,assignee:p&&p.owner||''})}
+ if(el=t.closest('[data-tstd]'))return addStdTasks(el.dataset.tstd);
+ if(t.closest('#t-save'))return saveTask();
+ if(t.closest('#t-del'))return deleteTask();
+ if(t.closest('#t-open')){const pid=TK&&TK.post_id;closeOv('ovt');if(pid)openEditor(pid);return}
+ if(t.closest('#ideabtn'))return runIdeas();
+ if(el=t.closest('[data-idel]'))return dismissIdea(el.dataset.idel,el);
+ if(el=t.closest('[data-stage]'))return setStage(el.dataset.stage,el.dataset.to);
+ if(t.closest('[data-cnew]'))return openCreator(null);
+ if(el=t.closest('[data-copen]'))return openCreator(el.dataset.copen);
+ if(t.closest('#r-save'))return saveCreator();
+ if(t.closest('#r-del'))return deleteCreator();
+ if(el=t.closest('[data-golink]'))return copyText(goLink('bio',el.dataset.golink));
+ if(t.closest('#e-golink')){if(ED&&ED.id){copyText(goLink(ED.id,'story'));$('#e-golinkstat').textContent='Copied. Use it as a story link sticker or in a Facebook post.'}return}
+ if(t.closest('#e-verbtn'))return makeVersions();
+ if(t.closest('#s-mailtest'))return mailTest();
+ if(t.closest('[data-tpledit]')){TPL=JSON.parse(JSON.stringify(templates()));return render()}
+ if(t.closest('[data-tpladd]')){TPL.push({id:'',name:'New format',format:'Reel',pillar:pillars()[0]?.id||'',idea:'',hook:''});return render()}
+ if(el=t.closest('[data-tplrm]')){TPL.splice(Number(el.dataset.tplrm),1);return render()}
+ if(t.closest('[data-tplsave]'))return saveTemplates();
+ if(t.closest('[data-tplcancel]')){TPL=null;return render()}
  if(el=t.closest('[data-new]'))return openEditor(null,el.dataset.new);
  if(el=t.closest('[data-rm]')){readEditor();ED.shots.splice(Number(el.dataset.rm),1);return renderShots()}
  if(el=t.closest('[data-prm]')){SP.splice(Number(el.dataset.prm),1);return renderSP()}
@@ -1609,10 +1991,18 @@ $('#s-save').onclick=saveSettings;
 $('#s-pillars').addEventListener('input',e=>{const t=e.target;if(t.dataset.pc)SP[+t.dataset.pc].color=t.value;if(t.dataset.pn)SP[+t.dataset.pn].name=t.value});
 document.addEventListener('change',e=>{const t=e.target;
  if(t.dataset&&t.dataset.shot!==undefined)return toggleShot(t.dataset.shot,Number(t.dataset.i),t.checked);
- if(t.id==='openonly'){S.openOnly=t.checked;return render()}
- if(t.id==='fstatus'){S.fstatus=t.value;$('#listbody').innerHTML=listBody()}
+ if(t.dataset&&t.dataset.tdone)return toggleTask(t.dataset.tdone,t.checked);
+ if(t.dataset&&t.dataset.cstat)return setCreatorStatus(t.dataset.cstat,t.value);
+ if(t.id==='mfilter'){S.mFilter=t.value;t.blur();return render()}
+ if(t.id==='e-tpl'){useTemplate(t.value);t.value='';return}
+ if(t.dataset&&t.dataset.tpl!=null&&TPL){const o=TPL[Number(t.dataset.tpl)];if(o)o[t.dataset.k]=t.value}
 });
-document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;$('#listbody').innerHTML=listBody()}if(e.target.id==='l-text')S.lDraft=e.target.value});
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='l-text')S.lDraft=t.value;if(t.dataset&&t.dataset.tpl!=null&&TPL){const o=TPL[Number(t.dataset.tpl)];if(o)o[t.dataset.k]=t.value}});
+document.addEventListener('submit',async e=>{const f=e.target;
+ if(f.id==='suform'){e.preventDefault();if(document.activeElement)document.activeElement.blur();return saveSignups()}
+ if(f.matches&&f.matches('form.tadd[data-tadd]')){e.preventDefault();const title=f.title.value.trim();if(!title)return;const b=f.querySelector('button');b.disabled=true;
+  try{await addTask({title,assignee:f.assignee.value,due:f.due.value,post_id:f.dataset.post||null});if(document.activeElement)document.activeElement.blur();f.reset();render();if(edOpen())renderEdTasks();toast('Task added')}catch(err){toast('Could not add the task.')}finally{b.disabled=false}}
+});
 document.addEventListener('change',e=>{const t=e.target;
  if(t.id==='csvfile'){const f=t.files&&t.files[0];t.value='';return importCSV(f)}
  if(t.id==='impplat'&&IMP){IMP.plat=t.value;impAnalyse();return render()}
@@ -1620,6 +2010,9 @@ document.addEventListener('change',e=>{const t=e.target;
 });
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.id==='csvdrop'){e.preventDefault();const f=$('#csvfile');if(f)f.click()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const o=$$('.ov.open').pop();if(o)closeOv(o.id)}});
+document.addEventListener('dragstart',e=>{const bc=e.target.closest&&e.target.closest('.bcard');if(bc&&e.dataTransfer){e.dataTransfer.setData('text/x-roef-stage',bc.dataset.bid);e.dataTransfer.effectAllowed='move'}});
+document.addEventListener('dragover',e=>{const col=e.target.closest&&e.target.closest('.bcol');if(col&&e.dataTransfer&&[...(e.dataTransfer.types||[])].includes('text/x-roef-stage')){e.preventDefault();$$('.bcol.over').forEach(x=>x!==col&&x.classList.remove('over'));col.classList.add('over')}});
+document.addEventListener('drop',e=>{const col=e.target.closest&&e.target.closest('.bcol');$$('.bcol.over').forEach(x=>x.classList.remove('over'));if(!col||!e.dataTransfer)return;const id=e.dataTransfer.getData('text/x-roef-stage');if(id){e.preventDefault();e.stopPropagation();setStage(id,col.dataset.stageCol)}},true);
 document.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.chip');if(c&&e.dataTransfer){e.dataTransfer.setData('text/plain',c.dataset.id);e.dataTransfer.effectAllowed='move'}});
 const hasFiles=e=>!!(e.dataTransfer&&[...(e.dataTransfer.types||[])].includes('Files'));
 const edOpen=()=>$('#ov').classList.contains('open');
@@ -1645,7 +2038,7 @@ $('#e-findbtn').onclick=findSuggestions;
 $('#e-drop').onclick=()=>{if(S.canWrite)$('#e-files').click()};
 $('#e-drop').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();if(S.canWrite)$('#e-files').click()}});
 $('#e-files').addEventListener('change',e=>{const fl=[...(e.target.files||[])];e.target.value='';addFiles(fl)});
-window.addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(VIEWS.includes(v)&&v!==S.view){S.view=v;render()}});
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);const m=h.match(/^(post|task)=([\w-]+)$/);if(m){if(m[1]==='post')openEditor(m[2]);else openTask(m[2]);return}if((VIEWS.includes(h)||OLDV[h])&&h!==S.view)setView(h)});
 
 /* ---------- start ---------- */
 const SB_URL='https://vxrwoibtoobyksdkldod.supabase.co';
@@ -1726,11 +2119,14 @@ async function start(){
  db=sbDb;sample=sbSample;assets=sbAssets;S.canWrite=true;imgOK=true;imgMax=8;
  render();setNote('Loading the planner…');
  try{const {data:{session}}=await sbc.auth.getSession();S.me=lowerE(session&&session.user&&session.user.email)}catch(e){}
- try{await Promise.all([refresh('posts'),refresh('settings'),loadMembers()]);setNote('');loadStats();loadComments()}catch(e){setNote('Could not load the planner. Reload the page to try again.')}
+ try{await Promise.all([refresh('posts'),refresh('settings'),loadMembers()]);setNote('');loadStats();loadComments();loadTasks();loadCreators();loadClicks()}catch(e){setNote('Could not load the planner. Reload the page to try again.')}
+ {const m=location.hash.match(/^#(post|task)=([\w-]+)$/);if(m)setTimeout(()=>{if(m[1]==='post')openEditor(m[2]);else openTask(m[2])},m[1]==='task'?900:0)}
  let t1=null;const sched=()=>{clearTimeout(t1);t1=setTimeout(()=>{refresh('posts').catch(()=>{});refresh('settings').catch(()=>{})},300)};
  let t2=null;const schedC=()=>{clearTimeout(t2);t2=setTimeout(()=>loadComments(),300)};
- try{sbc.channel('planner').on('postgres_changes',{event:'*',schema:'public',table:'posts'},sched).on('postgres_changes',{event:'*',schema:'public',table:'settings'},sched).on('postgres_changes',{event:'*',schema:'public',table:'comments'},schedC).subscribe()}catch(e){}
- document.addEventListener('visibilitychange',()=>{if(!document.hidden){sched();schedC();checkVersion()}});
+ let t3=null;const schedT=()=>{clearTimeout(t3);t3=setTimeout(()=>loadTasks(),300)};
+ let t4=null;const schedR=()=>{clearTimeout(t4);t4=setTimeout(()=>loadCreators(),300)};
+ try{sbc.channel('planner').on('postgres_changes',{event:'*',schema:'public',table:'posts'},sched).on('postgres_changes',{event:'*',schema:'public',table:'settings'},sched).on('postgres_changes',{event:'*',schema:'public',table:'comments'},schedC).on('postgres_changes',{event:'*',schema:'public',table:'tasks'},schedT).on('postgres_changes',{event:'*',schema:'public',table:'creators'},schedR).subscribe()}catch(e){}
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){sched();schedC();schedT();checkVersion()}});
  setInterval(checkVersion,15*60*1000);
 }
 function renderSugg(){const k=($('#e-keyword').value||'').trim().toLowerCase();$('#e-sugg').innerHTML=edSugg.map((x,i)=>`<button type="button" class="schip${x.text.toLowerCase()===k?' on':''}" data-sugg="${i}">${esc(x.text)}<small>${esc(x.sources.join(' + '))} · ${esc(x.langs.join('/'))}</small></button>`).join('')}
@@ -1749,7 +2145,7 @@ async function findSuggestions(){
  finally{$('#e-findbtn').disabled=false}
 }
 async function init(){
- const h=location.hash.slice(1);if(VIEWS.includes(h))S.view=h;
+ const h=location.hash.slice(1);if(OLDV[h]){S.view=OLDV[h][0];if(OLDV[h][1])S.sub=OLDV[h][1]}else if(VIEWS.includes(h))S.view=h;
  if(!window.supabase||!window.supabase.createClient){document.body.innerHTML='<p style="padding:24px;font:16px Inter,sans-serif">The planner could not load. Check your connection and reload.</p>';return}
  sbc=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
  const {data}=await sbc.auth.getSession();
